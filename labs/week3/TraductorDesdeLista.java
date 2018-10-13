@@ -2,12 +2,18 @@
  * de traduci&oacute;n a Matriz de Adyacencias. Esta clase est&aacute; pensada para ser
  * usada al leer grafos en formato Lista de Adyacencias desde un archivo.
  */
+import java.util.ArrayList;
+
 public class TraductorDesdeLista extends TraductorGrafo{
 	
 	//ToDo: Debe colocar aqu&iacute; estructuras de java.util.collections apropiadas
+	ArrayList<String> lista;
 	
 	/**Crea un grafo minimal*/
+
 	TraductorDesdeLista(){
+		this.lista = new ArrayList<String>();
+
 		throw new UnsupportedOperationException("Este metodo aun no ha sido "
 				+"implementado");
 	}

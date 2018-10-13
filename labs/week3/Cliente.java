@@ -62,6 +62,7 @@ public class Cliente{
 	private static void cargarLista(String linea, TraductorDesdeLista grafo)
 			throws IllegalArgumentException
 	{
+		grafo.lista.add(linea);
 		throw new UnsupportedOperationException("Este metodo aun no ha sido "
 				+"implementado");
 	}
@@ -120,13 +121,13 @@ public class Cliente{
 			salida = new TraductorDesdeLista();
 			do{
 				cargarLista(linea, (TraductorDesdeLista)salida);
-				Lector.readLine();
+				linea = Lector.readLine();
 			}while(linea != null);
 		}else{
 			salida = new TraductorDesdeMatriz(detectarVertices(linea));
 			do{
 				cargarMatriz(linea, (TraductorDesdeMatriz)salida);
-				Lector.readLine();
+				linea = Lector.readLine();
 			}while(linea != null);
 		}
 		
