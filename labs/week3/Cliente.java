@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 /**<p>Programa para convertir archivos Lista de Adyacencia a archivos Matriz de
  * Adyacencia.</p>
@@ -46,9 +47,14 @@ public class Cliente{
 	 */
 	static boolean esLista(String linea)
 			throws IllegalArgumentException
-	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+	{ 
+    if(linea.startsWith(" ")){
+      // System.out.println("NO es lista");
+      return false;
+    } else {
+      // System.out.println("Es Lista");
+      return true;
+    }
 	}
 	
 	/**Carga la <code>linea</code> de un archivo Lista de Adyacencias dada
@@ -78,8 +84,20 @@ public class Cliente{
 	private static void cargarMatriz(String linea, TraductorDesdeMatriz grafo)
 			throws IllegalArgumentException
 	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+    // System.out.println("Esta es la linea que hay que pasar: " + linea);
+    // System.out.println("Esta es el grafo que se ha creado: " + grafo);
+    if (linea.startsWith(" ") || linea.startsWith("-")) {
+      return;
+    } else {
+      System.out.println("Parsear: " + linea.substring(0,1));
+      int vertice = Integer.parseInt(linea.substring(0,1));
+      linea = linea.substring(3);
+
+      System.out.println("Linea: " + linea);
+      System.out.println("Vertice: " + vertice);
+    }
+		// throw new UnsupportedOperationException("Este metodo aun no ha sido "
+		// 		+"implementado");
 	}
 	
 	/**Detecta el n&uacute;mero de v&eacute;rtices en un archivo Matriz de Adyacencias 
@@ -92,8 +110,10 @@ public class Cliente{
 	private static int detectarVertices(String linea)
 			throws IllegalArgumentException
 	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+    linea = linea.substring(3); // Elimina los espacios innecesarios
+    String[] lista = linea.split(" ");
+    
+    return lista.length;
 	}
 	
 	/**Carga un grafo desde un archivo y lo almacena en un
@@ -110,7 +130,7 @@ public class Cliente{
 	static TraductorGrafo cargarGrafo(String nombreArchivo)
 			throws IOException
 	{
-		TraductorGrafo salida;
+    TraductorGrafo salida;
 		
 		BufferedReader Lector = new BufferedReader(
 				new FileReader(nombreArchivo));
