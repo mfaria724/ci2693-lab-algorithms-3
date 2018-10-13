@@ -83,20 +83,20 @@ public class Cliente{
 	private static void cargarMatriz(String linea, TraductorDesdeMatriz grafo)
 			throws IllegalArgumentException
 	{
-    // System.out.println("Esta es la linea que hay que pasar: " + linea);
-    // System.out.println("Esta es el grafo que se ha creado: " + grafo);
     if (linea.startsWith(" ") || linea.startsWith("-")) {
       return;
     } else {
-      System.out.println("Parsear: " + linea.substring(0,1));
-      int vertice = Integer.parseInt(linea.substring(0,1));
-      linea = linea.substring(3);
+      int verticeInicial = Integer.parseInt(linea.substring(0,1)); // Guarda el primer caracter.
+      linea = linea.substring(3); //Guarda el resto de la cadena.
+      String[] lista = linea.split(" "); //Convierte en array.
 
-      System.out.println("Linea: " + linea);
-      System.out.println("Vertice: " + vertice);
+      // Itera sobre el array para encontrar los vertices adyacentes.
+      for (int i = 0; i < lista.length; i++) {
+        if (Integer.parseInt(lista[i]) == 1) {
+          grafo.agregarArco(verticeInicial, i);
+        }
+      }
     }
-		// throw new UnsupportedOperationException("Este metodo aun no ha sido "
-		// 		+"implementado");
 	}
 	
 	/**Detecta el n&uacute;mero de v&eacute;rtices en un archivo Matriz de Adyacencias 
