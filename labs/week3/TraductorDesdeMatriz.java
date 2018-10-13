@@ -5,14 +5,16 @@
 public class TraductorDesdeMatriz extends TraductorGrafo{
 	
 	//ToDo: Debe colocar aqu&iacute; estructuras de java.util.collections apropiadas
-	
+  public void readMatrixFile(String path){
+
+  }
+  
 	/**Crea un grafo con el n&uacute;mero de v&eacute;rtices dado
 	 * 
 	 * @param vertices El n&uacute;mero de v&eacute;rtices del grafo
 	 */
 	TraductorDesdeMatriz(int vertices){
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+    this.grafo = new int[vertices][vertices];
 	}
 	
 	/**{@inheritDoc}**/
