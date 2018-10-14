@@ -19,13 +19,27 @@ public class TraductorDesdeMatriz extends TraductorGrafo{
 	
 	/**{@inheritDoc}**/
 	public void agregarArco(int verticeInicial, int verticeFinal){
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+
+    // Guarda en la matriz la relacion de adyacencia.
+    this.grafo[verticeInicial][verticeFinal] = 1;
+
 	}
 	
 	/**{@inheritDoc}**/
 	public String imprimirGrafoTraducido(){
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+    String resultado = "";
+
+    // Itera sobre la matriz mientras se guarda la relacion.
+    for (int i = 0; i < this.grafo.length; i++){
+      resultado += i + ": ";
+      for (int j = 0; j < this.grafo[i].length; j++){
+        if (this.grafo[i][j] == 1){
+          resultado += j + " ";
+        }
+      }
+      resultado += "\n";
+    }
+    
+    return resultado;
 	}
 }
