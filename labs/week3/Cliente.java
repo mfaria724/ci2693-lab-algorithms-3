@@ -69,8 +69,10 @@ public class Cliente{
 			throws IllegalArgumentException
 	{
 		grafo.lista.add(linea);
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+		
+		
+		//throw new UnsupportedOperationException("Este metodo aun no ha sido "
+		//		+"implementado");
 	}
 	
 	/**Carga la <code>linea</code> de un archivo Matriz de Adyacencias dada
@@ -130,7 +132,8 @@ public class Cliente{
 	static TraductorGrafo cargarGrafo(String nombreArchivo)
 			throws IOException
 	{
-    TraductorGrafo salida;
+	TraductorGrafo salida;
+	TraductorGrafo salida2;
 		
 		BufferedReader Lector = new BufferedReader(
 				new FileReader(nombreArchivo));
