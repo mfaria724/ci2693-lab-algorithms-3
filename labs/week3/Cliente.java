@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 /**<p>Programa para convertir archivos Lista de Adyacencia a archivos Matriz de
  * Adyacencia.</p>
@@ -48,11 +47,11 @@ public class Cliente{
 	static boolean esLista(String linea)
 			throws IllegalArgumentException
 	{ 
+	// Verifica si la primera linea del archivo comienza con " " para saber si es una matriz
+	// de adyacencia o una lista de adyacencia.
     if(linea.startsWith(" ")){
-      // System.out.println("NO es lista");
       return false;
     } else {
-      // System.out.println("Es Lista");
       return true;
     }
 	}
@@ -68,8 +67,18 @@ public class Cliente{
 	private static void cargarLista(String linea, TraductorDesdeLista grafo)
 			throws IllegalArgumentException
 	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+		int vertice = Integer.parseInt(linea.substring(0,1));		// Guarda el vertice
+		linea = linea.substring(3);									// Guarda los vertices sucesores 
+		String[] lista = linea.split(" ");							// Almacena los vertices sucesores en un arreglo
+
+		// Agrega vertice en la matriz de adyacencia
+		grafo.agregarVertice(vertice);
+
+		// Itera sobre los vertices sucesores al vertice agregado agregando los arcos en la matriz de adyacencia
+		for(int i=0;i<lista.length;i++){
+			grafo.agregarArco(vertice, Integer.parseInt(lista[i]));
+		}
+
 	}
 	
 	/**Carga la <code>linea</code> de un archivo Matriz de Adyacencias dada
@@ -99,6 +108,31 @@ public class Cliente{
     }
 	}
 	
+	// Metodo que se encarga de verificar si el grafo es no dirigido
+	private static void noDirigido(TraductorGrafo grafo){
+
+		// Inicializa variable booleana que almacena si el grafo es no dirigido
+		boolean esNoDirigido = true;
+
+		// Itera sobre la matriz de adyacencias del grafo verificando que paratodo i,j se cumple que
+		// grafo[i][j] == grafo[j][i]
+		for(int i=0;i<grafo.grafo.length;i++){
+			for(int j=0;j<grafo.grafo.length;j++){
+				if(grafo.grafo[i][j] != grafo.grafo[j][i]){
+					// En caso de encontrar un caso para el cual no se cumple, se asigna a la variable booleana false
+					esNoDirigido = false;
+				}
+			}
+		}
+
+		// Verifica el estado de la variable booleana, y dependiendo de este imprime el mensaje correspondiente
+		if(esNoDirigido){
+			System.out.println("El grafo es no dirigido");
+		} else {
+			System.out.println("El grafo es dirigido");
+		}
+
+	}
 	/**Detecta el n&uacute;mero de v&eacute;rtices en un archivo Matriz de Adyacencias 
 	 * basado en una muestra de una l&iacute;nea tomada del archivo.
 	 * 
@@ -129,7 +163,7 @@ public class Cliente{
 	static TraductorGrafo cargarGrafo(String nombreArchivo)
 			throws IOException
 	{
-    TraductorGrafo salida;
+	TraductorGrafo salida;
 		
 		BufferedReader Lector = new BufferedReader(
 				new FileReader(nombreArchivo));
@@ -173,5 +207,6 @@ public class Cliente{
 		TraductorGrafo g = cargarGrafo(args[0]);
 		
 		System.out.println(g.imprimirGrafoTraducido());
+		noDirigido(g);
 	}
 }
