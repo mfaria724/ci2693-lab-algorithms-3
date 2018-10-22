@@ -6,7 +6,24 @@ import java.io.FileReader;
  */
 public class Grafo {
 
-  public int[][] grafo;
+  private int[][] grafo;
+  private int vertices;
+  private int aristas;
 
+  Grafo(int vertices, int aristas){
+    this.vertices = vertices;
+    this.aristas = aristas;
+    this.grafo = new int[vertices][vertices];
+  }
+
+  public void agregarArista(int vertice1, int vertice2) throws Exception{
+
+    if (this.grafo[vertice1][vertice2] == 1 || this.grafo[vertice2][vertice1] == 1){
+      throw new Exception("Arista Repetida");
+    }
+    this.grafo[vertice1][vertice2] = 1;
+    this.grafo[vertice2][vertice1] = 1;
+    
+  }
 }
 
