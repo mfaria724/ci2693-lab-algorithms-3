@@ -2,44 +2,67 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Hamilton extends BFS {
+public class Hamilton {
 
-  static Grafo cargarGrafo(String nombreArchivo) throws IOException{
-    Grafo salida = new Grafo();
+  static Grafo cargarGrafo(String nombreArchivo) throws IOException, Exception{
     
     BufferedReader Lector = new BufferedReader(
     new FileReader(nombreArchivo));
       
     String linea = Lector.readLine();
       
-    int N = Integer.parseInt(linea);
-
+    int vertices = Integer.parseInt(linea);
     linea = Lector.readLine();
-    int M = Integer.parseInt(linea); 
-    
-    salida.grafo = new int[N][N];
+    int aristas = Integer.parseInt(linea); 
 
-    for(int i=0; i<M; i++){
+    Grafo grafo = new Grafo(vertices, aristas);
+
+    for(int i=0; i < aristas; i++){
       linea = Lector.readLine();
+
       int vertice1 = Integer.parseInt(linea.substring(0,1));
       int vertice2 = Integer.parseInt(linea.substring(2,3));
-      salida.grafo[vertice1][vertice2] = 1;
-      salida.grafo[vertice2][vertice1] = 1;
+
+      try {
+        grafo.agregarArista(vertice1, vertice2);
+      } catch (Exception e) {
+        if (e.getMessage() == "Arista Repetida"){
+          System.out.println("No se puede cargar grafos con aristas repetidas.");
+          System.exit(0);
+        }
+      }
     }
 
-    return salida;
+    return grafo;
   }
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, Exception {
+
+    String mensajeError = "Uso: java Hamilton <nombreArchivo> <BFS|DFS> <cycle>";
+
     if(args.length < 1){
-      System.err.println("Uso: java Hamilton <nombreArchivo> <BFS|DFS> <cycle>");
+      System.err.println(mensajeError);
       return;
-    } else if (args.length > 2) {
-      System.out.println("Quiero ciclo");
-    } 
-    else {
+    } else {
+      
       Grafo g = cargarGrafo(args[0]);
-      System.out.println(g.imprimirGrafoTraducido());
-      System.out.println("Uso normal");
+      
+      boolean quieroCiclo = false;
+
+      if (args.length > 2){
+        if (args[2].equals("cycle")) {
+          quieroCiclo = true;
+        }
+      }
+
+      if (args[1].equals("BFS")){
+        BFS bfs = new BFS(g, quieroCiclo);
+      } else if(args[1].equals("DFS")){
+        DFS dfs = new DFS(g, quieroCiclo);
+        dfs.generalModel(0);
+      } else {
+        System.out.println(mensajeError);
+      }
+
     }
   }
 
