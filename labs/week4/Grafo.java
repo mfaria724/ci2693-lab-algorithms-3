@@ -23,7 +23,11 @@ public class Grafo {
     }
     this.grafo[vertice1][vertice2] = 1;
     this.grafo[vertice2][vertice1] = 1;
-    
+
+  }
+
+  public int[][] getGrafo(){
+    return this.grafo;
   }
 }
 
