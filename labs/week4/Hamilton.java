@@ -57,7 +57,7 @@ public class Hamilton {
 
       if (args[1].equals("BFS")){
         BFS bfs = new BFS(g, quieroCiclo);
-        bfs.metodo(0);
+        bfs.applyBFS(quieroCiclo);
       } else if(args[1].equals("DFS")){
 
         DFS dfs = new DFS(g);
