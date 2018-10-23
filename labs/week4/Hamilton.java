@@ -20,8 +20,9 @@ public class Hamilton {
     for(int i=0; i < aristas; i++){
       linea = Lector.readLine();
 
-      int vertice1 = Integer.parseInt(linea.substring(0,1));
-      int vertice2 = Integer.parseInt(linea.substring(2,3));
+      String[] verticesArista = linea.split(" ");
+      int vertice1 = Integer.parseInt(verticesArista[0]);
+      int vertice2 = Integer.parseInt(verticesArista[1]);
 
       try {
         grafo.agregarArista(vertice1, vertice2);
@@ -57,8 +58,9 @@ public class Hamilton {
       if (args[1].equals("BFS")){
         BFS bfs = new BFS(g, quieroCiclo);
       } else if(args[1].equals("DFS")){
-        DFS dfs = new DFS(g, quieroCiclo);
-        dfs.generalModel(0);
+        DFS dfs = new DFS(g);
+        dfs.applyDFS(quieroCiclo);
+        // dfs.generalModel(0);
       } else {
         System.out.println(mensajeError);
       }
