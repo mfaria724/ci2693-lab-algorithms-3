@@ -33,7 +33,6 @@ public class BFS {
             for (int i=1; i < v; i++) 
                 if((this.grafo[x][i] == 1) && (!visited[i]))
                 {
-
                 queue.add(i);
                 visited[i]=true;
                 }
