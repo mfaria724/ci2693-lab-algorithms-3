@@ -1,0 +1,8 @@
+B
+B
+N
+3
+3
+0 true 1.5
+1 false 2.6
+2 true 3
