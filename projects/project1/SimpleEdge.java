@@ -1,31 +1,36 @@
 /**
- * 
+ * Class to implement all Simple Edges TAD methods.
+ * @param <T> // Type of data edge.
  */
 public class SimpleEdge<T> extends Edge<T> {
   
   /**
-   * 
-   * @param id
-   * @param data
-   * @param weight
-   * @param u
-   * @param v
+   * // Creates a new simple edge
+   * @param id // Edge's id.
+   * @param data // Edge's data.
+   * @param weight // Edge's weight.
+   * @param iv // Vertex 1.
+   * @param fv // Vertex 2.
+   * @return // Edge object.
    * @return
    */
   public Edge<T> createSimpleEdge(String id, T data, double weight, Vertex<T> u, Vertex<T> v){
+
     Edge<T> e = new Edge<T>();
+
     e.id = id;
     e.data = data;
     e.weight = weight;
     e.v1 = u;
     e.v2 = v;
+
     return e;
   }
 
   /**
-   * 
-   * @param e
-   * @return
+   * Gets first end from edge.
+   * @param e // Edge to consider.
+   * @return // Edge's initial vertex.
    */
   public Vertex<T> getEnd1(Edge<T> e){
     
@@ -33,9 +38,9 @@ public class SimpleEdge<T> extends Edge<T> {
   }
 
   /**
-   * 
-   * @param e
-   * @return
+   * Gets second end from edge.
+   * @param e // Edge to consider.
+   * @return // Edge's final vertex.
    */
   public Vertex<T> getEnd2(Edge<T> e){
 
@@ -43,9 +48,9 @@ public class SimpleEdge<T> extends Edge<T> {
   }
 
   /**
-   * 
-   * @param e
-   * @return
+   * Prints edge information.
+   * @param e // Edge to print.
+   * @return 
    */
   public String toString(Edge<T> e){
     String eString = "";

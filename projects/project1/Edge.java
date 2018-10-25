@@ -1,3 +1,7 @@
+/**
+ * Abstract class that has common classes for Directed and Simple edges
+ * @param <T> // Type of data edge
+ */
 public abstract class Edge<T> {
 
     protected String id;
