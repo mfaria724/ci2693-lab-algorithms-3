@@ -70,4 +70,9 @@ public class Vertex<T> {
     return vString;
   }
 
+  public ArrayList<Vertex<T>> getAdjacencies(){
+    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>(this.adjacents);
+    return adj;
+  }
+
 }
