@@ -4,6 +4,11 @@
  */
 public class Vertex<T> {
   
+  // Vertex data.
+  private String id;
+  private T data;
+  private double weight;
+
   /**
    * Creates a new vertex.
    * @param id // Vertex's id.
@@ -12,7 +17,14 @@ public class Vertex<T> {
    * @return // New Vertex.
    */
   public Vertex<T> createVertex(String id, T data, double weight){
-    return new Vertex<>();
+
+    // Initialice vertexes.
+    Vertex<T> v = new Vertex<T>();
+    v.id = id;
+    v.data = data;
+    v.weight = weight;
+
+    return v;
   };
 
   /**
@@ -21,7 +33,7 @@ public class Vertex<T> {
    * @return // Vertex's weight
    */
   public Integer getWeight(Vertex<T> v){
-    return 0;
+    return v.weight;
   };
 
   /**
@@ -30,7 +42,7 @@ public class Vertex<T> {
    * @return // Vertex's id.
    */
   public String getId(Vertex<T> v){
-    return "";
+    return v.id;
   }
 
   /**
@@ -38,8 +50,8 @@ public class Vertex<T> {
    * @param v // Vertex to evaluate.
    * @return // Vertex data.
    */
-  public E getData(Vertex<T> v){
-
+  public T getData(Vertex<T> v){
+    return v.data;
   }
 
   /**
@@ -48,7 +60,11 @@ public class Vertex<T> {
    * @return // Vertex's string representation.
    */
   public String toString(Vertex<T> v){
-    return "";
+    String vString = "";
+    vString = "Vertex's id: " + v.id + "\n";
+    vString = "Vertex's data: " + v.data + "\n";
+    vString = "Vertex's weight: " + v.weight + "/n";
+    return vString;
   }
 
 }
