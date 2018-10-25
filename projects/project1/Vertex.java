@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+
 /**
  * Class to implement TAD Vertex methods.
  * @param <T> // Type of data.
@@ -8,6 +12,7 @@ public class Vertex<T> {
   private String id;
   private T data;
   private double weight;
+  private ArrayList<Vertex<T>> adjacencies = new ArrayList<Vertex<T>>();
 
   /**
    * Creates a new vertex.
