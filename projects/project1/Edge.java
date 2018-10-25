@@ -1,10 +1,10 @@
 public abstract class Edge<T> {
 
-    private String id;
-    private T data;
-    private double weight;
-    private Vertex<U> v1;
-    private Vertex<U> v2;
+    protected String id;
+    protected T data;
+    protected double weight;
+    protected Vertex<U> v1;
+    protected Vertex<U> v2;
 
     /**
      * Create new edge with a id, data and weight
