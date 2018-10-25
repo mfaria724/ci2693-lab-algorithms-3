@@ -67,10 +67,13 @@ public class Hamilton {
 
       if (args[1].equals("BFS")){
         BFS bfs = new BFS(g, quieroCiclo);
+        bfs.applyBFS(quieroCiclo);
       } else if(args[1].equals("DFS")){
+
         DFS dfs = new DFS(g);
         dfs.applyDFS(quieroCiclo);
         // dfs.generalModel(0);
+
       } else {
         System.out.println(mensajeError);
       }
