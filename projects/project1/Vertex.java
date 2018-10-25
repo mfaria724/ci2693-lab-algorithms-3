@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Class to implement TAD Vertex methods.
  * @param <T> // Type of data.
@@ -8,6 +10,7 @@ public class Vertex<T> {
   private String id;
   private T data;
   private double weight;
+  private ArrayList<T> adjacents;
 
   /**
    * Creates a new vertex.
