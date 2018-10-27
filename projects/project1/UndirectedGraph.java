@@ -212,12 +212,14 @@ public class UndirectedGraph<V,E> {
    * @param id // Vertex's id.
    * @return // Vertex's degree.
    */
-  public Integer degree(String id){
+  public Integer degree(String id) throws NoSuchElementException{
     for(int i=0; i<this.graph.size();i++){
       if(this.graph.get(i).getId().equals(id)){
         return this.graph.get(i).getAdjacencies().size();
       }
     }
+
+    throw new NoSuchElementException("Vertex doesn't exist");
   }
 
   /**
@@ -228,12 +230,17 @@ public class UndirectedGraph<V,E> {
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
   public List<Vertex> adjacents(String id) throws NoSuchElementException{
-    List<Vertex<V>> adjacents = new List<Vertex<V>>();
-
+  
     for(int i=0;i<this.graph.size();i++){
-
+      if(this.graph.get(i).getId().equals(id)){
+        return this.graph.get(i).getAdjacencies();
+      }
     }
+
+    throw new NoSuchElementException("Vertex doesn't exist");
   }
+
+    
 
   /**
    * Gets all vertex incident edges.  
@@ -242,8 +249,16 @@ public class UndirectedGraph<V,E> {
    * @return // The list of edges.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<E> incidents(String id) throws NoSuchElementException{
+  public List<Edge<E>> incidents(String id) throws NoSuchElementException{
 
+    List<Edge<E>> incidents = new List<Edge<E>>();
+    for(int i=0;i<this.edges.size(); i++){
+      if(this.edges.get(i).getEnd1().getId().equals(id) || this.edges.get(i).getEnd2().getId().equals(id) ){
+        incidents.add(this.edges.get(i));
+      }
+    }
+
+    return incidents;
   }
 
   /**
@@ -252,7 +267,17 @@ public class UndirectedGraph<V,E> {
    * @return // A new graph clone.
    */
   public UndirectedGraph<V,E> clone(){
+    UndirectedGraph<V,E> clone = new UndirectedGraph<V,E>();
 
+    for(int i=0; i<this.graph.size(); i++){
+      clone.graph.add(this.graph.get(i));
+    }
+
+    for(int i=0; i<this.edges.size(); i++){
+      clone.edges.add(this.edges.get(i));
+    }
+
+    return clone;
   }
 
   /**
