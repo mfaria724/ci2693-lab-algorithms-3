@@ -19,24 +19,22 @@ public class Vertex<T> {
    * @param weight // Vertex's weight.
    * @return // New Vertex.
    */
-  public Vertex<T> createVertex(String id, T data, double weight){
+  Vertex(String id, T data, double weight){
 
     // Initialice vertexes.
     Vertex<T> v = new Vertex<T>();
-    v.id = id;
-    v.data = data;
-    v.weight = weight;
-
-    return v;
-  };
+    this.id = id;
+    this.data = data;
+    this.weight = weight;
+  }
 
   /**
    * Gets the Vertex's weight 
    * @param v // Vertex's to evaluate.
    * @return // Vertex's weight
    */
-  public Integer getWeight(Vertex<T> v){
-    return v.weight;
+  public Integer getWeight(){
+    return this.weight;
   };
 
   /**
@@ -44,8 +42,8 @@ public class Vertex<T> {
    * @param v // Vertex to evaluate.
    * @return // Vertex's id.
    */
-  public String getId(Vertex<T> v){
-    return v.id;
+  public String getId(){
+    return this.id;
   }
 
   /**
@@ -53,8 +51,8 @@ public class Vertex<T> {
    * @param v // Vertex to evaluate.
    * @return // Vertex data.
    */
-  public T getData(Vertex<T> v){
-    return v.data;
+  public T getData(){
+    return this.data;
   }
 
   /**
@@ -62,11 +60,11 @@ public class Vertex<T> {
    * @param v // Vertex to evaluate.
    * @return // Vertex's string representation.
    */
-  public String toString(Vertex<T> v){
+  public String toString(){
     String vString = "";
-    vString = "Vertex's id: " + v.id + "\n";
-    vString = "Vertex's data: " + v.data + "\n";
-    vString = "Vertex's weight: " + v.weight + "/n";
+    vString = "Vertex's id: " + this.id + "\n";
+    vString = "Vertex's data: " + this.data + "\n";
+    vString = "Vertex's weight: " + this.weight + "/n";
     return vString;
   }
 
