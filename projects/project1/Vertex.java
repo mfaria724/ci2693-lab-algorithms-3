@@ -21,12 +21,12 @@ public class Vertex<T> {
    */
   Vertex(String id, T data, double weight){
 
-    // Initialice vertexes.
+    // Initialice vertex.
     this.id = id;
     this.data = data;
     this.weight = weight;
-  }
 
+  }
 
   /**
    * Gets the Vertex's weight 
@@ -34,7 +34,6 @@ public class Vertex<T> {
    */
   public Integer getWeight(){
     return this.weight;
-
   };
 
   /**

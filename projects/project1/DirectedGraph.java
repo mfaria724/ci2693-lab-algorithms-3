@@ -8,8 +8,13 @@ import java.util.NoSuchElementException;
  */
 public class DirectedGraph<V,E> extends Graph<V,E> {
 
-  private ArrayList<Vertex<V>> graph = new ArrayList<Vertex<V>>(); 
-  private ArrayList<DirectedEdge<E>> edges =  new ArrayList<DirectedEdge<E>>();
+  private ArrayList<Vertex<V>> graph; 
+  private ArrayList<DirectedEdge<E>> edges;
+
+  DirectedGraph(){
+    this.graph = new ArrayList<Vertex<V>>();
+    this.edges = new ArrayList<DirectedEdge<E>>();
+  }
 
   /**
    * Opens file and upload its data into Adjacencies List implementation of graph.  
@@ -349,6 +354,26 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    */
   public int innerDegree(String id) throws NoSuchElementException{
 
+    int degree = 0;
+    boolean exist = false;
+
+    for(int i = 0; i < this.graph.size(); i++){
+      if(!this.graph.get(i).getId().equals(id)){
+        for(int j = 0; j < this.graph.get(i).getAdjacencies().size(); j++){
+          if(this.graph.get(i).getAdjacencies().get(j).getId().equals(id)){
+            degree += 1;
+            exist = true;
+          }
+        }
+      }
+    }
+
+    if(exist){
+      return degree;
+    }
+
+    throw new NoSuchElementException("There is no vertex with that id.");
+
   }
 
   /**
@@ -359,6 +384,14 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    */
   public int outterDegree(String id) throws NoSuchElementException{
     
+    for(int i = 0; i < this.graph.size(); i++){ 
+      if(this.graph.get(i).getId().equals(id)){
+        return this.graph.get(i).getAdjacencies().size();
+      }
+    }
+
+    throw new NoSuchElementException("There is no vertex with that id.");
+
   }
 
   /**

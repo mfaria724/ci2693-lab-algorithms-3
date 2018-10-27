@@ -72,7 +72,7 @@ public class UndirectedGraph<V,E> {
    */
   public boolean addVertex(String id, V data, double weight){
 
-    Vertex<V> v = new Vertex<V>(id, data, weight)
+    Vertex<V> v = new Vertex<V>(id, data, weight);
     return addVertex(v);
 
   }
