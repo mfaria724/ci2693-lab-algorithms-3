@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.List;
 
 /**
  * Class to implement all TAD Directed
  * @param <V>
  * @param <E>
  */
-public class DirectedGraph<V,E> extends Graph<V,E> {
+public class DirectedGraph<V,E> implements Graph<V,E> {
 
   private ArrayList<Vertex<V>> graph; 
   private ArrayList<DirectedEdge<E>> edges;
@@ -22,7 +23,7 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    * @return true if the file was opened correctly, othercase false.
    */
   public boolean loadGraph(String file) {
-
+    return true;
   };
 
   /**

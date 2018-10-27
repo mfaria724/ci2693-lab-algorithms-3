@@ -13,7 +13,7 @@ public class DirectedEdge<T> extends Edge<T> {
    * @param fv // Final vertex.
    * @return // Edge object.
    */
-  public DirectedEdge<T> createDirectedEdge(String id, T data, double weight, Vertex<> iv, Vertex<> fv){
+  public DirectedEdge<T> createDirectedEdge(String id, T data, double weight, String iv, String fv){
 
     DirectedEdge<T> e =  new DirectedEdge<>();
 
@@ -30,7 +30,7 @@ public class DirectedEdge<T> extends Edge<T> {
    * Gets initial end from edge.
    * @return // Edge's initial vertex.
    */
-  public Vertex<U> getInitialEnd(){
+  public String getInitialEnd(){
     return this.iv;
   }
 
@@ -38,7 +38,7 @@ public class DirectedEdge<T> extends Edge<T> {
    * Gets final end from edge.
    * @return // Edge's final vertex.
    */
-  public Vertex<U> getFinalEnd(){
+  public String getFinalEnd(){
     return this.fv;
   } 
 
