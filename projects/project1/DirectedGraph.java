@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Class to implement all TAD Directed
@@ -8,10 +9,10 @@ import java.util.ArrayList;
 public class DirectedGraph<V,E> extends Graph<V,E> {
 
   private ArrayList<Vertex<V>> graph = new ArrayList<Vertex<V>>(); 
+  private ArrayList<DirectedEdge<E>> edges =  new ArrayList<DirectedEdge<E>>();
 
   /**
    * Opens file and upload its data into Adjacencies List implementation of graph.  
-   * @param g // ToDo
    * @param file // File that user wants to open.
    * @return true if the file was opened correctly, othercase false.
    */
@@ -21,24 +22,22 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
 
   /**
    * Gets the number of vertices in a graph. 
-   * @param g // Graphs that user wants to know the number of vertices.
    * @return // The number of vertices.
    */
   public Integer numVertices(){
-    return g.graph.size();
+    return this.graph.size();
   };
 
   /**
    * Gets the number of edges in a graph.
-   * @param g // Graphs that user wants to know the number of edges.
    * @return // The number of edges.
    */
-  public Integer numEdges(DirectedGraph<V,E> g){
+  public Integer numEdges(){
     
     Integer nEdges = 0;
     
-    for (int i = 0; i < g.graph.size(); i++){
-      nEdges += g.graph.get(i).adjacencies.size();
+    for (int i = 0; i < this.graph.size(); i++){
+      nEdges += this.graph.get(i).adjacencies.size();
     }
 
     return nEdges;
@@ -48,29 +47,24 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
   /**
    * Adds an existing vertex to the graph. If there is no vertex with
    * that id, it creates the vertex.
-   * @param g // Graph that user wants to add the vertex.
    * @param vertex // Vertex that user wants to add to graph.
    * @return // true if the vertex was added, othercase false.
    */  
   public boolean addVertex(Vertex<V> vertex){
 
-    boolean newId = true; 
-
-    for(int i = 0; i < g.graph.size(); i++){
-      if (g.graph.get(i).getId(g.graph.get(i)) == vertex.getId(vertex)){
-        newId = false;
+    for(int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == vertex.getId()){
         return false;
       }
     }
 
-
+    this.graph.add(vertex);
     return true;
 
   };
 
   /**
    * Add a new vertex to the graph.
-   * @param g // Graph that user wants to add the vertex.
    * @param id // Id of the vertex.
    * @param data // Value of vertex.
    * @param weight // Weight of the vertex.
@@ -87,40 +81,60 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
 
   };
 
- with the specified id.
-   * @param g // Graph to search the vertex
+  /**
+   * Gets the vertex with the specified id.
    * @param id // Vertex id.
    * @return // The vertex.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public V getVertex(String id) throws NoSuchElementException{
+  public Vertex<V> getVertex(String id) throws NoSuchElementException{
 
-    try {
-      
-    } catch (Exception e) {
-      //TODO: handle exception
+    for (int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == id){
+        return this.graph.get(i);
+      }
     }
+
+    throw new NoSuchElementException("Vertex do not exists in the graph");
     
   };
 
   /**
- is in the graph.
-   * @param g // Graph to search the vertex.
+   * Verifies if a vertex is in the graph.
    * @param id // Vertex id.
    * @return // true if the vertex is in the graph, othercase false.
    */
   public boolean containsVertex(String id){
 
+    for (int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == id){
+        return true;
+      }
+    }
+
+    return false;
+
   };
 
   /**
    * Verifies if a edge is in the graph.
-   * @param g // Graph to search the edge.
    * @param v1 // End 1
    * @param v2 // End 2
-   * @return // true if the edge is  false.
+   * @return // true if the edge is in the graph, othercase false.
    */
   public boolean cotainsEdge(String v1, String v2){
+
+    for (int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == v1){
+        for (int j = 0; j < this.graph.get(i).getAdjacencies().size(); j++){
+          if (this.graph.get(i).getAdjacencies().get(j) == v2){
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
 
   };
 
@@ -130,7 +144,13 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    * @param Id // Vertex's id.
    * @return // true if the vertex was deleted, othercase false.
    */
-  public 
+  public boolean deleteVertex(String Id){
+
+    for (int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == id){
+        this.graph.remove(i);
+      }
+    }
 
   };
 
@@ -139,7 +159,9 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    * @param g // Graph to consider.
    * @return // The list of vertices.
    */
-  public List<V> vertices(DirectedGraph<
+  public ArrayList<Vertex<V>> vertices(){
+
+    return this.graph;
 
   };
   
@@ -148,28 +170,64 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    * @param g // Graph to consider.
    * @return //  The list of edges.
    */
-  public List<E> edges(DirectedGraph<V,E> g){
+  public List<E> edges(){
+
+    return this.edges;
 
   };
 
   /**
    * Gets the degree of one vertex in the graph.
-   * @param g // Graph to consider.
    * @param id // Vertex's id.
    * @return // Vertex's degree.
    */
   public Integer degree(String id){
 
+    Integer degree = 0;
+
+    for (int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == id){
+        degree += this.graph.get(i).getAdjacencies().size();
+      }
+    }
+
+    for(int j = 0; j < this.graph.size(); j++){
+      for (int k = 0; k < this.graph.get(j).getAdjacencies().size(); k++){
+        if (this.graph.get(j).getAdjacencies().get(k).getId() == id){
+          degree += 1;
+        };
+      }
+    }
+
+    return degree;
+
   };
 
   /**
    * Gets all adjacent vertices to a vertex. 
-   * @param g // Graph to consider.
    * @param id // Vertex's id.
    * @return // the list of adjacent vertices.
-   * @throws NoSuchElementException  vertex with that id.
+   * @throws NoSuchElementException // If there is no vertex with that id.
    */
   public List<V> neighbourhood(String id) throws NoSuchElementException{
+
+    ArrayList<Vertex<V>> neighbourhood = new ArrayList<Vertex<V>>();
+
+    for (int i = 0; i < this.graph.size(); i++){
+      if (this.graph.get(i).getId() == id){
+        neighbourhood.addAll(this.graph.get(i).getAdjacencies());
+      }
+    }
+
+    for (int j = 0; j < this.graph.size(); j++){
+      for (int k = 0; k < this.graph.get(j).getAdjacencies().size(); k++){
+        if (this.graph.get(j).getAdjacencies().get(k).getId().equals(id)){
+          neighbourhood.add(this.graph.getAdjacencies().get(k));
+        }
+      }
+    }
+
+    return neighbourhood;
 
   };
 
@@ -178,15 +236,31 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
    * @param g // Graph to consider.
    * @param id // Vertex's id.
    * @return // The list of edges.
-   * @throws NoSuchElementException  vertex with that id.
+   * @throws NoSuchElementException // If there is no vertex with that id.
    */
   public List<E> incidents(String id) throws NoSuchElementException{
+
+    ArrayList<DirectedEdge<E>> incidents = new ArrayList<DirectedEdge<E>>();
+
+    for (int i = 0; i < this.edges.size(); i++){
+      if(this.edges.get(i).getInitialEnd().equals(id) ||
+         this.edges.get(i).getFinalEnd().equals(id)){
+
+        incidents.add(this.edges.get(i));
+
+      }
+    }
+
+    if (incidents.size() == 0){
+      throw new NoSuchElementException("There is no vertex with that id.");
+    } else {
+      return incidents;
+    }
 
   };
 
   /**
    * Clones a graph into a new structure.
-   * @param g // Graph to clone.
    * @return // A new graph clone.
    */
   public DirectedGraph<V,E> clone(){
@@ -195,10 +269,136 @@ public class DirectedGraph<V,E> extends Graph<V,E> {
 
   /**
    * Gets a string graph representation.
-   * @param g // Graph to convert in string.
    * @return // Graph converted to string.
    */
-  public String toString(DirectedGraph<V,E> g){
+  public String toString(){
 
   };
+
+  /**
+   * 
+   * @param edge
+   * @return
+   */
+  public boolean addDirectedEdge(DirectedEdge<E> edge){
+    return true;
+  }
+
+  /**
+   * 
+   * @param id
+   * @param data
+   * @param weight
+   * @param iv
+   * @param fv
+   * @return
+   */
+  public boolean addDirectedEdge(String id, E data, double weight, String iv, String fv){
+    
+    for (int i = 0; i < this.edges.size(); i++){
+      if (this.edges.get(i).getId().equals(id)){
+        return false;
+      }
+    }
+
+    DirectedEdge<E> e = new DirectedEdge<>();
+    return this.addDirectedEdge(e); 
+  }
+
+  /**
+   * 
+   * @param id
+   * @return
+   */
+  public boolean deleteDirectedEdge(String id){
+
+    for (int i = 0; i < this.edges.size(); i++){
+      if (this.edges.get(i).getId().equals(id)){
+        this.edges.remove(i);
+        return true;
+      }
+    }
+
+    return false;
+
+  }
+
+  /**
+   * 
+   * @param id
+   * @return
+   * @throws NoSuchElementException
+   */
+  public DirectedEdge<E> getDirectedEdge(String id) throws NoSuchElementException{
+
+    for (int i = 0; i < this.edges.size(); i++){
+      if(this.edges.get(i).getId().equals(id)){
+        return this.edges.get(i);
+      }
+    }
+
+    throw new NoSuchElementException("There is no edges woth that id");
+
+  }
+
+  /**
+   * 
+   * @param id
+   * @return
+   * @throws NoSuchElementException
+   */
+  public int innerDegree(String id) throws NoSuchElementException{
+
+  }
+
+  /**
+   * 
+   * @param id
+   * @return
+   * @throws NoSuchElementException
+   */
+  public int outterDegree(String id) throws NoSuchElementException{
+    
+  }
+
+  /**
+   * 
+   * @param id
+   * @return
+   * @throws NoSuchElementException
+   */
+  public ArrayList<Vertex<V>> sucessors(String id) throws NoSuchElementException{
+
+    for(int i = 0; i < this.graph.size(); i++){
+      if(this.graph.get(i).getId().equals(id)){
+        return this.graph.get(i).getAdjacencies();
+      }
+    }
+
+    throw new NoSuchElementException("There is no vertex with that id.");
+
+  }
+
+  public ArrayList<Vertex<V>> predecessor(String id) throws NoSuchElementException{
+
+    ArrayList<Vertex<V>> suc = new ArrayList<Vertex<V>>();
+
+    for(int i = 0; i < this.graph.size(); i++){
+      if(!this.graph.get(i).getId().equals(id)){
+        for(int j = 0; j < this.graph.get(i).getAdjacencies().size(); j++){
+          if(this.graph.get(i).getAdjacencies().get(j).getId().equals(id)){
+            suc.add(this.graph.get(i));
+          }
+        }
+      }
+    }
+
+    if(suc.size() > 0){
+      return suc;
+    } 
+    
+    throw new NoSuchElementException("There is no vertex with that index.");
+
+  }
+
 }

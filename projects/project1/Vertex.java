@@ -22,24 +22,23 @@ public class Vertex<T> {
   Vertex(String id, T data, double weight){
 
     // Initialice vertexes.
-    Vertex<T> v = new Vertex<T>();
     this.id = id;
     this.data = data;
     this.weight = weight;
   }
 
+
   /**
    * Gets the Vertex's weight 
-   * @param v // Vertex's to evaluate.
    * @return // Vertex's weight
    */
   public Integer getWeight(){
     return this.weight;
+
   };
 
   /**
    * Gets the Vertex's id.
-   * @param v // Vertex to evaluate.
    * @return // Vertex's id.
    */
   public String getId(){
@@ -48,7 +47,6 @@ public class Vertex<T> {
 
   /**
    * Gets Vertex's data.
-   * @param v // Vertex to evaluate.
    * @return // Vertex data.
    */
   public T getData(){
@@ -57,7 +55,6 @@ public class Vertex<T> {
 
   /**
    * Gets the vertex's string representation.
-   * @param v // Vertex to evaluate.
    * @return // Vertex's string representation.
    */
   public String toString(){
