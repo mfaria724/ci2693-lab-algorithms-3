@@ -13,9 +13,9 @@ public class DirectedEdge<T> extends Edge<T> {
    * @param fv // Final vertex.
    * @return // Edge object.
    */
-  public Edge<T> createDirectedEdge(String id, T data, double weight, Vertex<> iv, Vertex<> fv){
+  public DirectedEdge<T> createDirectedEdge(String id, T data, double weight, Vertex<> iv, Vertex<> fv){
 
-    Edge<T> e =  new Edge<>();
+    DirectedEdge<T> e =  new DirectedEdge<>();
 
     e.id = id;
     e.data = data;
@@ -28,36 +28,33 @@ public class DirectedEdge<T> extends Edge<T> {
 
   /**
    * Gets initial end from edge.
-   * @param e // Edge to consider.
    * @return // Edge's initial vertex.
    */
-  public Vertex<U> getInitialEnd(Edge<T> e){
-    return e.iv;
+  public Vertex<U> getInitialEnd(){
+    return this.iv;
   }
 
   /**
    * Gets final end from edge.
-   * @param e // Edge to consider.
    * @return // Edge's final vertex.
    */
-  public Vertex<U> getFinalEnd(Edge<T> e){
-    return e.fv;
+  public Vertex<U> getFinalEnd(){
+    return this.fv;
   } 
 
   /**
    * Prints edge information.
-   * @param e // Edge to print.
    * @return 
    */
-  public String toString(Edge<T> e){
+  public String toString(){
 
     String eString = "";
     
-    eString = "Edge's id: " + e.id + "/n";
-    eString = "Edge's data: " + e.data + "/n";
-    eString = "Edge's weight: " + e.weight + "/n";
-    eString = "Edge's Initial Vertex: /n" + e.v1.toString() + "/n";
-    eString = "Edge's Final Vertex: /n" + e.v2.toString() + "/n";
+    eString = "Edge's id: " + this.id + "/n";
+    eString = "Edge's data: " + this.data + "/n";
+    eString = "Edge's weight: " + this.weight + "/n";
+    eString = "Edge's Initial Vertex: /n" + this.v1 + "/n";
+    eString = "Edge's Final Vertex: /n" + this.v2 + "/n";
 
     return eString;
   }  
