@@ -1,6 +1,8 @@
 // Exceptions
 import java.util.NoSuchElementException;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Class to implementen all graphs TAD methods. 
@@ -8,21 +10,15 @@ import java.util.List;
  * @param <E> // Edges type.
  */
 public interface Graph<V, E> {
-  
-  /**
-   * Opens file and upload its data into Adjacencies List implementation of graph.  
-   * @param g // ToDo
-   * @param file // File that user wants to open.
-   * @return true if the file was opened correctly, othercase false.
-   */
-  public boolean openGraph(String file);
+
+  public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer<V> verTrans, TypeTransformer<E> edgeTrans) throws IOException;
 
   /**
    * Gets the number of vertices in a graph. 
    * @param g // Graphs that user wants to know the number of vertices.
    * @return // The number of vertices.
    */
-  public Integer numvertices();
+  public Integer numVertices();
 
   /**
    * Gets the number of edges in a graph.
@@ -57,7 +53,7 @@ public interface Graph<V, E> {
    * @return // The vertex.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public V getVertex(String id) throws NoSuchElementException;
+  public Vertex<V> getVertex(String id) throws NoSuchElementException;
 
   /**
    * Verifies if a vertex is in the graph.
@@ -89,14 +85,14 @@ public interface Graph<V, E> {
    * @param g // Graph to consider.
    * @return // The list of vertices.
    */
-  public List<V> vertices();
+  public ArrayList<Vertex<V>> vertices();
   
   /**
    * Gets the list of edges.
    * @param g // Graph to consider.
    * @return //  The list of edges.
    */
-  public List<E> edges();
+  public ArrayList<Edge<E>> edges();
 
   /**
    * Gets the degree of one vertex in the graph.
@@ -113,7 +109,7 @@ public interface Graph<V, E> {
    * @return // the list of adjacent vertices.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<V> neighbourhood(String id) throws NoSuchElementException;
+  public ArrayList<Vertex<V>> neighbourhood(String id) throws NoSuchElementException;
 
   /**
    * Gets all vertex incident edges.  
@@ -122,14 +118,14 @@ public interface Graph<V, E> {
    * @return // The list of edges.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<E> incidents(String id) throws NoSuchElementException;
+  public ArrayList<Edge<E>> incidents(String id) throws NoSuchElementException;
 
   /**
    * Clones a graph into a new structure.
    * @param g // Graph to clone.
    * @return // A new graph clone.
    */
-  public Graph<V,E> clone();
+  // public Graph<V,E> clone();
 
   /**
    * Gets a string graph representation.

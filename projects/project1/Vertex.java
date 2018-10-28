@@ -32,7 +32,7 @@ public class Vertex<T> {
    * Gets the Vertex's weight 
    * @return // Vertex's weight
    */
-  public Integer getWeight(){
+  public Double getWeight(){
     return this.weight;
   };
 
@@ -65,7 +65,7 @@ public class Vertex<T> {
   }
 
   public ArrayList<Vertex<T>> getAdjacencies(){
-    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>(this.adjacents);
+    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>();
     return adj;
   }
 

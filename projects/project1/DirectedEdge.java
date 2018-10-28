@@ -4,26 +4,12 @@
  */
 public class DirectedEdge<T> extends Edge<T> {
 
-  /**
-   * Creates a new directed edge.
-   * @param id // Edge's id.
-   * @param data // Edge's data.
-   * @param weight // Edge's weight.
-   * @param iv // Initial vertex
-   * @param fv // Final vertex.
-   * @return // Edge object.
-   */
-  public DirectedEdge<T> createDirectedEdge(String id, T data, double weight, String iv, String fv){
-
-    DirectedEdge<T> e =  new DirectedEdge<>();
-
-    e.id = id;
-    e.data = data;
-    e.weight = weight;
-    e.v1 = iv;
-    e.v2 = fv;
-
-    return e;
+  public DirectedEdge(String id, T data, Double weight, String iv, String fv){
+    this.id = id;
+    this.data = data;
+    this.weight = weight;
+    this.v1 = iv;
+    this.v2 = fv;
   }
 
   /**
@@ -31,7 +17,7 @@ public class DirectedEdge<T> extends Edge<T> {
    * @return // Edge's initial vertex.
    */
   public String getInitialEnd(){
-    return this.iv;
+    return this.v1;
   }
 
   /**
@@ -39,7 +25,7 @@ public class DirectedEdge<T> extends Edge<T> {
    * @return // Edge's final vertex.
    */
   public String getFinalEnd(){
-    return this.fv;
+    return this.v2;
   } 
 
   /**

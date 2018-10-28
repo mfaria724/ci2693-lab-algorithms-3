@@ -2,25 +2,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import sun.java2d.pipe.SpanShapeRenderer.Simple;
-
 public class UndirectedGraph<V,E> {
 
-    private ArrayList<Vertex<V>> graph;
-    private ArrayList<SimpleEdge<E>> edges;
-  
-    UndirectedGraph(){
-      graph = new ArrayList<Vertex<V>>();
-      edges = new ArrayList<SimpleEdge<E>>();
-    }
-  /**
-   * Opens file and upload its data into Adjacencies List implementation of graph.  
-   * @param g // ToDo
-   * @param file // File that user wants to open.
-   * @return true if the file was opened correctly, othercase false.
-   */
-  public boolean loadGraph(String file){
-    return true;
+  private ArrayList<Vertex<V>> graph;
+  private ArrayList<SimpleEdge<E>> edges;
+
+  UndirectedGraph(){
+    graph = new ArrayList<Vertex<V>>();
+    edges = new ArrayList<SimpleEdge<E>>();
   }
 
   /**
@@ -286,6 +275,6 @@ public class UndirectedGraph<V,E> {
    * @return // Graph converted to string.
    */
   public String toString(){
-
+    return "";
   }
 }

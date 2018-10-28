@@ -1,6 +1,9 @@
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.List;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Class to implement all TAD Directed
@@ -17,14 +20,60 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
     this.edges = new ArrayList<DirectedEdge<E>>();
   }
 
-  /**
-   * Opens file and upload its data into Adjacencies List implementation of graph.  
-   * @param file // File that user wants to open.
-   * @return true if the file was opened correctly, othercase false.
-   */
-  public boolean loadGraph(String file) {
+  public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer<V> verTrans, TypeTransformer<E> edgeTrans) throws IOException{
+    
+    System.out.println("loadGraph function");
+
+    // Initialice BufferReader
+    BufferedReader reader = new BufferedReader(new FileReader(file));
+
+    String line = reader.readLine();
+
+    for(int i = 0; i < 5; i++){
+      line = reader.readLine();
+    }
+
+    System.out.println("Vertex initializations.");
+
+    for(int i = 0; i < numVertices; i++){
+
+      String[] info = line.split(" ");
+      String id = info[0];
+      V data = verTrans.transform(info[1]);
+      Double weight = Double.parseDouble(info[2]);
+
+      this.addVertex(id, data, weight);
+
+      line = reader.readLine();
+    }
+
+    System.out.println("Edge initializations." + numEdges);
+
+    for(int i = 0; i < numEdges; i++){
+
+      String[] info = line.split(" ");
+      String id = info[0];
+      E data = edgeTrans.transform(info[1]);
+      Double weight = Double.parseDouble(info[2]);
+      String v1 = info[3];
+      String v2 = info[4];
+
+      System.out.println("Voy a agregar lado " + i);
+      System.out.println("Id: " + id);
+      System.out.println("Data: " + data);
+      System.out.println("Weight: " + weight);
+      System.out.println("V1: " + v1);
+      System.out.println("V2: " + v2);
+
+      this.addDirectedEdge(id, data, weight, v1, v2);
+
+      line = reader.readLine();
+    }
+
+    System.out.println("Before return");
     return true;
   };
+
 
   /**
    * Gets the number of vertices in a graph. 
@@ -43,7 +92,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
     Integer nEdges = 0;
     
     for (int i = 0; i < this.graph.size(); i++){
-      nEdges += this.graph.get(i).adjacencies.size();
+      nEdges += this.graph.get(i).getAdjacencies().size();
     }
 
     return nEdges;
@@ -80,8 +129,8 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
   
     boolean result = false;
 
-    Vertex<V> v = new Vertex<V>().createVertex(id, data, weight);
-    result = this.addVertex(g, v);
+    Vertex<V> v = new Vertex<V>(id, data, weight);
+    result = this.addVertex(v);
 
     return result;
 
@@ -133,7 +182,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
     for (int i = 0; i < this.graph.size(); i++){
       if (this.graph.get(i).getId() == v1){
         for (int j = 0; j < this.graph.get(i).getAdjacencies().size(); j++){
-          if (this.graph.get(i).getAdjacencies().get(j) == v2){
+          if (this.graph.get(i).getAdjacencies().get(j).getId() == v2){
             return true;
           }
         }
@@ -150,13 +199,15 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @param Id // Vertex's id.
    * @return // true if the vertex was deleted, othercase false.
    */
-  public boolean deleteVertex(String Id){
+  public boolean deleteVertex(String id){
 
     for (int i = 0; i < this.graph.size(); i++){
       if (this.graph.get(i).getId() == id){
         this.graph.remove(i);
       }
     }
+
+    return true;
 
   };
 
@@ -167,7 +218,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public ArrayList<Vertex<V>> vertices(){
 
-    return this.graph;
+    return new ArrayList<Vertex<V>>();
 
   };
   
@@ -176,9 +227,14 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @param g // Graph to consider.
    * @return //  The list of edges.
    */
-  public List<E> edges(){
+  public ArrayList<Edge<E>> edges(){
 
-    return this.edges;
+    ArrayList<Edge<E>> edges = new ArrayList<Edge<E>>();
+
+    for(int i = 0; i < this.edges.size(); i++){
+      edges.add(this.edges.get(i));
+    }
+    return edges;
 
   };
 
@@ -215,7 +271,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return // the list of adjacent vertices.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<V> neighbourhood(String id) throws NoSuchElementException{
+  public ArrayList<Vertex<V>> neighbourhood(String id) throws NoSuchElementException{
 
     ArrayList<Vertex<V>> neighbourhood = new ArrayList<Vertex<V>>();
 
@@ -228,7 +284,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
     for (int j = 0; j < this.graph.size(); j++){
       for (int k = 0; k < this.graph.get(j).getAdjacencies().size(); k++){
         if (this.graph.get(j).getAdjacencies().get(k).getId().equals(id)){
-          neighbourhood.add(this.graph.getAdjacencies().get(k));
+          neighbourhood.add(this.graph.get(j).getAdjacencies().get(k));
         }
       }
     }
@@ -244,18 +300,18 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return // The list of edges.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<E> incidents(String id) throws NoSuchElementException{
+  public ArrayList<Edge<E>> incidents(String id) throws NoSuchElementException{
 
-    ArrayList<DirectedEdge<E>> incidents = new ArrayList<DirectedEdge<E>>();
+    ArrayList<Edge<E>> incidents = new ArrayList<Edge<E>>();
 
-    for (int i = 0; i < this.edges.size(); i++){
-      if(this.edges.get(i).getInitialEnd().equals(id) ||
-         this.edges.get(i).getFinalEnd().equals(id)){
+    // for (int i = 0; i < this.edges.size(); i++){
+    //   if(this.edges.get(i).getInitialEnd().equals(id) ||
+    //      this.edges.get(i).getFinalEnd().equals(id)){
 
-        incidents.add(this.edges.get(i));
+    //     incidents.add(this.edges.get(i));
 
-      }
-    }
+    //   }
+    // }
 
     if (incidents.size() == 0){
       throw new NoSuchElementException("There is no vertex with that id.");
@@ -268,10 +324,10 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
   /**
    * Clones a graph into a new structure.
    * @return // A new graph clone.
-   */
-  public DirectedGraph<V,E> clone(){
+  //  */
+  // public DirectedGraph<V,E> clone(){
 
-  };
+  // };
 
   /**
    * Gets a string graph representation.
@@ -279,7 +335,60 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public String toString(){
 
+    String stringGraph = "";
+
+    stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";
+    stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
+    stringGraph += "D \n";
+    stringGraph += this.graph.size() + "\n";
+    stringGraph += this.edges.size() + "\n";
+    
+    for(int i = 0; i < this.graph.size(); i++){
+      Vertex v = this.graph.get(i);
+      stringGraph += v.getId() + " ";
+      stringGraph += v.getData() + " ";
+      stringGraph += v.getWeight() + "\n";
+    }
+
+    for(int j = 0; j < this.edges.size(); j++){
+      DirectedEdge e = this.edges.get(j);
+      stringGraph += e.getId() + " ";
+      stringGraph += e.getData() + " ";
+      stringGraph += e.getWeight() + " ";
+      stringGraph += e.getInitialEnd() + " ";
+      stringGraph += e.getFinalEnd() + "\n";
+    }
+
+    return stringGraph;
   };
+
+  private String getVertexType(V value){
+    
+    if(value instanceof String){
+      return "String";
+    }else if(value instanceof Double){
+      return "Double";
+    }else if(value instanceof Boolean){
+      return "Boolean";
+    }
+
+    return "None";
+
+  }
+
+  private String getEdgeType(E value){
+    
+    if(value instanceof String){
+      return "String";
+    }else if(value instanceof Double){
+      return "Double";
+    }else if(value instanceof Boolean){
+      return "Boolean";
+    }
+
+    return "None";
+
+  }
 
   /**
    * 
@@ -287,6 +396,8 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return
    */
   public boolean addDirectedEdge(DirectedEdge<E> edge){
+
+    this.edges.add(edge);
     return true;
   }
 
@@ -301,13 +412,32 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean addDirectedEdge(String id, E data, double weight, String iv, String fv){
     
-    for (int i = 0; i < this.edges.size(); i++){
-      if (this.edges.get(i).getId().equals(id)){
-        return false;
-      }
-    }
+    System.out.println("DIRECTED EDGE ANTES");
+    System.out.println("Voy a agregar lado " + id);
+    System.out.println("Id: " + id);
+    System.out.println("Data: " + data);
+    System.out.println("Weight: " + weight);
+    System.out.println("V1: " + iv);
+    System.out.println("V2: " + fv);
+    System.out.println("Size: " + this.edges.size());
 
-    DirectedEdge<E> e = new DirectedEdge<>();
+    // for (int i = 0; i < this.edges.size(); i++){
+    //   System.out.println("Iterador: " + i);
+    //   System.out.println("Id actual: " + this.edges.get(i).getId());
+    //   if (this.edges.get(i).getId().equals(id)){
+    //     return false;
+    //   }
+    // }
+
+    System.out.println("DIRECTED EDGE DESPUES");
+    System.out.println("Voy a agregar lado " + id);
+    System.out.println("Id: " + id);
+    System.out.println("Data: " + data);
+    System.out.println("Weight: " + weight);
+    System.out.println("V1: " + iv);
+    System.out.println("V2: " + fv);
+
+    DirectedEdge<E> e = new DirectedEdge<E>(id, data, weight, iv, fv);
     return this.addDirectedEdge(e); 
   }
 
@@ -335,7 +465,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return
    * @throws NoSuchElementException
    */
-  public DirectedEdge<E> getDirectedEdge(String id) throws NoSuchElementException{
+  public Edge<E> getDirectedEdge(String id) throws NoSuchElementException{
 
     for (int i = 0; i < this.edges.size(); i++){
       if(this.edges.get(i).getId().equals(id)){
