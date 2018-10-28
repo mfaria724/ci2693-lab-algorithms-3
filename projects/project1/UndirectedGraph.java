@@ -181,8 +181,8 @@ public class UndirectedGraph<V,E> {
    * @param g // Graph to consider.
    * @return // The list of vertices.
    */
-  public List<Vertex<V>> vertices(){
-    List<Vertex<V>> vertices = new List<Vertex<V>>();
+  public ArrayList<Vertex<V>> vertices(){
+    ArrayList<Vertex<V>> vertices = new ArrayList<Vertex<V>>();
 
     for(int i=0; i<this.graph.size(); i++){
       vertices.add(this.graph.get(i));
@@ -196,8 +196,8 @@ public class UndirectedGraph<V,E> {
    * @param g // Graph to consider.
    * @return //  The list of edges.
    */
-  public List<Edge<E>> edges(){
-    List<Edge<E>> out = new List<Edge<E>>();
+  public ArrayList<Edge<E>> edges(){
+    ArrayList<Edge<E>> out = new ArrayList<Edge<E>>();
 
     for(int i=0; i<this.edges.size(); i++){
       edges.add(this.edges.get(i));
@@ -229,7 +229,7 @@ public class UndirectedGraph<V,E> {
    * @return // the list of adjacent vertices.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<Vertex> adjacents(String id) throws NoSuchElementException{
+  public ArrayList<Vertex> adjacents(String id) throws NoSuchElementException{
   
     for(int i=0;i<this.graph.size();i++){
       if(this.graph.get(i).getId().equals(id)){
@@ -249,9 +249,9 @@ public class UndirectedGraph<V,E> {
    * @return // The list of edges.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public List<Edge<E>> incidents(String id) throws NoSuchElementException{
+  public ArrayList<Edge<E>> incidents(String id) throws NoSuchElementException{
 
-    List<Edge<E>> incidents = new List<Edge<E>>();
+    ArrayList<Edge<E>> incidents = new ArrayList<Edge<E>>();
     for(int i=0;i<this.edges.size(); i++){
       if(this.edges.get(i).getEnd1().getId().equals(id) || this.edges.get(i).getEnd2().getId().equals(id) ){
         incidents.add(this.edges.get(i));
