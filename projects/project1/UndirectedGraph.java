@@ -172,7 +172,35 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
       }
     }
 
+    if(!containsVertex(e.getEnd1()) || !containsVertex(e.getEnd2())){
+      return false;
+    }
+
     this.edges.add(e);
+    Vertex<V> v1 = this.graph.get(0);
+    Vertex<V> v2 = this.graph.get(0);
+    int index1 = 0;
+    int index2 = 0;
+  
+
+    for(int i=0;i<this.graph.size();i++){
+      if(this.graph.get(i).getId().equals(e.getEnd1())){
+        v1 = this.graph.get(i);
+        index1 = i;
+      } else if(this.graph.get(i).getId().equals(e.getEnd2())){
+        v2 = this.graph.get(i);
+        index2 = i;
+      }
+    }
+    
+
+    ArrayList<Vertex<V>> newAdj = v1.getAdjacencies();
+    newAdj.add(v2);
+    this.graph.get(index1).setAdjacencies(newAdj);
+
+    newAdj = v2.getAdjacencies();
+    newAdj.add(v1);
+    this.graph.get(index2).setAdjacencies(newAdj);
 
     return true;
   }
