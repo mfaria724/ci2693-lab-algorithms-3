@@ -118,9 +118,11 @@ public class ClientProgram {
       case 1:
         result = graph.numVertices();
         System.out.println("Número de Vértices: " + result);
+        break;
       case 2:
         result = graph.numEdges();
         System.out.println("Número de Lados: " + result);
+        break;
       case 3:
         id = idInput();
         data = dataInput();
@@ -128,6 +130,7 @@ public class ClientProgram {
         if(graph.addVertex(id, data, weight)){
           System.out.println("Vertice añadido correctamente.");
         }
+        break;
       case 4:
         id = idInput();
         try {
@@ -135,6 +138,7 @@ public class ClientProgram {
         } catch (NoSuchElementException e) {
           System.out.println("No existe ningún vértice con ese identificador.");
         }
+        break;
       case 5:
         id = idInput();
         if(graph.containsVertex(id)){
@@ -142,15 +146,18 @@ public class ClientProgram {
         }else {
           System.out.println("No existe ningún vértice con el identificador especificado.");
         }
+        break;
       case 6:
+        break;
       case 7:
         id = idInput();
 
-        if(graph.deleteVertex(input[0])){
+        if(graph.deleteVertex(id)){
           System.out.println("El vértice de identificador " + id + " fue eliminado.");
         }else {
           System.out.println("No existe ningún vértice en el grafo con el identificador especificado o");
         }
+        break;
       case 8:
         ArrayList<Vertex<?>> vertices = graph.vertices();
         System.out.println("Se imprimirán los vértices en el siguiente formato: ");
@@ -159,6 +166,7 @@ public class ClientProgram {
           Vertex<?> v = vertices.get(i);
           System.out.println(v.getId() + " " + v.getData() + " " + v.getWeight());
         }
+        break;
       case 9:
         if(directed){
           ArrayList<DirectedEdge<?>> edges = graph.edges();
@@ -171,10 +179,15 @@ public class ClientProgram {
         }else {
 
         } 
+        break;
       case 10:
+        break;
       case 11:
+        break;
       case 12:
+        break;
       case 13:
+        break;
     }
 
     return true;
@@ -215,21 +228,39 @@ public class ClientProgram {
             v1 = idInput();
             v2 = idInput();
 
-            boolean action = dirGraph.addDirectedEdge(id, data, weight, v1, v2);
-            if(action){
+            if(dirGraph.addDirectedEdge(id, data, weight, v1, v2)){
               System.out.println("El arco fue añadido.");
             }else {
               System.out.println("El arco no fue añadido, verifique que los vertices existen.");
             }
           }else {
+            
+          }
+          break;
+        case 15:
+          if(directed){
+            id = idInput();
+
+            if(dirGraph.deleteDirectedEdge(id)){
+              System.out.println("El arco fue eliminado.");
+            }else {
+              System.out.println("El arco no fue eliminado, verifique que el arco existe.");
+            }
+            
+          }else {
 
           }
-        case 15:
+          break;
         case 16:
+          break;
         case 17:
+          break;
         case 18:
+          break;
         case 19:
+          break;
         case 20:
+          break;
       }
     }
 

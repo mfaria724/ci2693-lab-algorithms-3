@@ -89,15 +89,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return // The number of edges.
    */
   public Integer numEdges(){
-    
-    Integer nEdges = 0;
-    
-    for (int i = 0; i < this.graph.size(); i++){
-      nEdges += this.graph.get(i).getAdjacencies().size();
-    }
-
-    return nEdges;
-
+    return this.edges.size();
   };
 
   /**
@@ -413,7 +405,15 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean addDirectedEdge(DirectedEdge<E> edge){
 
+    System.out.println("Edge id: " + edge.getId());
+    System.out.println("Edge data: " + edge.getData());
+    System.out.println("Edge weight: " + edge.getWeight());
+    System.out.println("Edge iv: " + edge.getInitialEnd());
+    System.out.println("Edge fv: " + edge.getFinalEnd());
+
     this.edges.add(edge);
+
+    System.out.println("Cant de lados: " + this.edges.size());
     return true;
   }
 
@@ -427,32 +427,48 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return
    */
   public boolean addDirectedEdge(String id, E data, double weight, String iv, String fv){
-    
-    System.out.println("DIRECTED EDGE ANTES");
-    System.out.println("Voy a agregar lado " + id);
-    System.out.println("Id: " + id);
-    System.out.println("Data: " + data);
-    System.out.println("Weight: " + weight);
-    System.out.println("V1: " + iv);
-    System.out.println("V2: " + fv);
-    System.out.println("Size: " + this.edges.size());
+
+    boolean existsIv = false;
+    boolean existsFv = false;
+    Vertex<V> v = new Vertex<V>();
+
+    for(int i = 0; i < this.graph.size(); i++){
+      if(this.graph.get(i).getId().equals(iv)){
+        existsIv = true;
+      }else if (this.graph.get(i).getId().equals(fv)){
+        System.out.println("Vertice final");
+        v = this.graph.get(i);
+        existsFv = true;
+      }
+
+      if(existsFv && existsIv){
+        break;
+      }
+    }
+
+    if(!(existsIv) || !(existsFv)){
+      return false;
+    }
 
     for (int i = 0; i < this.edges.size(); i++){
-      System.out.println("Iterador: " + i);
-      System.out.println("Id actual: " + this.edges.get(i).getId());
       if (this.edges.get(i).getId().equals(id)){
-        System.out.println("Vertex already exists.");
         return false;
       }
     }
 
-    System.out.println("DIRECTED EDGE DESPUES");
-    System.out.println("Voy a agregar lado " + id);
-    System.out.println("Id: " + id);
-    System.out.println("Data: " + data);
-    System.out.println("Weight: " + weight);
-    System.out.println("V1: " + iv);
-    System.out.println("V2: " + fv);
+    for(int i = 0; i < this.graph.size(); i++){
+      System.out.println("Iv: " + iv);
+      System.out.println("Id: " + this.graph.get(i).getId());
+      if(this.graph.get(i).getId().equals(iv)){
+        ArrayList<Vertex<V>> adj = this.graph.get(i).getAdjacencies();
+        System.out.println("Adj: " + adj.toString());
+        adj.add(v);        
+        System.out.println("Adj: " + adj.toString());
+        this.graph.get(i).setAdjacencies(adj);
+        System.out.println("Adj: " + this.graph.get(i).getAdjacencies());
+        break;
+      }
+    }
 
     DirectedEdge<E> e = new DirectedEdge<E>(id, data, weight, iv, fv);
     return this.addDirectedEdge(e); 
@@ -465,10 +481,36 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean deleteDirectedEdge(String id){
 
+    String iv = "";
+    String fv = "";
+
     for (int i = 0; i < this.edges.size(); i++){
-      if (this.edges.get(i).getId().equals(id)){
+      DirectedEdge<E> e = this.edges.get(i);
+      if (e.getId().equals(id)){
+        iv = e.getInitialEnd();
+        fv = e.getFinalEnd();
         this.edges.remove(i);
-        return true;
+      }
+    }
+
+    System.out.println("Lo elimino de la lista de lados.");
+    System.out.println("iv: " + iv);
+    System.out.println("fv: " + fv);
+
+    for (int i = 0; i < this.graph.size(); i++){
+      Vertex<V> b = this.graph.get(i);
+      System.out.println("Id vert: " + b.getId());
+      if(b.getId().equals(iv)){
+        System.out.println("Guardia Id vert: " + b.getId());
+        ArrayList<Vertex<V>> v = b.getAdjacencies();
+        System.out.println("Tamano adj: " + v.size());
+        for(int j = 0; j < v.size(); j++){
+          if(v.get(j).getId().equals(fv)){
+            v.remove(j);
+            b.setAdjacencies(v);
+            return true;
+          }
+        }
       }
     }
 

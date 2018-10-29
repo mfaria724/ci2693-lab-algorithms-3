@@ -12,6 +12,10 @@ public class Vertex<T> {
   private double weight;
   private ArrayList<Vertex<T>> adjacents;
 
+  Vertex(){
+    
+  }
+
   /**
    * Creates a new vertex.
    * @param id // Vertex's id.
