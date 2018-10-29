@@ -10,7 +10,7 @@ public class Vertex<T> {
   private String id;
   private T data;
   private double weight;
-  private ArrayList<T> adjacents;
+  private ArrayList<Vertex<T>> adjacents;
 
   /**
    * Creates a new vertex.
@@ -67,6 +67,10 @@ public class Vertex<T> {
   public ArrayList<Vertex<T>> getAdjacencies(){
     ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>();
     return adj;
+  }
+
+  public void setAdjacencies(ArrayList<Vertex<T>> newAdj){
+    this.adjacents = newAdj;
   }
 
 }

@@ -9,24 +9,24 @@ public class SimpleEdge<T> extends Edge<T> {
    * @param id // Edge's id.
    * @param data // Edge's data.
    * @param weight // Edge's weight.
-   * @param u // Vertex 1.
-   * @param v // Vertex 2.
+   * @param v1 // Vertex 1.
+   * @param v2 // Vertex 2.
    * @return // Edge object.
    * @return
    */
-    SimpleEdge(String id, T data, double weight, Vertex<T> u, Vertex<T> v){
+    SimpleEdge(String id, T data, double weight, String v1, String v2){
       this.id = id;
       this.data = data;
       this.weight = weight;
-      this.v1 = u;
-      this.v2 = v;
+      this.v1 = v1;
+      this.v2 = v2;
   }
 
   /**
    * Gets first end from edge.
    * @return // Edge's initial vertex.
    */
-  public Vertex<T> getEnd1(){
+  public String getEnd1(){
     
     return this.v1; 
   }
@@ -35,7 +35,7 @@ public class SimpleEdge<T> extends Edge<T> {
    * Gets second end from edge.
    * @return // Edge's final vertex.
    */
-  public Vertex<T> getEnd2(){
+  public String getEnd2(){
 
     return this.v2;
   }

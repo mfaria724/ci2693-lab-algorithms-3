@@ -1,28 +1,80 @@
+import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.List;
+import java.io.FileReader;
+import java.io.IOException;
 
-public class UndirectedGraph<V,E> {
+public class UndirectedGraph<V,E> implements Graph<V,E>{
 
   private ArrayList<Vertex<V>> graph;
   private ArrayList<SimpleEdge<E>> edges;
-
-  UndirectedGraph(){
-    graph = new ArrayList<Vertex<V>>();
-    edges = new ArrayList<SimpleEdge<E>>();
-    private ArrayList<Vertex<V>> graph;
-    private ArrayList<SimpleEdge<E>> edges;
   
     UndirectedGraph(){
       graph = new ArrayList<Vertex<V>>();
       edges = new ArrayList<SimpleEdge<E>>();
     }
   /**
-   * Opens file and upload its data into Adjacencies List implementation of graph.  
-   * @param file // File that user wants to open.
-   * @return true if the file was opened correctly, othercase false.
+   * 
+   * @param file
+   * @param numVertices
+   * @param numEdges
+   * @param verTrans
+   * @param edgeTrans
+   * @return
+   * @throws IOException
    */
-  public boolean loadGraph(String file){
+  public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer<V> verTrans, TypeTransformer<E> edgeTrans) throws IOException{
+    
+    System.out.println("loadGraph function");
+
+    // Initialice BufferReader
+    BufferedReader reader = new BufferedReader(new FileReader(file));
+
+    String line = reader.readLine();
+
+    for(int i = 0; i < 5; i++){
+      line = reader.readLine();
+    }
+
+    System.out.println("Vertex initializations.");
+
+    for(int i = 0; i < numVertices; i++){
+
+      String[] info = line.split(" ");
+      String id = info[0];
+      V data = verTrans.transform(info[1]);
+      Double weight = Double.parseDouble(info[2]);
+
+      this.addVertex(id, data, weight);
+
+      line = reader.readLine();
+    }
+
+    System.out.println("Edge initializations." + numEdges);
+
+    for(int i = 0; i < numEdges; i++){
+
+      String[] info = line.split(" ");
+      String id = info[0];
+      E data = edgeTrans.transform(info[1]);
+      Double weight = Double.parseDouble(info[2]);
+      String v1 = info[3];
+      String v2 = info[4];
+
+      System.out.println("Voy a agregar lado " + i);
+      System.out.println("Id: " + id);
+      System.out.println("Data: " + data);
+      System.out.println("Weight: " + weight);
+      System.out.println("V1: " + v1);
+      System.out.println("V2: " + v2);
+
+      this.addSimpleEdge(id, data, weight, v1, v2);
+
+      line = reader.readLine();
+    }
+
+    System.out.println("Before return");
     return true;
   }
 
@@ -82,7 +134,7 @@ public class UndirectedGraph<V,E> {
    * @return // The vertex.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public V getVertex(String id) throws NoSuchElementException{
+  public Vertex<V> getVertex(String id) throws NoSuchElementException{
 
     for(int i=0;i<this.graph.size(); i++){
       if(this.graph.get(i).getId().equals(id)){
@@ -134,8 +186,8 @@ public class UndirectedGraph<V,E> {
    * @param v
    * @return
    */
-  public boolean addSimpleEdge(String id, E data, double weight, String u, String v){
-    SimpleEdge<E> e = new SimpleEdge<E>(id, data, weight, u, v);
+  public boolean addSimpleEdge(String id, E data, double weight, String v1, String v2){
+    SimpleEdge<E> e = new SimpleEdge<E>(id, data, weight, v1, v2);
     return addSimpleEdge(e);
   }
 
@@ -147,8 +199,8 @@ public class UndirectedGraph<V,E> {
    */
   public boolean cotainsEdge(String id1, String id2){
     for(int i=0; i<this.edges.size();i++){
-      if((this.edges.get(i).getEnd1().getId().equals(id1) && this.edges.get(i).getEnd2().getId().equals(id2))
-      || (this.edges.get(i).getEnd1().getId().equals(id2) && this.edges.get(i).getEnd2().getId().equals(id1))){
+      if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
+      || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
         return true;
       }
     }
@@ -180,7 +232,7 @@ public class UndirectedGraph<V,E> {
       }
     }
     for(int i=0; i<this.edges.size(); i++){
-      if(this.edges.get(i).getEnd1().getId().equals(Id) || this.edges.get(i).getEnd2().getId().equals(Id)){
+      if(this.edges.get(i).getEnd1().equals(Id) || this.edges.get(i).getEnd2().equals(Id)){
         this.edges.remove(i);
       }
     }
@@ -238,7 +290,7 @@ public class UndirectedGraph<V,E> {
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
 
-  public ArrayList<Vertex<V>> adjacents(String id) throws NoSuchElementException{
+  public ArrayList<Vertex<V>> neighbourhood(String id) throws NoSuchElementException{
   
     for(int i=0;i<this.graph.size();i++){
       if(this.graph.get(i).getId().equals(id)){
@@ -261,7 +313,7 @@ public class UndirectedGraph<V,E> {
 
     ArrayList<Edge<E>> incidents = new ArrayList<Edge<E>>();
     for(int i=0;i<this.edges.size(); i++){
-      if(this.edges.get(i).getEnd1().getId().equals(id) || this.edges.get(i).getEnd2().getId().equals(id) ){
+      if(this.edges.get(i).getEnd1().equals(id) || this.edges.get(i).getEnd2().equals(id) ){
         incidents.add(this.edges.get(i));
       }
     }
@@ -293,11 +345,13 @@ public class UndirectedGraph<V,E> {
    * @return
    */
   public boolean deleteSimpleEdge(String id){
-    SimpleEdge<E> side;
+    String v1 ="";
+    String v2 ="";
     boolean result = false;
     for(int i=0; i<this.edges.size();i++){
       if(this.edges.get(i).getId().equals(id)){
-        side = this.edges.get(i);
+        v1 = this.edges.get(i).getEnd1();
+        v2 = this.edges.get(i).getEnd2();
         result = true;
         this.edges.remove(i);
       }
@@ -305,19 +359,18 @@ public class UndirectedGraph<V,E> {
 
     if(result){
       for(int i=0; i<this.graph.size();i++){
-
-        if(this.graph.get(i) == side.getEnd1()){
+        if(this.graph.get(i).getId().equals(v1)){
           for(int j=0;j<this.graph.get(i).getAdjacencies().size();j++){
-            if(this.graph.get(i).getAdjacencies().get(j).getId().equals(side.getEnd2().getId())){
+            if(this.graph.get(i).getAdjacencies().get(j).getId().equals(v2)){
               ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
               newAdj.remove(j);
               this.graph.get(i).setAdjacencies(newAdj);
             } 
           }
         }
-        if(this.graph.get(i) == side.getEnd2()){
+        if(this.graph.get(i).getId().equals(v2)){
           for(int j=0;j<this.graph.get(i).getAdjacencies().size();j++){
-            if(this.graph.get(i).getAdjacencies().get(j).getId().equals(side.getEnd1().getId())){
+            if(this.graph.get(i).getAdjacencies().get(j).getId().equals(v1)){
               ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
               newAdj.remove(j);
               this.graph.get(i).setAdjacencies(newAdj);
@@ -350,13 +403,60 @@ public class UndirectedGraph<V,E> {
    * @return // Graph converted to string.
    */
   public String toString(){
-<<<<<<< HEAD
-    return "";
-=======
-    String result = "";
 
+    String stringGraph = "";
 
-    return result;
->>>>>>> f4691ef860e591796df6996ba40818ef6b24dc51
+    stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";
+    stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
+    stringGraph += "N \n";
+    stringGraph += this.graph.size() + "\n";
+    stringGraph += this.edges.size() + "\n";
+    
+    for(int i = 0; i < this.graph.size(); i++){
+      Vertex v = this.graph.get(i);
+      stringGraph += v.getId() + " ";
+      stringGraph += v.getData() + " ";
+      stringGraph += v.getWeight() + "\n";
+    }
+
+    for(int j = 0; j < this.edges.size(); j++){
+      SimpleEdge e = this.edges.get(j);
+      stringGraph += e.getId() + " ";
+      stringGraph += e.getData() + " ";
+      stringGraph += e.getWeight() + " ";
+      stringGraph += e.getEnd1() + " ";
+      stringGraph += e.getEnd2() + "\n";
+    }
+
+    return stringGraph;
+
+  }
+
+    private String getVertexType(V value){
+    
+    if(value instanceof String){
+      return "String";
+    }else if(value instanceof Double){
+      return "Double";
+    }else if(value instanceof Boolean){
+      return "Boolean";
+    }
+
+    return "None";
+
+  }
+
+  private String getEdgeType(E value){
+    
+    if(value instanceof String){
+      return "String";
+    }else if(value instanceof Double){
+      return "Double";
+    }else if(value instanceof Boolean){
+      return "Boolean";
+    }
+
+    return "None";
+
   }
 }
