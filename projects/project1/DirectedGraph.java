@@ -437,13 +437,14 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
     System.out.println("V2: " + fv);
     System.out.println("Size: " + this.edges.size());
 
-    // for (int i = 0; i < this.edges.size(); i++){
-    //   System.out.println("Iterador: " + i);
-    //   System.out.println("Id actual: " + this.edges.get(i).getId());
-    //   if (this.edges.get(i).getId().equals(id)){
-    //     return false;
-    //   }
-    // }
+    for (int i = 0; i < this.edges.size(); i++){
+      System.out.println("Iterador: " + i);
+      System.out.println("Id actual: " + this.edges.get(i).getId());
+      if (this.edges.get(i).getId().equals(id)){
+        System.out.println("Vertex already exists.");
+        return false;
+      }
+    }
 
     System.out.println("DIRECTED EDGE DESPUES");
     System.out.println("Voy a agregar lado " + id);
