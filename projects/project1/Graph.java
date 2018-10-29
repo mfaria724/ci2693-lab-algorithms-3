@@ -1,5 +1,6 @@
 // Exceptions
 import java.util.NoSuchElementException;
+import java.util.List;
 
 /**
  * Class to implementen all graphs TAD methods. 
