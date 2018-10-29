@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.List;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * Class to implement all TAD Directed
@@ -126,13 +127,9 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return // true if the vertex was added, other case returns false.
    */
   public boolean addVertex(String id, V data, double weight){
-  
-    boolean result = false;
 
     Vertex<V> v = new Vertex<V>(id, data, weight);
-    result = this.addVertex(v);
-
-    return result;
+    return this.addVertex(v);
 
   };
 
@@ -144,8 +141,9 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public Vertex<V> getVertex(String id) throws NoSuchElementException{
 
+    System.out.println("Vertex id: " + id);
     for (int i = 0; i < this.graph.size(); i++){
-      if (this.graph.get(i).getId() == id){
+      if (this.graph.get(i).getId().equals(id)){
         return this.graph.get(i);
       }
     }
@@ -162,7 +160,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
   public boolean containsVertex(String id){
 
     for (int i = 0; i < this.graph.size(); i++){
-      if (this.graph.get(i).getId() == id){
+      if (this.graph.get(i).getId().equals(id)){
         return true;
       }
     }
@@ -201,13 +199,26 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean deleteVertex(String id){
 
+    boolean exists = false;
+
     for (int i = 0; i < this.graph.size(); i++){
-      if (this.graph.get(i).getId() == id){
+      if (this.graph.get(i).getId().equals(id)){
         this.graph.remove(i);
+        exists = true;
+      }
+
+      // if(this.graph.get(i).getAdjacencies() ) < ------- JUAN
+    }
+
+    for(int j = 0; j < this.edges.size(); j++){
+      if (this.edges.get(j).getInitialEnd().equals(id) || 
+          this.edges.get(j).getFinalEnd().equals(id)){
+        
+        this.edges.remove(j);
       }
     }
 
-    return true;
+    return exists;
 
   };
 
@@ -218,8 +229,12 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public ArrayList<Vertex<V>> vertices(){
 
-    return new ArrayList<Vertex<V>>();
+    ArrayList<Vertex<V>> v = new ArrayList<Vertex<V>>();
+    for(int i = 0; i < this.graph.size(); i++){
+      v.add(this.graph.get(i));
+    }
 
+    return v;
   };
   
   /**
@@ -234,6 +249,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
     for(int i = 0; i < this.edges.size(); i++){
       edges.add(this.edges.get(i));
     }
+
     return edges;
 
   };

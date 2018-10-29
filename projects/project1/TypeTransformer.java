@@ -1,3 +1,3 @@
 public interface TypeTransformer<T>{
-  public T transform(String value); 
+  public T transform(String value) throws NumberFormatException; 
 }
