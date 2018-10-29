@@ -134,7 +134,7 @@ public class ClientProgram {
       case 4:
         id = idInput();
         try {
-          Vertex<?> v = graph.getVertex(id);
+          System.out.println(graph.getVertex(id).toString());
         } catch (NoSuchElementException e) {
           System.out.println("No existe ningún vértice con ese identificador.");
         }
@@ -148,6 +148,31 @@ public class ClientProgram {
         }
         break;
       case 6:
+        if(directed){
+          System.out.println("Por favor, introduzca el identificador del vertice inicial del arco.");
+          v1 = idInput();
+          System.out.println("Por favor, introduzca el identificador del vertice final del arco.");
+          v2 = idInput();
+
+          if(graph.cotainsEdge(v1, v2)){
+            System.out.println("El arco que incide sobre los vertices " + v1 + " y " + v2 + " pertenece al grafo.");
+          } else {
+            System.out.println("No existe ningún arco que incida sobre los vertices indicados.");
+          }
+
+        } else {
+          System.out.println("Por favor, introduzca el identificador del primer vertice del lado.");
+          v1 = idInput();
+          System.out.println("Por favor, introduzca el identificador del segundo vertice del lado.");
+          v2 = idInput();
+
+          if(graph.cotainsEdge(v1, v2)){
+            System.out.println("El lado que incide sobre los vertices " + v1 + " y " + v2 + " pertenece al grafo.");
+          } else {
+            System.out.println("No existe ningún lado que incida sobre los vertices indicados.");
+          }
+
+        }
         break;
       case 7:
         id = idInput();
@@ -177,7 +202,13 @@ public class ClientProgram {
             System.out.println(e.getId() + " " + e.getData() + " " + e.getWeight() + " " + e.getInitialEnd() + " " + e.getFinalEnd());
           }  
         }else {
-
+          ArrayList<SimpleEdge<?>> edges = graph.edges();
+          System.out.println("Se imprimirán los arcos en el siguiente formato: ");
+          System.out.println("Id Dato Peso IdPrimerVertice IdSegundoVertice");
+          for(int i = 0; i < edges.size(); i++){
+            SimpleEdge<?> e = edges.get(i);
+            System.out.println(e.getId() + " " + e.getData() + " " + e.getWeight() + " " + e.getEnd1() + " " + e.getEnd2());
+          }
         } 
         break;
       case 10:
@@ -234,7 +265,22 @@ public class ClientProgram {
               System.out.println("El arco no fue añadido, verifique que los vertices existen.");
             }
           }else {
-            
+            System.out.println("id.");
+            id = idInput();
+            System.out.println("data.");
+            data = dataInput();
+            System.out.println("weight.");
+            weight = weightInput();
+            System.out.println("v1.");
+            v1 = idInput();
+            System.out.println("v2.");
+            v2 = idInput();
+
+            if(undGraph.addSimpleEdge(id, data, weight, v1, v2)){
+              System.out.println("La arista fue añadida.");
+            } else {
+              System.out.println("La arista no fue añadida.");
+            }
           }
           break;
         case 15:
@@ -279,6 +325,7 @@ public class ClientProgram {
     Object data;
 
     while(true){
+
       System.out.println("Por favor, introduzca el dato del vértice que desea agregar: ");
       System.out.println("Recuerde que debe tener el tipo previamente especificado");
       String input = scanner.nextLine();
@@ -321,47 +368,47 @@ public class ClientProgram {
     System.out.println("DirectedGraph will be read."); // <-------------------QUITAR
 
     if(types[1].equals("B")){ // Boolean Vertex
+      vTrans = new BooleanTransformer();
 
       if(types[2].equals("B")){ // Boolean Edge
         System.out.println("DirectedGraph<B,B>"); // <-------------------QUITAR
-        vTrans = new BooleanTransformer();
         eTrans = new BooleanTransformer();
         graph = new DirectedGraph<Boolean, Boolean>();
       }else if(types[2].equals("D")){ // Double Edge
         System.out.println("DirectedGraph<B,D>"); // <-------------------QUITAR
-        vTrans = new BooleanTransformer();
         eTrans = new DoubleTransformer();
         graph = new DirectedGraph<Boolean, Double>();
       }else if(types[2].equals("S")){ // String Edge
         System.out.println("DirectedGraph<B,S>"); // <-------------------QUITAR
-        vTrans = new BooleanTransformer();
+        eTrans = new StringTransformer();
+
         graph = new DirectedGraph<Boolean, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
       }
 
     }else if(types[1].equals("D")){ // Double Vertex
+      vTrans = new DoubleTransformer();
 
       if(types[2].equals("B")){ // Boolean Edge
         System.out.println("DirectedGraph<D,B>"); // <-------------------QUITAR
-        vTrans = new DoubleTransformer();
         eTrans = new BooleanTransformer();
         graph = new DirectedGraph<Double, Boolean>();
       }else if(types[2].equals("D")){ // Double Edge
         System.out.println("DirectedGraph<D,D>"); // <-------------------QUITAR
-        vTrans = new DoubleTransformer();
         eTrans = new DoubleTransformer();
         graph = new DirectedGraph<Double, Double>();
       }else if(types[2].equals("S")){ // String Edge
         System.out.println("DirectedGraph<D,S>"); // <-------------------QUITAR
-        vTrans = new DoubleTransformer();
+        eTrans = new StringTransformer();
         graph = new DirectedGraph<Double, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
       }
 
     }else if(types[1].equals("S")){ // String Vertex
-
+      vTrans = new StringTransformer();
+      
       if(types[2].equals("B")){ // Boolean Edge
         System.out.println("DirectedGraph<S,B>"); // <-------------------QUITAR
         eTrans = new BooleanTransformer();
@@ -372,6 +419,7 @@ public class ClientProgram {
         graph = new DirectedGraph<String, Double>();
       }else if(types[2].equals("S")){ // String Edge
         System.out.println("DirectedGraph<S,S>"); // <-------------------QUITAR
+        eTrans = new StringTransformer();
         graph = new DirectedGraph<String, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
@@ -392,36 +440,50 @@ public class ClientProgram {
     System.out.println("UndirectedGraph will be read."); // <-------------------QUITAR
 
     if(types[1].equals("B")){
+      vTrans = new BooleanTransformer();
+
 
       if(types[2].equals("B")){ // Boolean Edge
+        eTrans = new BooleanTransformer();
         graph = new UndirectedGraph<Boolean, Boolean>();
       }else if(types[2].equals("D")){ // Double Edge
+        eTrans = new DoubleTransformer();
         graph = new UndirectedGraph<Boolean, Double>();
       }else if(types[2].equals("S")){ // String Edge
+        eTrans = new StringTransformer();
         graph = new UndirectedGraph<Boolean, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
       }
 
     }else if(types[1].equals("D")){
+      vTrans = new DoubleTransformer();
+
 
       if(types[2].equals("B")){ // Boolean Edge
+        eTrans = new BooleanTransformer();
         graph = new UndirectedGraph<Double, Boolean>();
       }else if(types[2].equals("D")){ // Double Edge
+        eTrans = new DoubleTransformer();
         graph = new UndirectedGraph<Double, Double>();
       }else if(types[2].equals("S")){ // String Edge
+        eTrans = new StringTransformer();
         graph = new UndirectedGraph<Double, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
       }
 
     }else if(types[1].equals("S")){
+      vTrans = new StringTransformer();
 
       if(types[2].equals("B")){ // Boolean Edge
+        eTrans = new BooleanTransformer();
         graph = new UndirectedGraph<String, Boolean>();
       }else if(types[2].equals("D")){ // Double Edge
+        eTrans = new DoubleTransformer();
         graph = new UndirectedGraph<String, Double>();
       }else if(types[2].equals("S")){ // String Edge
+        eTrans = new StringTransformer();
         graph = new UndirectedGraph<String, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");

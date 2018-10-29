@@ -104,7 +104,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
   public boolean addVertex(Vertex<V> v){
 
     for(int i=0; i<this.graph.size(); i++){
-      if(this.graph.get(i).getId().equals(v.getId())){
+      if(this.graph.get(i).getId() == v.getId()){
         return false;
       }
     }
@@ -124,7 +124,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
   public boolean addVertex(String id, V data, double weight){
 
     Vertex<V> v = new Vertex<V>(id, data, weight);
-    return addVertex(v);
+    return this.addVertex(v);
 
   }
 
@@ -172,7 +172,38 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
       }
     }
 
+    if(!containsVertex(e.getEnd1()) || !containsVertex(e.getEnd2())){
+      return false;
+    }
+
     this.edges.add(e);
+    Vertex<V> v1 = this.graph.get(0);
+    Vertex<V> v2 = this.graph.get(0);
+    int index1 = 0;
+    int index2 = 0;
+  
+
+    for(int i=0;i<this.graph.size();i++){
+      if(this.graph.get(i).getId().equals(e.getEnd1())){
+        v1 = this.graph.get(i);
+        index1 = i;
+      } else if(this.graph.get(i).getId().equals(e.getEnd2())){
+        v2 = this.graph.get(i);
+        index2 = i;
+      }
+    }
+    
+    System.out.println(this.graph.get(index1).getAdjacencies().toString());
+    ArrayList<Vertex<V>> newAdj = v1.getAdjacencies();
+    System.out.println(newAdj.toString());
+    newAdj.add(v2);
+    System.out.println(newAdj.toString());
+    this.graph.get(index1).setAdjacencies(newAdj);
+    System.out.println(this.graph.get(index1).getAdjacencies().toString());
+
+    newAdj = v2.getAdjacencies();
+    newAdj.add(v1);
+    this.graph.get(index2).setAdjacencies(newAdj);
 
     return true;
   }
@@ -188,7 +219,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
   public boolean addSimpleEdge(String id, E data, double weight, String v1, String v2){
     SimpleEdge<E> e = new SimpleEdge<E>(id, data, weight, v1, v2);
-    return addSimpleEdge(e);
+    return this.addSimpleEdge(e);
   }
 
   /**
@@ -262,7 +293,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     ArrayList<Edge<E>> out = new ArrayList<Edge<E>>();
 
     for(int i=0; i<this.edges.size(); i++){
-      edges.add(this.edges.get(i));
+      out.add(this.edges.get(i));
     }
 
     return out;
