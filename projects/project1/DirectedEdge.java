@@ -36,11 +36,11 @@ public class DirectedEdge<T> extends Edge<T> {
 
     String eString = "";
     
-    eString = "Edge's id: " + this.id + "/n";
-    eString = "Edge's data: " + this.data + "/n";
-    eString = "Edge's weight: " + this.weight + "/n";
-    eString = "Edge's Initial Vertex: /n" + this.v1 + "/n";
-    eString = "Edge's Final Vertex: /n" + this.v2 + "/n";
+    eString += "Edge's id: " + this.id + "\n";
+    eString += "Edge's data: " + this.data + "\n";
+    eString += "Edge's weight: " + this.weight + "\n";
+    eString += "Edge's Initial Vertex:" + this.v1 + "\n";
+    eString += "Edge's Final Vertex:" + this.v2 + "\n";
 
     return eString;
   }  
