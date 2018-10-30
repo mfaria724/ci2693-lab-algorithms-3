@@ -63,9 +63,9 @@ public class Vertex<T> {
    */
   public String toString(){
     String vString = "";
-    vString = "Vertex's id: " + this.id + "\n";
-    vString = "Vertex's data: " + this.data + "\n";
-    vString = "Vertex's weight: " + this.weight + "/n";
+    vString += "Id: " + this.id + "\n";
+    vString += "Dato: " + this.data + "\n";
+    vString += "Peso: " + this.weight + "\n";
     return vString;
   }
 

@@ -137,10 +137,7 @@ public class ClientProgram {
       case 4:
         id = idInput();
         try {
-          Vertex<?> v = graph.getVertex(id);
-          System.out.println("Id: " + v.getId());
-          System.out.println("Dato: " + v.getData());
-          System.out.println("Peso: " + v.getWeight());
+          System.out.println(graph.getVertex(id).toString());
         } catch (NoSuchElementException e) {
           System.out.println("No existe ningún vértice con ese identificador.");
         }
@@ -228,10 +225,26 @@ public class ClientProgram {
         }
         break;
       case 11:
+        id = idInput();
+
+        try{ 
+          ArrayList<Vertex<?>> adj = graph.neighbourhood(id);
+          System.out.println("Se imprimirán los vértices adyacentes en el siguiente formato: ");
+          System.out.println("Id Dato Peso");
+          for(int i = 0; i < adj.size(); i++){
+            Vertex<?> v = adj.get(i);
+            System.out.println(v.getId() + " " + v.getData() + " " + v.getWeight());
+          }
+        } catch (NoSuchElementException e){
+          System.out.println("No existe ningún vértice en el grafo con el identificador especificado.");
+        }
         break;
       case 12:
+        graph = graph.clone();
+        System.out.println("Se ha clonando el grafo");
         break;
       case 13:
+        System.out.println(graph.toString());
         break;
     }
 
@@ -257,7 +270,7 @@ public class ClientProgram {
     String v1;
     String v2;
 
-    if(option < 13){
+    if(option < 14){
       if(directed){
         result = doCommonOption(option, directed, dirGraph);
       }else {

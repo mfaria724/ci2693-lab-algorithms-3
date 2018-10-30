@@ -125,7 +125,7 @@ public interface Graph<V, E> {
    * @param g // Graph to clone.
    * @return // A new graph clone.
    */
-  // public Graph<V,E> clone();
+  public Graph<V,E> clone();
 
   /**
    * Gets a string graph representation.

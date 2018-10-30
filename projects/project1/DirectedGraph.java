@@ -337,9 +337,10 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * Clones a graph into a new structure.
    * @return // A new graph clone.
   //  */
-  // public DirectedGraph<V,E> clone(){
-
-  // };
+  public DirectedGraph<V,E> clone(){
+    DirectedGraph<V,E> aja = new DirectedGraph<>();
+    return aja;
+   };
 
   /**
    * Gets a string graph representation.

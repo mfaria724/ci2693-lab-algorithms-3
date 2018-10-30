@@ -103,10 +103,8 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */  
   public boolean addVertex(Vertex<V> v){
 
-    for(int i=0; i<this.graph.size(); i++){
-      if(this.graph.get(i).getId().equals(v.getId())){
-        return false;
-      }
+    if(this.containsVertex(v.getId())){
+      return false;
     }
 
     this.graph.add(v);    
@@ -185,15 +183,14 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
 
     // for(int i=0;i<this.graph.size();i++){
       // if(this.graph.get(i).getId().equals(e.getEnd1())){
-        if(this.containsVertex(e.getEnd1())){
-        v1 = this.getVertex(e.getEnd1());
+  
         // index1 = i;
-      } else if(this.containsVertex(e.getEnd2())){
-        v2 = this.getVertex(e.getEnd2());
         // index2 = i;
-      }
-    // }
-    
+        // }
+
+    v2 = this.getVertex(e.getEnd2());
+    v1 = this.getVertex(e.getEnd1());
+        
     // System.out.println(this.graph.get(index1).getAdjacencies().toString());
     ArrayList<Vertex<V>> newAdj = v1.getAdjacencies();
     newAdj.add(v2);
@@ -295,7 +292,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return //  The list of edges.
    */
   public ArrayList<Edge<E>> edges(){
-    ArrayList<Edge<E>> out = new ArrayList<Edge<E>>();
+    ArrayList<Edge<E>> out = new ArrayList<>();
 
     for(int i=0; i<this.edges.size(); i++){
       out.add(this.edges.get(i));
@@ -331,13 +328,13 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
 
   public ArrayList<Vertex<V>> neighbourhood(String id) throws NoSuchElementException{
-    ArrayList<Vertex<V>> neighbours = new ArrayList<>();
+    // ArrayList<Vertex<V>> neighbours = new ArrayList<>();
 
     if(this.containsVertex(id)){
-      for(int i=0 ; i<this.getVertex(id).getAdjacencies().size(); i++){
-        neighbours.add(this.getVertex(id).getAdjacencies().get(i));
-      }
-      return neighbours;
+      // for(int i=0 ; i<this.getVertex(id).getAdjacencies().size(); i++){
+      //   neighbours.add(this.getVertex(id).getAdjacencies().get(i));
+      // }
+      return this.getVertex(id).getAdjacencies();
     }
 
     // for(int i=0;i<this.graph.size();i++){
@@ -406,26 +403,25 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     }
 
     if(result){
-      for(int i=0; i<this.graph.size();i++){
-        if(this.graph.get(i).getId().equals(v1)){
-          for(int j=0;j<this.graph.get(i).getAdjacencies().size();j++){
-            if(this.graph.get(i).getAdjacencies().get(j).equals(v2)){
-              ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
+        if(this.containsVertex(v1)){
+          for(int j=0;j<this.getVertex(v1).getAdjacencies().size();j++){
+            if(this.getVertex(v1).getAdjacencies().get(j).getId().equals(v2)){
+              ArrayList<Vertex<V>> newAdj = this.getVertex(v1).getAdjacencies();
               newAdj.remove(j);
-              this.graph.get(i).setAdjacencies(newAdj);
+              this.getVertex(v1).setAdjacencies(newAdj);
             } 
           }
         }
-        if(this.graph.get(i).getId().equals(v2)){
-          for(int j=0;j<this.graph.get(i).getAdjacencies().size();j++){
-            if(this.graph.get(i).getAdjacencies().get(j).equals(v1)){
-              ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
+        if(this.containsVertex(v2)){
+          for(int j=0;j<this.getVertex(v2).getAdjacencies().size();j++){
+            if(this.getVertex(v2).getAdjacencies().get(j).getId().equals(v1)){
+              ArrayList<Vertex<V>> newAdj = this.getVertex(v2).getAdjacencies();
               newAdj.remove(j);
-              this.graph.get(i).setAdjacencies(newAdj);
+              this.getVertex(v2).setAdjacencies(newAdj);
             }
           }
         }
-      }
+      
     }
 
     return result;
@@ -451,14 +447,13 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return // Graph converted to string.
    */
   public String toString(){
-
     String stringGraph = "";
-
     stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";
     stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
     stringGraph += "N \n";
     stringGraph += this.graph.size() + "\n";
     stringGraph += this.edges.size() + "\n";
+  
     
     for(int i = 0; i < this.graph.size(); i++){
       Vertex v = this.graph.get(i);
