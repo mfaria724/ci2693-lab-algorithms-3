@@ -51,7 +51,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
       line = reader.readLine();
     }
 
-    System.out.println("Edge initializations." + numEdges);
+    System.out.println("Edge initializations--> " + numEdges);
 
     for(int i = 0; i < numEdges; i++){
 
