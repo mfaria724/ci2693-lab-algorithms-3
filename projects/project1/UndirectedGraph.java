@@ -195,13 +195,13 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     // }
     
     // System.out.println(this.graph.get(index1).getAdjacencies().toString());
-    ArrayList<String> newAdj = v1.getAdjacencies();
-    newAdj.add(v2.getId());
+    ArrayList<Vertex<V>> newAdj = v1.getAdjacencies();
+    newAdj.add(v2);
     this.getVertex(e.getEnd1()).setAdjacencies(newAdj);
 
     newAdj = v2.getAdjacencies();
     System.out.println(newAdj.toString() + "antes");
-    newAdj.add(v1.getId());
+    newAdj.add(v1);
     System.out.println(v1.toString() + "v1");
     System.out.println(newAdj.toString() + "despues");
     this.getVertex(e.getEnd2()).setAdjacencies(newAdj);
@@ -250,8 +250,8 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     boolean result = false;
     for(int i=0;i<this.graph.size(); i++){
       for(int j=0;j<this.graph.get(i).getAdjacencies().size(); j++){
-        if(this.graph.get(i).getAdjacencies().get(j).equals(Id)){
-          ArrayList<String> newAdj = this.graph.get(i).getAdjacencies();
+        if(this.graph.get(i).getAdjacencies().get(j).getId().equals(Id)){
+          ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
           newAdj.remove(j);
           this.graph.get(i).setAdjacencies(newAdj);
           result = true;
@@ -335,7 +335,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
 
     if(this.containsVertex(id)){
       for(int i=0 ; i<this.getVertex(id).getAdjacencies().size(); i++){
-        neighbours.add(this.getVertex(this.getVertex(id).getAdjacencies().get(i)));
+        neighbours.add(this.getVertex(id).getAdjacencies().get(i));
       }
       return neighbours;
     }
@@ -410,7 +410,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
         if(this.graph.get(i).getId().equals(v1)){
           for(int j=0;j<this.graph.get(i).getAdjacencies().size();j++){
             if(this.graph.get(i).getAdjacencies().get(j).equals(v2)){
-              ArrayList<String> newAdj = this.graph.get(i).getAdjacencies();
+              ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
               newAdj.remove(j);
               this.graph.get(i).setAdjacencies(newAdj);
             } 
@@ -419,7 +419,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
         if(this.graph.get(i).getId().equals(v2)){
           for(int j=0;j<this.graph.get(i).getAdjacencies().size();j++){
             if(this.graph.get(i).getAdjacencies().get(j).equals(v1)){
-              ArrayList<String> newAdj = this.graph.get(i).getAdjacencies();
+              ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
               newAdj.remove(j);
               this.graph.get(i).setAdjacencies(newAdj);
             }

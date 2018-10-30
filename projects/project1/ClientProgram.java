@@ -110,6 +110,7 @@ public class ClientProgram {
     String v1;
     String v2;
     Integer result;
+    Integer degree;
 
     System.out.println("Es dirigido: " + (graph instanceof DirectedGraph));
     System.out.println("Es NO dirigido " + (graph instanceof UndirectedGraph));
@@ -136,7 +137,10 @@ public class ClientProgram {
       case 4:
         id = idInput();
         try {
-          System.out.println(graph.getVertex(id).toString());
+          Vertex<?> v = graph.getVertex(id);
+          System.out.println("Id: " + v.getId());
+          System.out.println("Dato: " + v.getData());
+          System.out.println("Peso: " + v.getWeight());
         } catch (NoSuchElementException e) {
           System.out.println("No existe ningún vértice con ese identificador.");
         }
@@ -214,6 +218,14 @@ public class ClientProgram {
         } 
         break;
       case 10:
+        id = idInput();
+
+        try {
+          degree = graph.degree(id);
+          System.out.println("El grado del vertice de identificador " + id + " es: " + degree);
+        } catch (NoSuchElementException e) {
+          System.out.println("No existe ningún vértice en el grafo con el identificador especificado.");
+        }
         break;
       case 11:
         break;
