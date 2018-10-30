@@ -407,8 +407,6 @@ public class ClientProgram {
             }
             
           }else {
-            id = idInput();
-
             if(undGraph.deleteSimpleEdge(id)){
               System.out.println("La arista fue eliminada.");
             } else {
@@ -431,7 +429,6 @@ public class ClientProgram {
               System.out.println("No existe ningún arco con el identificador indicado.");
             }
           }else {
-            id = idInput();
             try {
               System.out.println(undGraph.getSimpleEdge(id).toString());
             } catch (NoSuchElementException e) {
