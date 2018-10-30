@@ -46,11 +46,11 @@ public class SimpleEdge<T> extends Edge<T> {
    */
   public String toString(){
     String eString = "";
-    eString = "Edge's id: " + this.id + "\n";
-    eString = "Edge's data: " + this.data + "\n";
-    eString = "Edge's weight: " + this.weight + "\n";
-    eString = "Edge's vertex 1: " + this.v1 + "\n";
-    eString = "Edge's vertex 2: " + this.v2 + "\n";
+    eString += "Edge's id: " + this.id + "\n";
+    eString += "Edge's data: " + this.data + "\n";
+    eString += "Edge's weight: " + this.weight + "\n";
+    eString += "Edge's vertex 1: " + this.v1 + "\n";
+    eString += "Edge's vertex 2: " + this.v2 + "\n";
 
     return eString;
   }

@@ -407,7 +407,13 @@ public class ClientProgram {
             }
             
           }else {
+            id = idInput();
 
+            if(undGraph.deleteSimpleEdge(id)){
+              System.out.println("La arista fue eliminada.");
+            } else {
+              System.out.println("La arista no fue elminada, verifique que la arista existe.");
+            }
           }
 
           break;
@@ -420,17 +426,17 @@ public class ClientProgram {
           // Prints edge data if founded.
           if(directed){
             try {
-              DirectedEdge<?> edge = dirGraph.getDirectedEdge(id);
-              System.out.println("DirectedEdge's id: " + edge.getId());
-              System.out.println("DirectedEdge's data: " + edge.getData());
-              System.out.println("DirectedEdge's weight: " + edge.getWeight());
-              System.out.println("DirectedEdge's Initial End: " + edge.getInitialEnd());
-              System.out.println("DirectedEdge's Final End: " + edge.getFinalEnd());
+              System.out.println(dirGraph.getDirectedEdge(id).toString());
             } catch (NoSuchElementException e) {
               System.out.println("No existe ningún arco con el identificador indicado.");
             }
           }else {
-
+            id = idInput();
+            try {
+              System.out.println(undGraph.getSimpleEdge(id).toString());
+            } catch (NoSuchElementException e) {
+              System.out.println("No existe ningún arco con el identificador indicado.");
+            }
           }
           break;
 
