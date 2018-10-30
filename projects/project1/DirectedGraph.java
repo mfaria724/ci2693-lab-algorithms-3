@@ -48,13 +48,21 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
       line = reader.readLine();
     }
 
-    System.out.println("Edge initializations." + numEdges);
+    System.out.println("EdgeTransBool: " + (edgeTrans instanceof BooleanTransformer));
 
+    System.out.println("Edge initializations: " + numEdges);
+    // System.out.println("Tipo numEdges: ");
     for(int i = 0; i < numEdges; i++){
 
+      System.out.println("Line: " + line);
       String[] info = line.split(" ");
+      System.out.println("Info lenght: " + info.length);
       String id = info[0];
+
+      System.out.println("info[1]: " + info[1]);
+      // System.out.println("Trans: " + edgeTrans.transform("hoal"));
       E data = edgeTrans.transform(info[1]);
+      System.out.println("info[2]: " + info[2]);
       Double weight = Double.parseDouble(info[2]);
       String v1 = info[3];
       String v2 = info[4];

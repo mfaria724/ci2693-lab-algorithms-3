@@ -13,31 +13,74 @@ public class ClientProgram {
 
   private static void readFile(String file) throws Exception {
 
-    // // Initialice BufferReader
-    // BufferedReader reader = new BufferedReader(new FileReader(file));
+    // Initialice BufferReader
+    BufferedReader reader = new BufferedReader(new FileReader(file));
         
-    // // Gets types.
-    // String[] types =  new String[3];
-    // types[0] = reader.readLine();
-    // types[1] = reader.readLine();
-    // types[2] = reader.readLine();
+    // Gets types.
+    String[] types =  new String[3];
+    types[0] = reader.readLine();
+    System.out.println("types[0]: " + types[0]);
+    types[1] = reader.readLine();
+    System.out.println("types[1]: " + types[1]);
+    types[2] = reader.readLine();
+    System.out.println("types[2]: " + types[2]);
 
-    // // Gets quantity of vertices and edges.
-    // int[] quantities = new int[2];
-    // String line;
-    // line = reader.readLine();
-    // quantities[0] = Integer.parseInt(line);
-    // line = reader.readLine();    
-    // quantities[1] = Integer.parseInt(line);
+    // Gets quantity of vertices and edges.
+    int[] quantities = new int[2];
+    String line;
+    line = reader.readLine();
+    quantities[0] = Integer.parseInt(line);
+    line = reader.readLine();    
+    quantities[1] = Integer.parseInt(line);
 
-    // System.out.println("Types: " + types.toString());
-    // System.out.println("Num Vertices: " + quantities[0]);
-    // System.out.println("Num Edges: " + quantities[1]);
+    System.out.println("Types: " + types.toString());
+    System.out.println("Num Vertices: " + quantities[0]);
+    System.out.println("Num Edges: " + quantities[1]);
 
-    // // Declares graph
-    // Graph graph = graphInitialization(types); 
+    // Declares graph
+    DirectedGraph<?,?> dirGraph = new DirectedGraph<String, String>();
+    UndirectedGraph<?,?> undGraph = new UndirectedGraph<String, String>();;
 
-    // graph.loadGraph(file, quantities[0], quantities[1], vTrans, eTrans);
+    // Graph Initialization
+    if(types[2].equals("D")){ // Directed Graph
+      dirGraph = dirGraphInitialization(types);
+    }
+    else if (types[2].equals("N")) { // Undirected Graph
+      undGraph = undGraphInitialization(types);
+    }else { // Invalid Format
+      throw new Exception("Invalid file format");
+    }
+
+    System.out.println("EdgeTransBool: " + (eTrans instanceof BooleanTransformer));
+    System.out.println("VerTransBool: " + (vTrans instanceof BooleanTransformer));
+    System.out.println("EdgeTransBool: " + (eTrans instanceof BooleanTransformer));
+
+    boolean directed = false;
+    if(types[2].equals("D") || types[2].equals("d")){
+      directed = true;
+    }
+    
+    boolean result = false;
+
+    if(directed){
+      result = dirGraph.loadGraph(file, quantities[0], quantities[1], vTrans, eTrans);
+    }else {
+      result = undGraph.loadGraph(file, quantities[0], quantities[1], vTrans, eTrans);
+    }
+
+    if(result){
+      System.out.println("El grafo fue cargado.");
+    }else {
+      System.out.println("El grafo no fue cargado. ");
+    }
+
+    int option = -1;
+    while(option != 0){
+      option = generalMenu(directed);
+      result = doOption(option, directed, dirGraph, undGraph);
+    }
+
+    
     
     // System.out.println("Representación en String del Grafo.");
     // System.out.println(graph.toString());
@@ -350,7 +393,7 @@ public class ClientProgram {
           try {
             
             ArrayList<Vertex<?>> suc = dirGraph.sucessors(id);
-            
+
             if(suc.size() > 0){
               System.out.println("Los sucesores del vertice de identificador " + id + " son: ");
               for(int i = 0; i < suc.size(); i++){
@@ -448,18 +491,21 @@ public class ClientProgram {
 
     System.out.println("DirectedGraph will be read."); // <-------------------QUITAR
 
-    if(types[1].equals("B")){ // Boolean Vertex
+    if(types[0].equals("B")){ // Boolean Vertex
       vTrans = new BooleanTransformer();
+      System.out.println("VertTransBool GI: " + (eTrans instanceof BooleanTransformer));
 
-      if(types[2].equals("B")){ // Boolean Edge
+
+      if(types[1].equals("B")){ // Boolean Edge
         System.out.println("DirectedGraph<B,B>"); // <-------------------QUITAR
         eTrans = new BooleanTransformer();
+        System.out.println("EdgeTransBool GI: " + (eTrans instanceof BooleanTransformer));
         graph = new DirectedGraph<Boolean, Boolean>();
-      }else if(types[2].equals("D")){ // Double Edge
+      }else if(types[1].equals("D")){ // Double Edge
         System.out.println("DirectedGraph<B,D>"); // <-------------------QUITAR
         eTrans = new DoubleTransformer();
         graph = new DirectedGraph<Boolean, Double>();
-      }else if(types[2].equals("S")){ // String Edge
+      }else if(types[1].equals("S")){ // String Edge
         System.out.println("DirectedGraph<B,S>"); // <-------------------QUITAR
         eTrans = new StringTransformer();
 
@@ -468,18 +514,18 @@ public class ClientProgram {
         throw new Exception("Invalid file format");
       }
 
-    }else if(types[1].equals("D")){ // Double Vertex
+    }else if(types[0].equals("D")){ // Double Vertex
       vTrans = new DoubleTransformer();
 
-      if(types[2].equals("B")){ // Boolean Edge
+      if(types[1].equals("B")){ // Boolean Edge
         System.out.println("DirectedGraph<D,B>"); // <-------------------QUITAR
         eTrans = new BooleanTransformer();
         graph = new DirectedGraph<Double, Boolean>();
-      }else if(types[2].equals("D")){ // Double Edge
+      }else if(types[1].equals("D")){ // Double Edge
         System.out.println("DirectedGraph<D,D>"); // <-------------------QUITAR
         eTrans = new DoubleTransformer();
         graph = new DirectedGraph<Double, Double>();
-      }else if(types[2].equals("S")){ // String Edge
+      }else if(types[1].equals("S")){ // String Edge
         System.out.println("DirectedGraph<D,S>"); // <-------------------QUITAR
         eTrans = new StringTransformer();
         graph = new DirectedGraph<Double, String>();
@@ -487,18 +533,18 @@ public class ClientProgram {
         throw new Exception("Invalid file format");
       }
 
-    }else if(types[1].equals("S")){ // String Vertex
+    }else if(types[0].equals("S")){ // String Vertex
       vTrans = new StringTransformer();
       
-      if(types[2].equals("B")){ // Boolean Edge
+      if(types[1].equals("B")){ // Boolean Edge
         System.out.println("DirectedGraph<S,B>"); // <-------------------QUITAR
         eTrans = new BooleanTransformer();
         graph = new DirectedGraph<String, Boolean>();
-      }else if(types[2].equals("D")){ // Double Edge
+      }else if(types[1].equals("D")){ // Double Edge
         System.out.println("DirectedGraph<S,D>"); // <-------------------QUITAR
         eTrans = new DoubleTransformer();
         graph = new DirectedGraph<String, Double>();
-      }else if(types[2].equals("S")){ // String Edge
+      }else if(types[1].equals("S")){ // String Edge
         System.out.println("DirectedGraph<S,S>"); // <-------------------QUITAR
         eTrans = new StringTransformer();
         graph = new DirectedGraph<String, String>();
@@ -520,50 +566,50 @@ public class ClientProgram {
 
     System.out.println("UndirectedGraph will be read."); // <-------------------QUITAR
 
-    if(types[1].equals("B")){
+    if(types[0].equals("B")){
       vTrans = new BooleanTransformer();
 
 
-      if(types[2].equals("B")){ // Boolean Edge
+      if(types[1].equals("B")){ // Boolean Edge
         eTrans = new BooleanTransformer();
         graph = new UndirectedGraph<Boolean, Boolean>();
-      }else if(types[2].equals("D")){ // Double Edge
+      }else if(types[1].equals("D")){ // Double Edge
         eTrans = new DoubleTransformer();
         graph = new UndirectedGraph<Boolean, Double>();
-      }else if(types[2].equals("S")){ // String Edge
+      }else if(types[1].equals("S")){ // String Edge
         eTrans = new StringTransformer();
         graph = new UndirectedGraph<Boolean, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
       }
 
-    }else if(types[1].equals("D")){
+    }else if(types[0].equals("D")){
       vTrans = new DoubleTransformer();
 
 
-      if(types[2].equals("B")){ // Boolean Edge
+      if(types[1].equals("B")){ // Boolean Edge
         eTrans = new BooleanTransformer();
         graph = new UndirectedGraph<Double, Boolean>();
-      }else if(types[2].equals("D")){ // Double Edge
+      }else if(types[1].equals("D")){ // Double Edge
         eTrans = new DoubleTransformer();
         graph = new UndirectedGraph<Double, Double>();
-      }else if(types[2].equals("S")){ // String Edge
+      }else if(types[1].equals("S")){ // String Edge
         eTrans = new StringTransformer();
         graph = new UndirectedGraph<Double, String>();
       }else { // Invalid Format
         throw new Exception("Invalid file format");
       }
 
-    }else if(types[1].equals("S")){
+    }else if(types[0].equals("S")){
       vTrans = new StringTransformer();
 
-      if(types[2].equals("B")){ // Boolean Edge
+      if(types[1].equals("B")){ // Boolean Edge
         eTrans = new BooleanTransformer();
         graph = new UndirectedGraph<String, Boolean>();
-      }else if(types[2].equals("D")){ // Double Edge
+      }else if(types[1].equals("D")){ // Double Edge
         eTrans = new DoubleTransformer();
         graph = new UndirectedGraph<String, Double>();
-      }else if(types[2].equals("S")){ // String Edge
+      }else if(types[1].equals("S")){ // String Edge
         eTrans = new StringTransformer();
         graph = new UndirectedGraph<String, String>();
       }else { // Invalid Format
