@@ -10,7 +10,7 @@ public class Vertex<T> {
   private String id;
   private T data;
   private double weight;
-  private ArrayList<Vertex<T>> adjacents;
+  private ArrayList<String> adjacents;
 
   Vertex(){
     
@@ -68,13 +68,21 @@ public class Vertex<T> {
     return vString;
   }
 
-  public ArrayList<Vertex<T>> getAdjacencies(){
-    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>();
+  public ArrayList<String> getAdjacencies(){
+    // ArrayList<Vertex<T>> adj = new ArrayList<>();
+    // System.out.println(adj.toString());
+    // System.out.println(this.adjacents.toString());
+    // adj = this.adjacents;
+    // System.out.println(adj.toString());
+    // return adj;
+    ArrayList<String> adj = this.adjacents;
     return adj;
   }
 
-  public void setAdjacencies(ArrayList<Vertex<T>> newAdj){
+  public void setAdjacencies(ArrayList<String> newAdj){
+    System.out.println(newAdj.toString());
     this.adjacents = newAdj;
+    System.out.println(this.adjacents.toString() + "this.adj");
   }
 
 }

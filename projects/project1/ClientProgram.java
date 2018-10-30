@@ -129,6 +129,8 @@ public class ClientProgram {
         weight = weightInput();
         if(graph.addVertex(id, data, weight)){
           System.out.println("Vertice añadido correctamente.");
+        } else {
+          System.out.println("El vertice no ha sido añadido correctamente");
         }
         break;
       case 4:
