@@ -112,9 +112,6 @@ public class ClientProgram {
     Integer result;
     Integer degree;
 
-    System.out.println("Es dirigido: " + (graph instanceof DirectedGraph));
-    System.out.println("Es NO dirigido " + (graph instanceof UndirectedGraph));
-
     switch(option){
       case 1:
         result = graph.numVertices();
@@ -326,14 +323,45 @@ public class ClientProgram {
           }
           break;
         case 17:
+          id = idInput();
+
+          try {
+            int degree = dirGraph.innerDegree(id);  
+            System.out.println("Grado interno del vértice con identificador " + id + ": " + degree);          
+          } catch (NoSuchElementException e) {
+            System.out.println("No existe ningún vertice con el identificador indicado.");
+          }
+
           break;
         case 18:
+          id = idInput();
+
+          try {
+            int degree = dirGraph.outterDegree(id);  
+            System.out.println("Grado externo del vértice con identificador " + id + ": " + degree);          
+          } catch (NoSuchElementException e) {
+            System.out.println("No existe ningún vertice con el identificador indicado.");
+          }
+
           break;
         case 19:
           id = idInput();
 
           try {
             
+            ArrayList<Vertex<?>> suc = dirGraph.sucessors(id);
+            
+            if(suc.size() > 0){
+              System.out.println("Los sucesores del vertice de identificador " + id + " son: ");
+              for(int i = 0; i < suc.size(); i++){
+                System.out.print(suc.get(i).getId() + " ");
+              }
+              System.out.println("");
+
+            }else {
+              System.out.println("El vetice de identificador " + id + " no tiene sucesores.");
+            }
+
           } catch (NoSuchElementException e) {
             System.out.println("No existe ningún vertice con el identificador especificado.");
           }
@@ -343,7 +371,18 @@ public class ClientProgram {
           id = idInput();
           
           try {
-            
+            ArrayList<Vertex<?>> pre = dirGraph.predecessors(id);
+
+            if(pre.size() > 0){
+              System.out.println("Los predecesores del vertice de identificador " + id + " son: ");
+              for(int i = 0; i < pre.size(); i++){
+                System.out.print(pre.get(i).getId() + " ");
+              }
+              System.out.println("");
+            }else {
+              System.out.println("El vetice de identificador " + id + " no tiene predecesores.");
+            }
+              
           } catch (NoSuchElementException e) {
             System.out.println("No existe ningún vertice con el identificador especificado.");
           }

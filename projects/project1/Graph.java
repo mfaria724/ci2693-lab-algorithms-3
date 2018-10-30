@@ -100,7 +100,7 @@ public interface Graph<V, E> {
    * @param id // Vertex's id.
    * @return // Vertex's degree.
    */
-  public Integer degree(String id);
+  public Integer degree(String id) throws NoSuchElementException;
 
   /**
    * Gets all adjacent vertices to a vertex. 
