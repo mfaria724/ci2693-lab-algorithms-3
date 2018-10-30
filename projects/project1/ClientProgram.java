@@ -265,15 +265,10 @@ public class ClientProgram {
               System.out.println("El arco no fue añadido, verifique que los vertices existen.");
             }
           }else {
-            System.out.println("id.");
             id = idInput();
-            System.out.println("data.");
             data = dataInput();
-            System.out.println("weight.");
             weight = weightInput();
-            System.out.println("v1.");
             v1 = idInput();
-            System.out.println("v2.");
             v2 = idInput();
 
             if(undGraph.addSimpleEdge(id, data, weight, v1, v2)){
@@ -298,14 +293,47 @@ public class ClientProgram {
           }
           break;
         case 16:
+          if(directed){
+            id = idInput();
+
+            try {
+              DirectedEdge<?> edge = dirGraph.getDirectedEdge(id);
+              System.out.println("DirectedEdge's id: " + edge.getId());
+              System.out.println("DirectedEdge's data: " + edge.getData());
+              System.out.println("DirectedEdge's weight: " + edge.getWeight());
+              System.out.println("DirectedEdge's Initial End: " + edge.getInitialEnd());
+              System.out.println("DirectedEdge's Final End: " + edge.getFinalEnd());
+            } catch (NoSuchElementException e) {
+              System.out.println("No existe ningún arco con el identificador indicado.");
+            }
+
+          }else {
+
+          }
           break;
         case 17:
           break;
         case 18:
           break;
         case 19:
+          id = idInput();
+
+          try {
+            
+          } catch (NoSuchElementException e) {
+            System.out.println("No existe ningún vertice con el identificador especificado.");
+          }
+
           break;
         case 20:
+          id = idInput();
+          
+          try {
+            
+          } catch (NoSuchElementException e) {
+            System.out.println("No existe ningún vertice con el identificador especificado.");
+          }
+
           break;
       }
     }

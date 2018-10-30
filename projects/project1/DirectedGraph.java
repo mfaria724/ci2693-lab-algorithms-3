@@ -524,7 +524,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return
    * @throws NoSuchElementException
    */
-  public Edge<E> getDirectedEdge(String id) throws NoSuchElementException{
+  public DirectedEdge<E> getDirectedEdge(String id) throws NoSuchElementException{
 
     for (int i = 0; i < this.edges.size(); i++){
       if(this.edges.get(i).getId().equals(id)){
@@ -602,7 +602,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
   }
 
-  public ArrayList<Vertex<V>> predecessor(String id) throws NoSuchElementException{
+  public ArrayList<Vertex<V>> predecessors(String id) throws NoSuchElementException{
 
     ArrayList<Vertex<V>> suc = new ArrayList<Vertex<V>>();
 

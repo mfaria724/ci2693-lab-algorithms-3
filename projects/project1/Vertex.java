@@ -29,6 +29,7 @@ public class Vertex<T> {
     this.id = id;
     this.data = data;
     this.weight = weight;
+    this.adjacents =  new ArrayList<Vertex<T>>();
 
   }
 
@@ -69,7 +70,7 @@ public class Vertex<T> {
   }
 
   public ArrayList<Vertex<T>> getAdjacencies(){
-    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>();
+    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>(this.adjacents);
     return adj;
   }
 
