@@ -12,7 +12,10 @@ public class Vertex<T> {
   private double weight;
   private ArrayList<Vertex<T>> adjacents = new ArrayList<>();
 
-  Vertex(){
+  /**
+   * Initializes empty vertex.
+   */
+  public Vertex(){
     
   }
 
@@ -23,7 +26,7 @@ public class Vertex<T> {
    * @param weight // Vertex's weight.
    * @return // New Vertex.
    */
-  Vertex(String id, T data, double weight){
+  public Vertex(String id, T data, double weight){
 
     // Initialice vertex.
     this.id = id;
@@ -69,15 +72,21 @@ public class Vertex<T> {
     return vString;
   }
 
+  /**
+   * Get list of adjacent vertices.
+   * @return
+   */
   public ArrayList<Vertex<T>> getAdjacencies(){
     ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>(this.adjacents);
     return adj;
   }
 
+  /**
+   * Sets a new list of adjacents to the current one.
+   * @param newAdj
+   */
   public void setAdjacencies(ArrayList<Vertex<T>> newAdj){
-    System.out.println(newAdj.toString());
     this.adjacents = newAdj;
-    System.out.println(this.adjacents.toString() + "this.adj");
   }
 
 }

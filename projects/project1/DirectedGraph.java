@@ -13,73 +13,75 @@ import java.text.ParseException;
  */
 public class DirectedGraph<V,E> implements Graph<V,E> {
 
-  private ArrayList<Vertex<V>> graph; 
-  private ArrayList<DirectedEdge<E>> edges;
+  // DirectedGraph atributtes.
+  private ArrayList<Vertex<V>> graph; // Adjacencies List  
+  private ArrayList<DirectedEdge<E>> edges; // Edges List
 
+  // Initialices an empty graph.
   DirectedGraph(){
     this.graph = new ArrayList<Vertex<V>>();
     this.edges = new ArrayList<DirectedEdge<E>>();
   }
 
+  /**
+   * Reads a file and charges a graph.
+   * @param file // File path
+   * @param numVertices // Number of Vertices
+   * @param numEdges // Number of edges.
+   * @param verTrans // Vertices' transformer.
+   * @param edgeTrans // Edges' transformer.
+   * @return
+   * @throws IOException // If there is a problem in the O.S.
+   */
   public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer<V> verTrans, TypeTransformer<E> edgeTrans) throws IOException{
-    
-    System.out.println("loadGraph function");
 
-    // Initialice BufferReader
+    // Initialize BufferReader
     BufferedReader reader = new BufferedReader(new FileReader(file));
 
+    // Read lines pre-read
     String line = reader.readLine();
-
     for(int i = 0; i < 5; i++){
       line = reader.readLine();
     }
 
-    System.out.println("Vertex initializations.");
-
+    // Add vertexes.
     for(int i = 0; i < numVertices; i++){
 
+      // Transform line data.
       String[] info = line.split(" ");
+      
+      // Parse data types.
       String id = info[0];
       V data = verTrans.transform(info[1]);
       Double weight = Double.parseDouble(info[2]);
 
+      // Add vertex to graph.
       this.addVertex(id, data, weight);
 
+      // Next vertex.
       line = reader.readLine();
     }
 
-    System.out.println("EdgeTransBool: " + (edgeTrans instanceof BooleanTransformer));
-
-    System.out.println("Edge initializations: " + numEdges);
-    // System.out.println("Tipo numEdges: ");
+    // Add edges.
     for(int i = 0; i < numEdges; i++){
 
-      System.out.println("Line: " + line);
+      // Transform line data
       String[] info = line.split(" ");
-      System.out.println("Info lenght: " + info.length);
+      
+      // Parse data types.
       String id = info[0];
-
-      System.out.println("info[1]: " + info[1]);
-      // System.out.println("Trans: " + edgeTrans.transform("hoal"));
       E data = edgeTrans.transform(info[1]);
-      System.out.println("info[2]: " + info[2]);
       Double weight = Double.parseDouble(info[2]);
       String v1 = info[3];
       String v2 = info[4];
 
-      System.out.println("Voy a agregar lado " + i);
-      System.out.println("Id: " + id);
-      System.out.println("Data: " + data);
-      System.out.println("Weight: " + weight);
-      System.out.println("V1: " + v1);
-      System.out.println("V2: " + v2);
-
+      // Add edge.
       this.addDirectedEdge(id, data, weight, v1, v2);
 
+      // Next line.
       line = reader.readLine();
     }
 
-    System.out.println("Before return");
     return true;
   };
 
@@ -108,13 +110,17 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */  
   public boolean addVertex(Vertex<V> vertex){
 
+    // Checks if there is a vertex with that id.
+    // Iterate over graph vertexes
     for(int i = 0; i < this.graph.size(); i++){
       if (this.graph.get(i).getId() == vertex.getId()){
         return false;
       }
     }
 
+    // Add the vertex.
     this.graph.add(vertex);
+
     return true;
 
   };
@@ -128,7 +134,9 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean addVertex(String id, V data, double weight){
 
+    // Creates a new vertex
     Vertex<V> v = new Vertex<V>(id, data, weight);
+    
     return this.addVertex(v);
 
   };
@@ -141,13 +149,16 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public Vertex<V> getVertex(String id) throws NoSuchElementException{
 
-    System.out.println("Vertex id: " + id);
+    // Iterates over the list to get the vertex.
     for (int i = 0; i < this.graph.size(); i++){
-      if (this.graph.get(i).getId().equals(id)){
-        return this.graph.get(i);
+      Vertex<V> v = this.graph.get(i);
+
+      if (v.getId().equals(id)){
+        return v;
       }
     }
 
+    // If there is no vertex with that id.
     throw new NoSuchElementException("Vertex do not exists in the graph");
     
   };
@@ -159,6 +170,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean containsVertex(String id){
 
+    // Iterates over the list to find out if the vertex is in the graph.
     for (int i = 0; i < this.graph.size(); i++){
       if (this.graph.get(i).getId().equals(id)){
         return true;
@@ -177,13 +189,21 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public boolean cotainsEdge(String v1, String v2){
 
+    // Iterates over the graph's adjacencies list
     for (int i = 0; i < this.graph.size(); i++){
-      if (this.graph.get(i).getId() == v1){
-        for (int j = 0; j < this.graph.get(i).getAdjacencies().size(); j++){
-          if (this.graph.get(i).getAdjacencies().get(j).getId().equals(v2)){
+      // If vertex exists searchs it's sucessors
+      if (this.graph.get(i).getId().equals(v1)){
+        // Iterates over it's sucessors
+        ArrayList<Vertex<V>> adj = this.graph.get(i).getAdjacencies();
+
+        for (int j = 0; j < adj.size(); j++){
+          // If fv is a sucessor, edge exists.
+          if (adj.get(j).getId().equals(v2)){
             return true;
           }
         }
+        // There is no edge.
+        return false;
       }
     }
 
@@ -193,26 +213,31 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
   /**
    * Deletes a vertex in a graph.
-   * @param g // Graphs to delete the vertex.
    * @param Id // Vertex's id.
    * @return // true if the vertex was deleted, othercase false.
    */
   public boolean deleteVertex(String id){
 
+    // Variable initialization.
     boolean exists = false;
 
+    // Iterates over the list to find the vertex.
     for (int i = 0; i < this.graph.size(); i++){
+      // If the vertex is found, deletes it.
       if (this.graph.get(i).getId().equals(id)){
         this.graph.remove(i);
         exists = true;
       }
     }
 
+    // Checks if vertex exists.
     if(!exists){
       return false;
     }
 
+    // Iterates over edges list.
     for(int j = 0; j < this.edges.size(); j++){
+      // If there is an edge with the vertex in one of its ends, deletes it too.
       if (this.edges.get(j).getInitialEnd().equals(id) || 
           this.edges.get(j).getFinalEnd().equals(id)){
         this.edges.remove(j);
@@ -225,31 +250,24 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
   /**
    * Gets the list of vertices.
-   * @param g // Graph to consider.
    * @return // The list of vertices.
    */
   public ArrayList<Vertex<V>> vertices(){
 
-    ArrayList<Vertex<V>> v = new ArrayList<Vertex<V>>();
-    for(int i = 0; i < this.graph.size(); i++){
-      v.add(this.graph.get(i));
-    }
+    // Creates a new list.
+    ArrayList<Vertex<V>> v = new ArrayList<Vertex<V>>(this.graph);
 
     return v;
   };
   
   /**
    * Gets the list of edges.
-   * @param g // Graph to consider.
    * @return //  The list of edges.
    */
   public ArrayList<Edge<E>> edges(){
 
-    ArrayList<Edge<E>> edges = new ArrayList<Edge<E>>();
-
-    for(int i = 0; i < this.edges.size(); i++){
-      edges.add(this.edges.get(i));
-    }
+    // Creates a new list.
+    ArrayList<Edge<E>> edges = new ArrayList<Edge<E>>(this.edges);
 
     return edges;
 
@@ -262,19 +280,24 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public Integer degree(String id) throws NoSuchElementException{
 
+    // Initializes variables
     Integer degree = 0;
     boolean exists = false;
 
+    // Iterate over the vertexes.
     for(int i = 0; i < this.graph.size(); i++){
 
+      // Save some variables.
       Vertex<V> v = this.graph.get(i);
       ArrayList<Vertex<V>> adj = v.getAdjacencies();
 
+      // If vertex exists. Adds vertex's quantity of sucessors.
       if(v.getId().equals(id)){
         exists = true;
         degree += adj.size();
       }
       
+      // Iterates over it's sucessors to find loops.
       for(int j = 0; j < adj.size(); j++){
         if(adj.get(j).getId().equals(id)){
           degree += 1;
@@ -282,11 +305,13 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
       }
 
     }
-
+    
+    // If vertex exists, return degree.
     if(exists){
       return degree;
     }
 
+    // If vertex doesn't exist.
     throw new NoSuchElementException("Vertex doesn't exists.");
 
   };
@@ -299,21 +324,19 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public ArrayList<Vertex<V>> neighbourhood(String id) throws NoSuchElementException{
 
+    // Creates an empty list.
     ArrayList<Vertex<V>> neighbourhood = new ArrayList<Vertex<V>>();
 
-    // if(this.containsVertex(id)){
-    //   for(int i=0;i<this.getVertex(id).getAdjacencies().size();i++){
-    //     neighbourhood.add(this.getVertex(id).getAdjacencies().get(i));
-    //   }
-    // }
+    // If vertex exists add all it's sucessors.
+    if(this.containsVertex(id)){
+      ArrayList<Vertex<V>> adj = new ArrayList<Vertex<V>>(this.getVertex(id).getAdjacencies());
+      neighbourhood.addAll(adj);
+    }
 
-    // for (int j = 0; j < this.graph.size(); j++){
-    //   for (int k = 0; k < this.graph.get(j).getAdjacencies().size(); k++){
-    //     if (this.graph.get(j).getAdjacencies().get(k).equals(id)){
-    //       neighbourhood.add(this.graph.get(j).getAdjacencies().get(k));
-    //     }
-    //   }
-    // }
+    // Iterates over all vertexes to find all predecessors.
+    ArrayList<Vertex<V>> pre = this.predecessors(id);
+    
+    neighbourhood.addAll(pre);
 
     return neighbourhood;
 
@@ -321,30 +344,30 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
   /**
    * Gets all vertex incident edges.  
-   * @param g // Graph to consider.
    * @param id // Vertex's id.
    * @return // The list of edges.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
   public ArrayList<Edge<E>> incidents(String id) throws NoSuchElementException{
 
+    // If there is not such vertex.
+    if (this.containsVertex(id)){
+      throw new NoSuchElementException("There is no vertex with that id.");
+    } 
+
+    // Creates an empty list.
     ArrayList<Edge<E>> incidents = new ArrayList<Edge<E>>();
 
-    // for (int i = 0; i < this.edges.size(); i++){
-    //   if(this.edges.get(i).getInitialEnd().equals(id) ||
-    //      this.edges.get(i).getFinalEnd().equals(id)){
+    // Iterates over edges to find incidences.
+    for (int i = 0; i < this.edges.size(); i++){
+      Edge<E> e = this.edges.get(i);
 
-    //     incidents.add(this.edges.get(i));
-
-    //   }
-    // }
-
-    if (incidents.size() == 0){
-      throw new NoSuchElementException("There is no vertex with that id.");
-    } else {
-      return incidents;
+      if(e.getInitialEnd().equals(id) || e.getFinalEnd().equals(id)){
+        incidents.add(e);
+      }
     }
 
+    return incidents;
   };
 
   /**
@@ -353,7 +376,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
   //  */
   public DirectedGraph<V,E> clone(){
     DirectedGraph<V,E> aja = new DirectedGraph<>();
-    return aja;
+    return aja; // <--------------------------------------------------- MALISIMO
    };
 
   /**
@@ -362,33 +385,62 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    */
   public String toString(){
 
+    // Variables initialization.
     String stringGraph = "";
 
-    stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";
-    stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
-    stringGraph += "D \n";
+    // Vertices type.
+    if(this.graph.size() != 0){
+      stringGraph += "Tipo de dato de Vértices: ";
+      stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";    
+    }
+    
+    // Edges type.
+    if(this.edges.size() != 0){
+      stringGraph += "Tipo de dato de Arcos: ";
+      stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
+    }
+
+    // Graph type
+    stringGraph += "Grafo Dirijido (Digrafo) \n";
+
+    // Number of vertices.
+    stringGraph += "Número de Vértices: ";
     stringGraph += this.graph.size() + "\n";
+
+    // Number of Directed Edges.
+    stringGraph += "Número de Arcos: ";
     stringGraph += this.edges.size() + "\n";
     
+    // Vertices.
+    stringGraph += "Vértices: \n";
+    stringGraph += "Id\t\tDato\t\tPeso\n";
     for(int i = 0; i < this.graph.size(); i++){
       Vertex v = this.graph.get(i);
-      stringGraph += v.getId() + " ";
-      stringGraph += v.getData() + " ";
+      stringGraph += v.getId() + " \t\t";
+      stringGraph += v.getData() + "\t\t";
       stringGraph += v.getWeight() + "\n";
     }
 
+    // Directed Edges.
+    stringGraph += "Arcos: \n";
+    stringGraph += "Id\t\tDato\t\tPeso\t\tIdVI\t\tIdVF\n";
     for(int j = 0; j < this.edges.size(); j++){
       DirectedEdge e = this.edges.get(j);
-      stringGraph += e.getId() + " ";
-      stringGraph += e.getData() + " ";
-      stringGraph += e.getWeight() + " ";
-      stringGraph += e.getInitialEnd() + " ";
+      stringGraph += e.getId() + "\t\t";
+      stringGraph += e.getData() + "\t\t";
+      stringGraph += e.getWeight() + "\t\t";
+      stringGraph += e.getInitialEnd() + "\t\t";
       stringGraph += e.getFinalEnd() + "\n";
     }
 
     return stringGraph;
   };
 
+  /**
+   * Auxiliary function for idnetufy vertex's data type.
+   * @param value
+   * @return
+   */
   private String getVertexType(V value){
     
     if(value instanceof String){
@@ -403,6 +455,11 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
   }
 
+  /**
+   * Auxiliary function for idnetufy edge's data type.
+   * @param value
+   * @return
+   */
   private String getEdgeType(E value){
     
     if(value instanceof String){
@@ -418,117 +475,97 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
   }
 
   /**
-   * 
-   * @param edge
+   * Adds a directed edge to the graph.
+   * @param edge // Pre-created edge.
    * @return
    */
   public boolean addDirectedEdge(DirectedEdge<E> edge){
 
-    System.out.println("Edge id: " + edge.getId());
-    System.out.println("Edge data: " + edge.getData());
-    System.out.println("Edge weight: " + edge.getWeight());
-    System.out.println("Edge iv: " + edge.getInitialEnd());
-    System.out.println("Edge fv: " + edge.getFinalEnd());
-
-    this.edges.add(edge);
-
-    System.out.println("Cant de lados: " + this.edges.size());
-    return true;
-  }
-
-  /**
-   * 
-   * @param id
-   * @param data
-   * @param weight
-   * @param iv
-   * @param fv
-   * @return
-   */
-  public boolean addDirectedEdge(String id, E data, double weight, String iv, String fv){
-
-    boolean existsIv = false;
-    boolean existsFv = false;
-    Vertex<V> v = new Vertex<>();
-
-    for(int i = 0; i < this.graph.size(); i++){
-      if(this.graph.get(i).getId().equals(iv)){
-        existsIv = true;
-      }
-      
-      if (this.graph.get(i).getId().equals(fv)){
-        System.out.println("Vertice final");
-        v = this.getVertex(this.graph.get(i).getId());
-        existsFv = true;
-      }
-
-      if(existsFv && existsIv){
-        break;
-      }
-    }
-
-    if(!(existsIv) || !(existsFv)){
-      return false;
-    }
-
-    for (int i = 0; i < this.edges.size(); i++){
-      if (this.edges.get(i).getId().equals(id)){
+    // Checks if there is an edge with that id.
+    for(int i = 0; i < this.edges.size(); i++){
+      if(this.edges.get(i).getId().equals(edge.getId())){
         return false;
       }
     }
 
+    // Adds the edge.
+    this.edges.add(edge);
+
+    return true;
+  }
+
+  /**
+   * Adds a directed edge with provided data.
+   * @param id // Edge's id
+   * @param data // Edge's data
+   * @param weight // Edge's weight
+   * @param iv // Edge's initial vertex id.
+   * @param fv // Edge's final vertex id.
+   * @return
+   */
+  public boolean addDirectedEdge(String id, E data, double weight, String iv, String fv){
+
+    // Initializes variables.
+    Vertex<V> fVer = this.getVertex(fv);
+
+    // Checks that both vertices exists.
+    if(!(this.containsVertex(iv)) || !(this.containsVertex(fv))){
+      return false;
+    }
+
+    // Iterate over graph's vertices to update adjacencies list.
     for(int i = 0; i < this.graph.size(); i++){
-      System.out.println("Iv: " + iv);
-      System.out.println("Id: " + this.graph.get(i).getId());
-      if(this.graph.get(i).getId().equals(iv)){
-        ArrayList<Vertex<V>> adj = this.graph.get(i).getAdjacencies();
-        System.out.println("Adj: " + adj.toString());
-        adj.add(v);        
-        System.out.println("Adj: " + adj.toString());
-        this.graph.get(i).setAdjacencies(adj);
-        System.out.println("Adj: " + this.graph.get(i).getAdjacencies());
+      Vertex<V> iVer = this.graph.get(i);
+
+      // Updates adjacencies.
+      if(iVer.getId().equals(iv)){
+        ArrayList<Vertex<V>> adj = iVer.getAdjacencies();
+        adj.add(fVer);        
+        iVer.setAdjacencies(adj);
         break;
       }
     }
 
+    // Creates edge's and adds it to the graph.
     DirectedEdge<E> e = new DirectedEdge<E>(id, data, weight, iv, fv);
     return this.addDirectedEdge(e); 
   }
 
   /**
-   * 
-   * @param id
+   * Deletes and edge.
+   * @param id // Edge's id.
    * @return
    */
   public boolean deleteDirectedEdge(String id){
 
+    // Variables initialization.
     String iv = "";
     String fv = "";
 
+    // Iterates over edges to find the edge.
     for (int i = 0; i < this.edges.size(); i++){
       DirectedEdge<E> e = this.edges.get(i);
       if (e.getId().equals(id)){
-        System.out.println("Encontré lado.");
+        // Saves vertices' ids.
         iv = e.getInitialEnd();
         fv = e.getFinalEnd();
         this.edges.remove(i);
       }
     }
-
+    
+    // If there is no edge.
     if(iv.equals("")){
       return false;
     }
 
-    System.out.println("iv: " + iv);
-    System.out.println("fv: " + fv);
-
+    // Iterates over graph's vertexes.
     for (int i = 0; i < this.graph.size(); i++){
       Vertex<V> b = this.graph.get(i);
-      System.out.println("Id vert: " + b.getId());
+      // When find the vertex.
       if(b.getId().equals(iv)){
-        System.out.println("Guardia Id vert: " + b.getId());
         ArrayList<Vertex<V>> v = b.getAdjacencies();
-        System.out.println("Tamano adj: " + v.size());
+        
+        // Updates adjacencies.
         for(int j = 0; j < v.size(); j++){
           if(v.get(j).getId().equals(fv)){
             v.remove(j);
@@ -544,41 +581,47 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
   }
 
   /**
-   * 
-   * @param id
+   * Gets an existing directed edge.
+   * @param id // Edge's id.
    * @return
-   * @throws NoSuchElementException
+   * @throws NoSuchElementException // If there is no edge.
    */
   public DirectedEdge<E> getDirectedEdge(String id) throws NoSuchElementException{
 
+    // Iterates over edges listo to find the edge.
     for (int i = 0; i < this.edges.size(); i++){
       if(this.edges.get(i).getId().equals(id)){
         return this.edges.get(i);
       }
     }
 
+    // If there is no edge.
     throw new NoSuchElementException("There is no edges woth that id");
 
   }
 
   /**
-   * 
-   * @param id
+   * Gets vertex's inner degree.
+   * @param id // Vertex's id.
    * @return
    * @throws NoSuchElementException
    */
   public int innerDegree(String id) throws NoSuchElementException{
 
+    // Variables initialization.
     int degree = 0;
     boolean exist = false;
 
+    // Iterates over vertexes to iterate over its sucessors.
     for(int i = 0; i < this.graph.size(); i++){
       Vertex<V> v = this.graph.get(i);
 
+      // If vertex is found.
       if(v.getId().equals(id)){
         exist = true;
       }
 
+      // Iterates over adjacencies to search vertex.
       ArrayList<Vertex<V>> adj = v.getAdjacencies();
       for(int j = 0; j < adj.size(); j++){
 
@@ -590,60 +633,76 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
     }
 
+    // If vertex exists, return it's degree.
     if(exist){
       return degree;
     }
 
+    // If vertex isn't found.
     throw new NoSuchElementException("There is no vertex with that id.");
 
   }
 
   /**
-   * 
-   * @param id
+   * Gets vertex's outter degree.
+   * @param id // vertex's id.
    * @return
    * @throws NoSuchElementException
    */
   public int outterDegree(String id) throws NoSuchElementException{
     
+    // Iterates over vertices to find its sucessors.
     for(int i = 0; i < this.graph.size(); i++){ 
       Vertex<V> v = this.graph.get(i);
+
 
       if(v.getId().equals(id)){
         return v.getAdjacencies().size();
       }
     }
 
+    // IIf there is no vertex.
     throw new NoSuchElementException("There is no vertex with that id.");
 
   }
 
   /**
-   * 
+   * Get all vertex's sucessors.
    * @param id
    * @return
    * @throws NoSuchElementException
    */
   public ArrayList<Vertex<V>> sucessors(String id) throws NoSuchElementException{
+
+    // If vertex exists, return it's sucessors.
     ArrayList<Vertex<V>> sucessors = new ArrayList<>();
-    
     if(this.containsVertex(id)){
       sucessors = this.getVertex(id).getAdjacencies();
       return sucessors;
     }
 
+    // If vertex doesn't exists.
     throw new NoSuchElementException("There is no vertex with that id.");
 
   }
 
+  /**
+   * Get all vertex's predecessors.
+   * @param id // vertex's id.
+   * @return
+   * @throws NoSuchElementException
+   */
   public ArrayList<Vertex<V>> predecessors(String id) throws NoSuchElementException{
 
+    // Creates an empty list.
     ArrayList<Vertex<V>> pre = new ArrayList<Vertex<V>>();
     
+    // Iterates over all vertexes.
     for(int i = 0; i < this.graph.size(); i++){
       Vertex<V> v = this.graph.get(i);
       ArrayList<Vertex<V>> adj = v.getAdjacencies();
 
+      // Iterates over it's sucessors.
       for(int j = 0; j < adj.size(); j++){
         if(adj.get(j).getId().equals(id)){
           pre.add(v);
@@ -652,10 +711,12 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
     }
 
+    // If vertex exists, return pre.
     if(this.containsVertex(id)){
       return pre;
     } 
     
+    // If vertex doesn't exists.
     throw new NoSuchElementException("There is no vertex with that index.");
 
   }

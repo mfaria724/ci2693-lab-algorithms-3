@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.io.IOException;
 
 /**
  * Main class to provied user interaction.
@@ -67,6 +68,11 @@ public class ClientProgram {
         throw new Exception("Invalid file format");
       }
     } catch (Exception e) {
+      if(e.getMessage().equals("Invalid file format")){
+        System.out.println("Formato de archivo inválido.");
+        System.out.println("Intente de nuevo con un archivo que cumpla con el formato.");
+        System.exit(0);
+      }
       System.out.println("mainMenu exception: " + e.getMessage());
     }
 
@@ -79,21 +85,37 @@ public class ClientProgram {
     // Only for graphs from files.
     boolean result = false;
 
-    if (!file.equals("")){
-      // Read the specified type of graph.
-      if(directed){
-        result = dirGraph.loadGraph(file, numVertices, numEdges, vTrans, eTrans);
-      }else {
-        result = undGraph.loadGraph(file, numVertices, numEdges, vTrans, eTrans);
+    try {
+      if (!file.equals("")){
+        // Read the specified type of graph.
+        if(directed){
+          result = dirGraph.loadGraph(file, numVertices, numEdges, vTrans, eTrans);
+        }else {
+          result = undGraph.loadGraph(file, numVertices, numEdges, vTrans, eTrans);
+        }
+    
+        // loadGraph result.
+        if(result){
+          System.out.println("El grafo fue cargado satisfactoriamente.");
+        }else {
+          System.out.println("El grafo no pudo ser cargado correctamente.");
+        }
       }
-  
-      // loadGraph result.
-      if(result){
-        System.out.println("El grafo fue cargado satisfactoriamente.");
-      }else {
-        System.out.println("El grafo no pudo ser cargado correctamente.");
-      }
-    }
+    } catch (IOException e){
+      System.out.println("Ocurrió un error de entrada salida con el archivo.");
+      System.out.println("Por favor inténtelo de nuevo.");   
+      System.exit(0); 
+
+    } catch (NumberFormatException e) {
+      System.out.println("Alguno de sus datos no puede ser convetido a tipo Double.");
+      System.out.println("Por favor inténtelo de nuevo.");      
+      System.exit(0);
+    } catch (Exception e) {
+      System.out.println("Formato de archivo inválido.");
+      System.out.println("Por favor inténtelo de nuevo.");      
+      System.exit(0);
+    } 
+
 
     // Menu loop.
     int option = -1;
@@ -171,7 +193,7 @@ public class ClientProgram {
     Integer degree;
 
     // Variables initialization.
-    String idVertexMessage = "ingrese el identificador del vértice ";
+    String idVertexMessage = "ingrese el identificador del vértice";
 
     switch(option){
       case 1: // Number of Vertices
@@ -184,7 +206,7 @@ public class ClientProgram {
         break;
       case 3: // Add Vertex
         // Reads input from user.
-        id = idInput(idVertexMessage +  " que desea añadir.");
+        id = idInput(idVertexMessage +  " que desea añadir: ");
         data = dataInput("ingrese el dato que desea almacenar en el vértice: ");
         weight = weightInput("ingrese el peso del vértice: ");
         
@@ -245,13 +267,12 @@ public class ClientProgram {
 
         // Get all vertices.
         ArrayList<Vertex<?>> vertices = graph.vertices();
-        System.out.println("Se imprimirán los vértices en el siguiente formato: ");
-        System.out.println("Id\tDato\tPeso");
+        System.out.println("Id\t\tDato\t\tPeso");
 
         // Prints all vertices data in the specified format.
         for(int i = 0; i < vertices.size(); i++){
           Vertex<?> v = vertices.get(i);
-          System.out.println(v.getId() + "\t" + v.getData() + "\t" + v.getWeight());
+          System.out.println(v.getId() + "\t\t" + v.getData() + "\t\t" + v.getWeight());
         }
         break;
       case 9: //Get edges
@@ -259,13 +280,12 @@ public class ClientProgram {
         if(directed){ //Directed
            // Get all DirectedEdges
           ArrayList<DirectedEdge<?>> edges = graph.edges();
-          System.out.println("Se imprimirán los arcos en el siguiente formato: ");
-          System.out.println("Id\tDato\tPeso\tIdVerticeInicial\tIdVerticeFinal");
+          System.out.println("Id\t\tDato\t\tPeso\t\tIdVI\t\tIdVF");
 
           // Prints all edges in specified format.
           for(int i = 0; i < edges.size(); i++){
             DirectedEdge<?> e = edges.get(i);
-            System.out.println(e.getId() + "\t" + e.getData() + "\t" + e.getWeight() + "\t" + e.getInitialEnd() + "\t" + e.getFinalEnd());
+            System.out.println(e.getId() + "\t\t" + e.getData() + "\t\t" + e.getWeight() + "\t\t" + e.getInitialEnd() + "\t\t" + e.getFinalEnd());
           }  
         }else { // Simple
           // Get all SimpleEdges
@@ -276,7 +296,7 @@ public class ClientProgram {
           // Prints all edges in specified format.
           for(int i = 0; i < edges.size(); i++){
             SimpleEdge<?> e = edges.get(i);
-            System.out.println(e.getId() + "\t" + e.getData() + "\t" + e.getWeight() + "\t" + e.getEnd1() + "\t" + e.getEnd2());
+            System.out.println(e.getId() + "\t\t" + e.getData() + "\t\t" + e.getWeight() + "\t\t" + e.getEnd1() + "\t\t" + e.getEnd2());
           }
         } 
         break;
@@ -302,13 +322,12 @@ public class ClientProgram {
 
           // Get all adjacents
           ArrayList<Vertex<?>> adj = graph.neighbourhood(id);
-          System.out.println("Se imprimirán los vértices adyacentes en el siguiente formato: ");
-          System.out.println("Id\tDato\tPeso");
+          System.out.println("Id\t\tDato\t\tPeso");
           
           // Prints adjacents in specified format.
           for(int i = 0; i < adj.size(); i++){
             Vertex<?> v = adj.get(i);
-            System.out.println(v.getId() + "\t" + v.getData() + "\t" + v.getWeight());
+            System.out.println(v.getId() + "\t\t" + v.getData() + "\t\t" + v.getWeight());
           }
         } catch (NoSuchElementException e){
           System.out.println("No existe ningún vértice en el grafo con el identificador especificado.");
@@ -347,7 +366,7 @@ public class ClientProgram {
     String eDir;
 
     // Variables initialization.
-    String idVertexMessage = "ingrese el identificador del vértice ";
+    String idVertexMessage = "ingrese el identificador del vértice";
     String idEdgeMessage = "ingrese el identificador de ";
     String dataEdgeMessage = "ingrese el dato de ";
     String weightEdgeMessage = "ingrese el peso de ";
@@ -374,8 +393,8 @@ public class ClientProgram {
           id = idInput(idEdgeMessage + eDir + " que desea agregar: ");
           data = dataInput(dataEdgeMessage + eDir + " que desea agregar: ");
           weight = weightInput(weightEdgeMessage + eDir + " que desea agregar: ");
-          v1 = idInput(idVertexMessage + "inicial de " + eDir);
-          v2 = idInput(idVertexMessage + "final de " + eDir);
+          v1 = idInput(idVertexMessage + "inicial de " + eDir + ": ");
+          v2 = idInput(idVertexMessage + "final de " + eDir + ": ");
 
           // Adds edge with provided data.
           if(directed){
@@ -548,8 +567,8 @@ public class ClientProgram {
     while(true){
 
       // Prints user information.
-      System.out.println("Por favor, " + message);
-      System.out.println("Recuerde que debe tener el tipo previamente especificado");
+      System.out.print("Por favor, " + message);
+      System.out.print("(Recuerde que debe tener el tipo previamente especificado): ");
       
       // Reads user information.
       String input = scanner.nextLine();
@@ -832,7 +851,7 @@ public class ClientProgram {
 
     while (true){
       // General Option
-      System.out.println("Indique una opción a realizar: ");
+      System.out.println("\nIndique una opción a realizar: ");
       System.out.println("0  --> Salir");      
       System.out.println("1  --> Número de vértices");
       System.out.println("2  --> Número de lados");
@@ -853,8 +872,8 @@ public class ClientProgram {
         System.out.println("14 --> Agregar Arco");
         System.out.println("15 --> Eliminar Arco");
         System.out.println("16 --> Obtener Arco");
-        System.out.println("17 --> Grado Interior");
-        System.out.println("18 --> Grado Exterior");
+        System.out.println("17 --> Grado Interno");
+        System.out.println("18 --> Grado Externo");
         System.out.println("19 --> Sucesores");
         System.out.println("20 --> Predecesores");
       }

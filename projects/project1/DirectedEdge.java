@@ -4,6 +4,14 @@
  */
 public class DirectedEdge<T> extends Edge<T> {
 
+  /**
+   * Initializes edge.
+   * @param id // DirectedEdge's id;
+   * @param data // DirectedEdge's data;
+   * @param weight // DirectedEdge's weight;
+   * @param iv // DirectedEdge's initial vertex;
+   * @param fv // DirectedEdge's final vertex;
+   */
   public DirectedEdge(String id, T data, Double weight, String iv, String fv){
     this.id = id;
     this.data = data;
@@ -36,11 +44,11 @@ public class DirectedEdge<T> extends Edge<T> {
 
     String eString = "";
     
-    eString += "Edge's id: " + this.id + "\n";
-    eString += "Edge's data: " + this.data + "\n";
-    eString += "Edge's weight: " + this.weight + "\n";
-    eString += "Edge's Initial Vertex:" + this.v1 + "\n";
-    eString += "Edge's Final Vertex:" + this.v2 + "\n";
+    eString += "Id del arco: " + this.id + "\n";
+    eString += "Dato del arco: " + this.data + "\n";
+    eString += "Peso del arco: " + this.weight + "\n";
+    eString += "Id del vértice inicial del arco: " + this.v1 + "\n";
+    eString += "Id del vértice final del arco: " + this.v2 + "\n";
 
     return eString;
   }  

@@ -4,6 +4,7 @@
  */
 public abstract class Edge<T> {
 
+    // Edge data.
     protected String id;
     protected T data;
     protected double weight;
