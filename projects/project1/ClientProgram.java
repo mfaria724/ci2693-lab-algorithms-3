@@ -290,8 +290,7 @@ public class ClientProgram {
         }else { // Simple
           // Get all SimpleEdges
           ArrayList<SimpleEdge<?>> edges = graph.edges();
-          System.out.println("Se imprimirán los arcos en el siguiente formato: ");
-          System.out.println("Id Dato Peso IdPrimerVertice IdSegundoVertice");
+          System.out.println("Id\t\tDato\t\tPeso\t\tIdV1\t\tIdV2");
 
           // Prints all edges in specified format.
           for(int i = 0; i < edges.size(); i++){
