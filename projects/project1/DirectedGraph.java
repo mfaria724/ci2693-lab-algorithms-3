@@ -227,7 +227,19 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
       if (this.graph.get(i).getId().equals(id)){
         this.graph.remove(i);
         exists = true;
+      }else {
+        // Removes adyacencies.
+        ArrayList<Vertex<V>> adj = this.graph.get(i).getAdjacencies();
+        for(int j = 0; j < adj.size(); j++){
+          if(adj.get(j).getId().equals(id)){
+            adj.remove(j);
+          }
+        }
+
+        // Saves new adjacencies.
+        this.graph.get(i).setAdjacencies(adj);
       }
+ 
     }
 
     // Checks if vertex exists.

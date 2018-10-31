@@ -1,0 +1,34 @@
+S
+D
+D
+9
+19
+caracas ciudad 2.5
+valencia ciudad 3.5
+maracaibo ciudad 4.6
+maracay pueblo 6.3
+barquisimeto ciudad 46.52
+calabozo pueblo 42.21 
+merida pueblo 42.68
+sanfelix ciudad 12.25
+sanfernando pueblo 10.264
+A 452.02 22.5 maracay sanfelix
+B 44151.56 0 caracas barquisimeto
+C 155.5 1 caracas caracas
+D 1213.15 2 caracas caracas
+E 123.4 3 maracay caracas
+F 4523.5 4 sanfelix barquisimeto
+G 5215.15 5 barquisimeto sanfernando
+H 153.51 6 barquisimeto valencia
+I 1126.45 7 maracaibo maracay
+J 1584.54 8 calabozo valencia
+K 153.6 9 valencia maracaibo
+L 135.05126 10 valencia maracaibo
+M 13512.156 11 valencia maracaibo
+N 86463.6415 12 maracaibo calabozo
+O 1531.13 13 maracaibo calabozo
+P 4121.15 14 calabozo maracaibo
+Q 1351.15 15 valencia valencia
+R 1553.15 16 calabozo merida
+S 1433.414 17 calabozo sanfernando
+T 153.215 18 maracaibo merida
