@@ -269,11 +269,19 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     }
 
     // Deletes edges that contains the vertex
-    for(int i=0; i<this.edges.size(); i++){
+    int i =0;
+    while(i < this.edges.size()){
       if(this.edges.get(i).getEnd1().equals(Id) || this.edges.get(i).getEnd2().equals(Id)){
         this.edges.remove(i);
+        i = i - 1;
       }
+      i += 1;
     }
+    // for(int i=0; i<this.edges.size(); i++){
+    //   if(this.edges.get(i).getEnd1().equals(Id) || this.edges.get(i).getEnd2().equals(Id)){
+    //     this.edges.remove(i);
+    //   }
+    // }
     
     return result;
   }

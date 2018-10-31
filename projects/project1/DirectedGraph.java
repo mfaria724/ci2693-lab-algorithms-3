@@ -235,14 +235,15 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
       return false;
     }
 
-    // Iterates over edges list.
-    for(int j = 0; j < this.edges.size(); j++){
-      // If there is an edge with the vertex in one of its ends, deletes it too.
-      if (this.edges.get(j).getInitialEnd().equals(id) || 
-          this.edges.get(j).getFinalEnd().equals(id)){
-        this.edges.remove(j);
-      }
-    }
+   // Deletes edges that contains the vertex
+   int i =0;
+   while(i < this.edges.size()){
+     if(this.edges.get(i).getInitialEnd().equals(id) || this.edges.get(i).getFinalEnd().equals(id)){
+       this.edges.remove(i);
+       i = i - 1;
+     }
+     i += 1;
+   }
 
     return exists;
 
