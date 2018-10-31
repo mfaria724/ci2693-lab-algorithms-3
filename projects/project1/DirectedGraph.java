@@ -360,7 +360,7 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
 
     // Iterates over edges to find incidences.
     for (int i = 0; i < this.edges.size(); i++){
-      Edge<E> e = this.edges.get(i);
+      DirectedEdge<E> e = this.edges.get(i);
 
       if(e.getInitialEnd().equals(id) || e.getFinalEnd().equals(id)){
         incidents.add(e);
@@ -375,8 +375,20 @@ public class DirectedGraph<V,E> implements Graph<V,E> {
    * @return // A new graph clone.
   //  */
   public DirectedGraph<V,E> clone(){
-    DirectedGraph<V,E> aja = new DirectedGraph<>();
-    return aja; // <--------------------------------------------------- MALISIMO
+       // Create new graph
+       DirectedGraph<V,E> clone = new DirectedGraph<V,E>();
+
+       // Copy all vertices in the new graph
+       for(int i=0; i<this.graph.size(); i++){
+         clone.graph.add(this.graph.get(i));
+       }
+   
+       // Copy all the edges in the new graph
+       for(int i=0; i<this.edges.size(); i++){
+         clone.edges.add(this.edges.get(i));
+       }
+   
+       return clone;
    };
 
   /**

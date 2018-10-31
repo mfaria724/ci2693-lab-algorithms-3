@@ -5,76 +5,76 @@ import java.util.List;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Class to implement all TAD Undirected
+ * @param <V> Vertex data type
+ * @param <E> Edge data type
+ */
 public class UndirectedGraph<V,E> implements Graph<V,E>{
+  // UndirectedGraph atributes
+  private ArrayList<Vertex<V>> graph; // Adjacencies List
+  private ArrayList<SimpleEdge<E>> edges; // Edges List
 
-  private ArrayList<Vertex<V>> graph;
-  private ArrayList<SimpleEdge<E>> edges;
-  
+    // Initialices an empty graph
     UndirectedGraph(){
-      graph = new ArrayList<Vertex<V>>();
-      edges = new ArrayList<SimpleEdge<E>>();
+      this.graph = new ArrayList<Vertex<V>>();
+      this.edges = new ArrayList<SimpleEdge<E>>();
     }
   /**
-   * 
-   * @param file
-   * @param numVertices
-   * @param numEdges
-   * @param verTrans
-   * @param edgeTrans
+   * Reads a file and charges a graph
+   * @param file // File path
+   * @param numVertices // Number of vertices
+   * @param numEdges // Number of edges
+   * @param verTrans // Vertices' transformer
+   * @param edgeTrans // Edges' transformer
    * @return
-   * @throws IOException
+   * @throws IOException // If there is a problem in the O.S
    */
   public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer<V> verTrans, TypeTransformer<E> edgeTrans) throws IOException{
     
-    System.out.println("loadGraph function");
-
     // Initialice BufferReader
     BufferedReader reader = new BufferedReader(new FileReader(file));
 
+    // Read lines pre-read
     String line = reader.readLine();
-
     for(int i = 0; i < 5; i++){
       line = reader.readLine();
     }
-
-    System.out.println("Vertex initializations.");
-
+    // Add vertexes
     for(int i = 0; i < numVertices; i++){
 
+      // Transform line data
       String[] info = line.split(" ");
+      
+      // Parse data types
       String id = info[0];
       V data = verTrans.transform(info[1]);
       Double weight = Double.parseDouble(info[2]);
 
+      // Add vertex to graph
       this.addVertex(id, data, weight);
 
+      // Next vertex
       line = reader.readLine();
     }
-
-    System.out.println("Edge initializations--> " + numEdges);
-
+    // Add edges
     for(int i = 0; i < numEdges; i++){
 
+      // Parse data types
       String[] info = line.split(" ");
       String id = info[0];
       E data = edgeTrans.transform(info[1]);
       Double weight = Double.parseDouble(info[2]);
       String v1 = info[3];
       String v2 = info[4];
-
-      System.out.println("Voy a agregar lado " + i);
-      System.out.println("Id: " + id);
-      System.out.println("Data: " + data);
-      System.out.println("Weight: " + weight);
-      System.out.println("V1: " + v1);
-      System.out.println("V2: " + v2);
-
+      
+      // Add edge
       this.addSimpleEdge(id, data, weight, v1, v2);
-
+      
+      // Next line
       line = reader.readLine();
     }
 
-    System.out.println("Before return");
     return true;
   }
 
@@ -103,10 +103,12 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */  
   public boolean addVertex(Vertex<V> v){
 
+    // Checks if there is a vertex with that id
     if(this.containsVertex(v.getId())){
       return false;
     }
 
+    // Add the vertex
     this.graph.add(v);    
 
     return true;
@@ -121,7 +123,9 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
   public boolean addVertex(String id, V data, double weight){
 
+    // Createsa new vertex
     Vertex<V> v = new Vertex<V>(id, data, weight);
+
     return this.addVertex(v);
 
   }
@@ -134,11 +138,14 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
   public Vertex<V> getVertex(String id) throws NoSuchElementException{
 
+    // Iterates over the list to get the vertex
     for(int i=0;i<this.graph.size(); i++){
       if(this.graph.get(i).getId().equals(id)){
         return this.graph.get(i);
       }
     }
+
+    // If there is no vertex with that id
     throw new NoSuchElementException("Vertex doesn't exist");
   }
 
@@ -149,6 +156,7 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
   public boolean containsVertex(String id){
 
+    // iterates over the list to find out if the vertex is in the graph
     for(int i=0;i<this.graph.size(); i++){
       if(this.graph.get(i).getId().equals(id)){
         return true;
@@ -158,62 +166,53 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     return false;
   }
   /**
-   * 
-   * @param e
+   * Adds a simple edge to the graph
+   * @param e // Pre-created edge.
    * @return
    */
   public boolean addSimpleEdge(SimpleEdge<E> e){
 
+    // Checks if there is an edge with that id.
     for(int i=0;i<edges.size();i++){
       if(edges.get(i).getId().equals(e.getId())){
         return false;
       }
     }
 
+    // Checks that both vertices exist
     if(!containsVertex(e.getEnd1()) || !containsVertex(e.getEnd2())){
       return false;
     }
 
+    // Adds the edge
     this.edges.add(e);
+
+    // Initialize variables
     Vertex<V> v1 = new Vertex<V>();
     Vertex<V> v2 = new Vertex<V>();
-    // int index1 = 0;
-    // int index2 = 0;
   
-
-    // for(int i=0;i<this.graph.size();i++){
-      // if(this.graph.get(i).getId().equals(e.getEnd1())){
-  
-        // index1 = i;
-        // index2 = i;
-        // }
-
     v2 = this.getVertex(e.getEnd2());
     v1 = this.getVertex(e.getEnd1());
-        
-    // System.out.println(this.graph.get(index1).getAdjacencies().toString());
+    
+    // Update adjacencies
     ArrayList<Vertex<V>> newAdj = v1.getAdjacencies();
     newAdj.add(v2);
     this.getVertex(e.getEnd1()).setAdjacencies(newAdj);
 
     newAdj = v2.getAdjacencies();
-    System.out.println(newAdj.toString() + "antes");
     newAdj.add(v1);
-    System.out.println(v1.toString() + "v1");
-    System.out.println(newAdj.toString() + "despues");
     this.getVertex(e.getEnd2()).setAdjacencies(newAdj);
-    // System.out.println(this.graph.get(index2).getAdjacencies().toString());
 
     return true;
   }
 
   /**
-   * 
-   * @param id
-   * @param data
-   * @param weight
-   * @param u
-   * @param v
+   * Adds a directed edge with provided data.
+   * @param id // Edge's id
+   * @param data // Edge's data
+   * @param weight // Edge's weight
+   * @param u // Edge's first vertex id.
+   * @param v // Edge's second vertex id.
    * @return
    */
   public boolean addSimpleEdge(String id, E data, double weight, String v1, String v2){
@@ -228,13 +227,16 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return // true if the edge is in the graph, othercase false.
    */
   public boolean cotainsEdge(String id1, String id2){
+    // Iterates over the edge's list
     for(int i=0; i<this.edges.size();i++){
+      // Checks if there's an edge with both vertex
       if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
       || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
         return true;
       }
     }
 
+    // If there isn't edfe
     return false;
   }
 
@@ -244,9 +246,14 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return // true if the vertex was deleted, othercase false.
    */
   public boolean deleteVertex(String Id){
+
+    // Initialize variables
     boolean result = false;
+
+    // Iterates over the list of adjacencies
     for(int i=0;i<this.graph.size(); i++){
       for(int j=0;j<this.graph.get(i).getAdjacencies().size(); j++){
+        // Deletes the vertex from the adjacencies list of another vertesx
         if(this.graph.get(i).getAdjacencies().get(j).getId().equals(Id)){
           ArrayList<Vertex<V>> newAdj = this.graph.get(i).getAdjacencies();
           newAdj.remove(j);
@@ -256,14 +263,12 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
       }
     }
 
+    // Deletes the vertex in the vertex list
     if(this.containsVertex(Id)){
       this.graph.remove(this.getVertex(Id));
     }
-    // for(int i=0; i<this.graph.size(); i++){
-    //   if(this.graph.get(i).getId().equals(Id)){
-    //     this.graph.remove(i);
-    //   }
-    // }
+
+    // Deletes edges that contains the vertex
     for(int i=0; i<this.edges.size(); i++){
       if(this.edges.get(i).getEnd1().equals(Id) || this.edges.get(i).getEnd2().equals(Id)){
         this.edges.remove(i);
@@ -278,11 +283,9 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return // The list of vertices.
    */
   public ArrayList<Vertex<V>> vertices(){
-    ArrayList<Vertex<V>> vertices = new ArrayList<Vertex<V>>();
-
-    for(int i=0; i<this.graph.size(); i++){
-      vertices.add(this.graph.get(i));
-    }
+    
+    // Creates a new list
+    ArrayList<Vertex<V>> vertices = new ArrayList<Vertex<V>>(this.graph);
 
     return vertices;
   }
@@ -292,11 +295,9 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return //  The list of edges.
    */
   public ArrayList<Edge<E>> edges(){
-    ArrayList<Edge<E>> out = new ArrayList<>();
 
-    for(int i=0; i<this.edges.size(); i++){
-      out.add(this.edges.get(i));
-    }
+    // Creates a new list
+    ArrayList<Edge<E>> out = new ArrayList<Edge<E>>(this.edges);
 
     return out;
   }
@@ -308,15 +309,13 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
   public Integer degree(String id) throws NoSuchElementException{
 
+    // Checks if the vertex exist
     if(this.containsVertex(id)){
+      // Return number of adjacents of the vertex
       return this.getVertex(id).getAdjacencies().size();
     }
-    // for(int i=0; i<this.graph.size();i++){
-    //   if(this.graph.get(i).getId().equals(id)){
-    //     return this.graph.get(i).getAdjacencies().size();
-    //   }
-    // }
 
+    // If vertex doesn't exist
     throw new NoSuchElementException("Vertex doesn't exist");
   }
 
@@ -328,20 +327,11 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    */
 
   public ArrayList<Vertex<V>> neighbourhood(String id) throws NoSuchElementException{
-    // ArrayList<Vertex<V>> neighbours = new ArrayList<>();
-
+    // Checks if vertex exist
     if(this.containsVertex(id)){
-      // for(int i=0 ; i<this.getVertex(id).getAdjacencies().size(); i++){
-      //   neighbours.add(this.getVertex(id).getAdjacencies().get(i));
-      // }
+      // Return vertex's adjacents
       return this.getVertex(id).getAdjacencies();
     }
-
-    // for(int i=0;i<this.graph.size();i++){
-    //   if(this.graph.get(i).getId().equals(id)){
-    //     return this.graph.get(i).getAdjacencies();
-    //   }
-    // }
 
     throw new NoSuchElementException("Vertex doesn't exist");
   }
@@ -355,9 +345,13 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
   public ArrayList<Edge<E>> incidents(String id) throws NoSuchElementException{
-
+    
+    // Creates new list
     ArrayList<Edge<E>> incidents = new ArrayList<Edge<E>>();
+
+    //Iterates over edges' list
     for(int i=0;i<this.edges.size(); i++){
+      // If the edge incise in the vertex, it's added to the list
       if(this.edges.get(i).getEnd1().equals(id) || this.edges.get(i).getEnd2().equals(id) ){
         incidents.add(this.edges.get(i));
       }
@@ -371,12 +365,16 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return // A new graph clone.
    */
   public UndirectedGraph<V,E> clone(){
+    
+    // Create new graph
     UndirectedGraph<V,E> clone = new UndirectedGraph<V,E>();
 
+    // Copy all vertices in the new graph
     for(int i=0; i<this.graph.size(); i++){
       clone.graph.add(this.graph.get(i));
     }
 
+    // Copy all the edges in the new graph
     for(int i=0; i<this.edges.size(); i++){
       clone.edges.add(this.edges.get(i));
     }
@@ -385,16 +383,21 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
   }
 
   /**
-   * 
-   * @param id
+   * Deletes an edge
+   * @param id // Edge's id
    * @return
    */
   public boolean deleteSimpleEdge(String id){
+
+    // Variables initialization
     String v1 ="";
     String v2 ="";
     boolean result = false;
+
+    // Iterates over the edges' list
     for(int i=0; i<this.edges.size();i++){
       if(this.edges.get(i).getId().equals(id)){
+        // Saves the edge's vertex and removes the edge from the list
         v1 = this.edges.get(i).getEnd1();
         v2 = this.edges.get(i).getEnd2();
         result = true;
@@ -402,43 +405,46 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
       }
     }
 
+    // If the edge exist
     if(result){
-        if(this.containsVertex(v1)){
-          for(int j=0;j<this.getVertex(v1).getAdjacencies().size();j++){
-            if(this.getVertex(v1).getAdjacencies().get(j).getId().equals(v2)){
-              ArrayList<Vertex<V>> newAdj = this.getVertex(v1).getAdjacencies();
-              newAdj.remove(j);
-              this.getVertex(v1).setAdjacencies(newAdj);
-            } 
-          }
+      // Iterates over the adjacents of v1
+      for(int j=0;j<this.getVertex(v1).getAdjacencies().size();j++){
+        // Deletes v2 from the adjacents of v1
+        if(this.getVertex(v1).getAdjacencies().get(j).getId().equals(v2)){
+          ArrayList<Vertex<V>> newAdj = this.getVertex(v1).getAdjacencies();
+          newAdj.remove(j);
+          this.getVertex(v1).setAdjacencies(newAdj);
+        } 
+      }
+      // Iterates over the adjacents of v2
+      for(int j=0;j<this.getVertex(v2).getAdjacencies().size();j++){
+        // Deletes v1 from the adjacents of v2
+        if(this.getVertex(v2).getAdjacencies().get(j).getId().equals(v1)){
+          ArrayList<Vertex<V>> newAdj = this.getVertex(v2).getAdjacencies();
+          newAdj.remove(j);
+          this.getVertex(v2).setAdjacencies(newAdj);
         }
-        if(this.containsVertex(v2)){
-          for(int j=0;j<this.getVertex(v2).getAdjacencies().size();j++){
-            if(this.getVertex(v2).getAdjacencies().get(j).getId().equals(v1)){
-              ArrayList<Vertex<V>> newAdj = this.getVertex(v2).getAdjacencies();
-              newAdj.remove(j);
-              this.getVertex(v2).setAdjacencies(newAdj);
-            }
-          }
-        }
-      
+      }
     }
 
     return result;
   }
   /**
-   * 
-   * @param id
+   * Gets an existing simple edge
+   * @param id // Edge's id
    * @return
-   * @throws NoSuchElementException
+   * @throws NoSuchElementException // If there is no edge
    */
   public Edge<E> getSimpleEdge(String id) throws NoSuchElementException{
+    
+    // Iterates over edges' list to find the edge
     for(int i=0; i<this.edges.size();i++){
       if(this.edges.get(i).getId().equals(id)){
         return this.edges.get(i);
       }
     }
 
+    // If there is no edge
     throw new NoSuchElementException("Edge doesn't exist");
   }
 
@@ -447,27 +453,52 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
    * @return // Graph converted to string.
    */
   public String toString(){
+
+    //  Variables initialization
     String stringGraph = "";
-    stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";
-    stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
-    stringGraph += "N \n";
-    stringGraph += this.graph.size() + "\n";
-    stringGraph += this.edges.size() + "\n";
-  
+
+    // Vertices type.
+    if(this.graph.size() != 0){
+      stringGraph += "Tipo de dato de Vértices: ";
+      stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";    
+    }
     
+    // Edges type.
+    if(this.edges.size() != 0){
+      stringGraph += "Tipo de dato de Aristas: ";
+      stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
+    }
+
+    // Graph type
+    stringGraph += "Grafo No Dirijido \n";
+
+    // Number of vertices.
+    stringGraph += "Número de Vértices: ";
+    stringGraph += this.graph.size() + "\n";
+
+    // Number of Directed Edges.
+    stringGraph += "Número de Aristas: ";
+    stringGraph += this.edges.size() + "\n";
+    
+    // Vertices.
+    stringGraph += "Vértices: \n";
+    stringGraph += "Id\t\tDato\t\tPeso\n";
     for(int i = 0; i < this.graph.size(); i++){
       Vertex v = this.graph.get(i);
-      stringGraph += v.getId() + " ";
-      stringGraph += v.getData() + " ";
+      stringGraph += v.getId() + " \t\t";
+      stringGraph += v.getData() + "\t\t";
       stringGraph += v.getWeight() + "\n";
     }
 
+    // Simple Edges.
+    stringGraph += "Aristas: \n";
+    stringGraph += "Id\t\tDato\t\tPeso\t\tIdV1\t\tIdV2\n";
     for(int j = 0; j < this.edges.size(); j++){
       SimpleEdge e = this.edges.get(j);
-      stringGraph += e.getId() + " ";
-      stringGraph += e.getData() + " ";
-      stringGraph += e.getWeight() + " ";
-      stringGraph += e.getEnd1() + " ";
+      stringGraph += e.getId() + "\t\t";
+      stringGraph += e.getData() + "\t\t";
+      stringGraph += e.getWeight() + "\t\t";
+      stringGraph += e.getEnd1() + "\t\t";
       stringGraph += e.getEnd2() + "\n";
     }
 
@@ -475,6 +506,11 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
 
   }
 
+  /**
+   * Auxiliary function for idnetufy vertex's data type.
+   * @param value
+   * @return
+   */
     private String getVertexType(V value){
     
     if(value instanceof String){
@@ -488,7 +524,12 @@ public class UndirectedGraph<V,E> implements Graph<V,E>{
     return "None";
 
   }
-
+  
+  /**
+   * Auxiliary function for idnetufy edge's data type.
+   * @param value
+   * @return
+   */
   private String getEdgeType(E value){
     
     if(value instanceof String){
