@@ -254,7 +254,7 @@ public class ClientProgram {
         break;
       case 7: // Delete Vertex
         // Reads input from user.
-        id = idInput(idVertexMessage + "que desea elimina: ");
+        id = idInput(idVertexMessage + " que desea eliminar: ");
 
         // Deletes vertex from graph.
         if(graph.deleteVertex(id)){
