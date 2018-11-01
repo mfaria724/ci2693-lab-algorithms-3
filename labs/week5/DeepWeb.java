@@ -126,14 +126,14 @@ public class DeepWeb {
               options[4] = true;          
           }
         }  
-      } catch (NumberFormatException ex) { // If trunc option isn't specified.
+      } catch (Exception ex) { // If trunc option isn't specified.
         System.out.println("Al utilizar la opción --trunc debe especificar la profundidad.");
         System.exit(0);
-      }
+      } 
       
       // Does specified algorithm
-      if(args[0].equals("dfs")){
-        // graph.dfs(o, options, trunc);
+      if(args[2].equals("dfs")){
+        graph.dfs(o, options, trunc);
       } else {
         graph.bfs(o, options, trunc);
       }
