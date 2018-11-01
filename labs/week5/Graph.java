@@ -64,6 +64,13 @@ public class Graph {
 
   }
 
+  /**
+   * Method to implement dfs over the graph. Some extra functionality has been implemented
+   * as explained in problem requirements.
+   * @param origin // Vertex to start
+   * @param options // Options specified by user.
+   * @param trunc // Depth to truncate.
+   */
   public void dfs(int origin, Boolean[] options, int trunc){
   
     // Set number of depth to truncate.
