@@ -23,9 +23,7 @@ public class Graph {
   public void addEdge(int iv, int fv) throws Exception{
 
     if (this.graph[iv][fv] == 1){
-      System.out.println("Vertice Inicial: " + iv);
-      System.out.println("Vertice Final: " + fv);
-      throw new Exception("Arco Repetido");
+      throw new Exception("Repeated Edge");
     }
 
     this.graph[iv][fv] = 1;
