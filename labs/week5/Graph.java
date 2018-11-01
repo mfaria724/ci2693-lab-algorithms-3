@@ -20,6 +20,7 @@ public class Graph {
   private int trunc = -1; // Detph to trunc.
   private int connected_components = 0; // Number of strong connected components.
   private boolean[] visited; // Array that contains if an vertex have been visited before
+  private int recursion = 0;
 
   /**
    * Initialices a graphs with v vertices and e edges.
@@ -45,24 +46,30 @@ public class Graph {
     this.graph[iv][fv] = 1;
 
   }
-
+    /**
+     * 
+     * @param o
+     * @param options
+     * @param trunc
+     */
     public void bfs(int o, boolean[] options, int trunc){
 
       int v= this.graph.length;  // Variable that has the number of vertexes
-
       LinkedList<Integer> queue=new LinkedList<Integer>(); // List to put discovered vertexes to consider their adjacents
       queue.add(o); // Add the first in the queue
-      int[] ordinal = new int[v];  // Array that contains the way to be considered
-      Arrays.fill(ordinal, -1);
-      int[] pred = new int[v];
-      Arrays.fill(pred, -1);
+      int[] ordinal = new int[v];  // Array that contains the order
+      Arrays.fill(ordinal, -1);  // Fills ordinal with -1
+      int[] pred = new int[v];  // Array that contains thet father of every vertex
+      Arrays.fill(pred, -1);    // Fills pred with -1
       int[] identacion = new int[v];  // Array used to know how much identation has every vertex for the output
       int counter = 0;   // Variable used to iterate camino array
-      int level = 0;
+      int level = 0;    // Variable that contains the level of bfs
       String salida; // Output
       String space = "  ";    // Output's identation
-      String tree = o + "-" + o + "(raiz)\n";
-      boolean salir = false;
+      String tree = o + "-" + o + "(raiz)\n"; // Output used in case of --arb 
+      boolean exit = false;    // Variable used to break while
+      this.connected_components += 1; // Add one to connected_components
+
       
       pred[o] = o;
       identacion[o] = 1;
@@ -75,7 +82,7 @@ public class Graph {
       // While used to consider all vertexes until there is no one that haven't been visited
       while(queue.size()!=0)
       {   
-          if(salir){
+          if(exit){
             break;
           }
 
@@ -93,10 +100,12 @@ public class Graph {
               if((this.graph[x][i] == 1) && (!this.visited[i]))
               {  
                   queue.add(i);
-                  level=identacion[x];
 
+                  // Saves the level 
+                  level=identacion[x];
+                  // Verifies
                   if(level > trunc){
-                    salir = true;
+                    exit = true;
                     break;
                   }
 
@@ -110,10 +119,10 @@ public class Graph {
                   
                   visited[i]=true;
               } else if((this.graph[x][i] == 1) && (this.visited[i])){
-                  level=identacion[x];
 
+                  level=identacion[x];
                   if(level > trunc){
-                    salir = true;
+                    exit = true;
                     break;
                   }
 
@@ -126,19 +135,21 @@ public class Graph {
       }
       
       salida = "";
+
       for(int i=0;i<this.visited.length;i++){
         if(this.visited[i] != true){
           salida += i + ", ";
         }
       }
+
       if(salida != ""){
         salida = (salida.substring(0,salida.length() - 2));
       } else {
         salida ="Todas las paginas son parte de la internet visible.";
       }
+
       if(options[1]){
         salida += "\n\nArbol:\n" + tree;
-
       }
    
       if(options[2]){
@@ -155,17 +166,24 @@ public class Graph {
         }
       }
 
+      
       if(options[4]){
         for(int i=0;i<this.visited.length;i++){
           if(!this.visited[i]){
+            recursion += 1;
             bfs(i, options, trunc);
-            this.connected_components += 1;
+            recursion = recursion - 1;
           }
         }
-        System.out.println("Componentes conexas: " + this.connected_components);
-      }
 
-      System.out.println(salida);
+        if(this.recursion == 0){
+          salida += "\n\nComponentes conexas: " + this.connected_components + "\n";
+        }
+      }
+      
+      if(this.recursion == 0){
+        System.out.println(salida);
+      }
   }
     
   /**
