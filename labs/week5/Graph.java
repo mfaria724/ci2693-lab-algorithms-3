@@ -19,6 +19,7 @@ public class Graph {
   private int depth = 0; // Depth of the graph.
   private int trunc = -1; // Detph to trunc.
   private int connected_components = 0; // Number of strong connected components.
+  private boolean[] visited; // Array that contains if an vertex have been visited before
 
   /**
    * Initialices a graphs with v vertices and e edges.
@@ -26,6 +27,7 @@ public class Graph {
    */
   Graph(int v){
     this.graph = new int[v][v];
+    this.visited = new boolean[v];
   }
 
   /**
@@ -47,12 +49,12 @@ public class Graph {
     public void bfs(int o, boolean[] options, int trunc){
 
       int v= this.graph.length;  // Variable that has the number of vertexes
-      boolean visited[]=new boolean[v]; // Array that contains if an vertex have been visited before
+
       LinkedList<Integer> queue=new LinkedList<Integer>(); // List to put discovered vertexes to consider their adjacents
       queue.add(o); // Add the first in the queue
-      int[] ordinal = new int[this.graph.length];  // Array that contains the way to be considered
+      int[] ordinal = new int[v];  // Array that contains the way to be considered
       Arrays.fill(ordinal, -1);
-      int[] pred = new int[this.graph.length];
+      int[] pred = new int[v];
       Arrays.fill(pred, -1);
       int[] identacion = new int[v];  // Array used to know how much identation has every vertex for the output
       int counter = 0;   // Variable used to iterate camino array
@@ -64,10 +66,10 @@ public class Graph {
       
       pred[o] = o;
       identacion[o] = 1;
-      visited[o]=true;
+      this.visited[o]=true;
 
       if(!options[0]){
-        trunc = this.graph.length;
+        trunc = v;
       }
       
       // While used to consider all vertexes until there is no one that haven't been visited
@@ -88,7 +90,7 @@ public class Graph {
           for (int i=0; i < v; i++) 
           {   
               // If the adj vertex haven't been visited, its added to queue
-              if((this.graph[x][i] == 1) && (!visited[i]))
+              if((this.graph[x][i] == 1) && (!this.visited[i]))
               {  
                   queue.add(i);
                   level=identacion[x];
@@ -99,7 +101,6 @@ public class Graph {
                   }
 
                   identacion[i]=identacion[x] + 1;
-                  System.out.println(identacion[x]);
                   for(int j=0; j<identacion[x]; j++){
                       tree += space;
                   }
@@ -108,7 +109,7 @@ public class Graph {
                   
                   
                   visited[i]=true;
-              } else if((this.graph[x][i] == 1) && (visited[i])){
+              } else if((this.graph[x][i] == 1) && (this.visited[i])){
                   level=identacion[x];
 
                   if(level > trunc){
@@ -125,8 +126,8 @@ public class Graph {
       }
       
       salida = "";
-      for(int i=0;i<visited.length;i++){
-        if(visited[i] != true){
+      for(int i=0;i<this.visited.length;i++){
+        if(this.visited[i] != true){
           salida += i + ", ";
         }
       }
@@ -152,6 +153,16 @@ public class Graph {
         for(int i=0; i<pred.length; i++){
           salida += i + ": " + pred[i] + "\n";
         }
+      }
+
+      if(options[4]){
+        for(int i=0;i<this.visited.length;i++){
+          if(!this.visited[i]){
+            bfs(i, options, trunc);
+            this.connected_components += 1;
+          }
+        }
+        System.out.println("Componentes conexas: " + this.connected_components);
       }
 
       System.out.println(salida);
