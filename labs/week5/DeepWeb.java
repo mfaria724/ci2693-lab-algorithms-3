@@ -73,12 +73,12 @@ public class DeepWeb {
   public static void main(String[] args){
 
     // Variables declaration.
-    int o;
+    int o = 0;
     int trunc = 0;
-    Boolean[] options;
+    boolean[] options;
 
     // Variables initialization.
-    options = new Boolean[5]; // Format: [--trunc, --arb, --ord, --pred, --comp]
+    options = new boolean[5]; // Format: [--trunc, --arb, --ord, --pred, --comp]
     Arrays.fill(options, false);
 
     // Checks correct program usage.
@@ -99,9 +99,8 @@ public class DeepWeb {
         System.out.println("El origen debe ser un número entero.");
         System.exit(0);
       }
-
       // Initialize graph.
-      Graph graph = readFile(args[0]);
+    Graph graph = readFile(args[0]);
 
       // Reads options.
       try {
@@ -136,7 +135,7 @@ public class DeepWeb {
       if(args[0].equals("dfs")){
         // graph.dfs(o, options, trunc);
       } else {
-        // graph.bfs(o, options, trunc);
+        graph.bfs(o, options, trunc);
       }
 
     }
