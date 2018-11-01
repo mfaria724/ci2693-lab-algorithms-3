@@ -73,7 +73,7 @@ public class DeepWeb {
   public static void main(String[] args){
 
     // Variables declaration.
-    int o;
+    int o = 0;
     int trunc = 0;
     Boolean[] options;
 
@@ -127,14 +127,14 @@ public class DeepWeb {
               options[4] = true;          
           }
         }  
-      } catch (NumberFormatException ex) { // If trunc option isn't specified.
+      } catch (Exception ex) { // If trunc option isn't specified.
         System.out.println("Al utilizar la opción --trunc debe especificar la profundidad.");
         System.exit(0);
-      }
+      } 
       
       // Does specified algorithm
-      if(args[0].equals("dfs")){
-        // graph.dfs(o, options, trunc);
+      if(args[2].equals("dfs")){
+        graph.dfs(o, options, trunc);
       } else {
         // graph.bfs(o, options, trunc);
       }
