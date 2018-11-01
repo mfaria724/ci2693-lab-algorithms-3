@@ -30,4 +30,8 @@ public class Graph {
 
   }
 
+  public void dfs(Boolean[] options, int trunc){
+    
+  }
+
 }
