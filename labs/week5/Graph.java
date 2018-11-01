@@ -30,12 +30,7 @@ public class Graph {
 
   }
 
-      /**
-     * Applies DFS algorithms over an specific vertex.
-     * @param vertice
-     * @throws Exception
-     */
-    public void BFS_visit(int vertice){
+    public void bfs(int vertice){
 
       System.out.println("Recorrido desde "+vertice+":");
 
@@ -88,4 +83,8 @@ public class Graph {
           }
       }
   }
+  public void dfs(Boolean[] options, int trunc){
+    
+  }
+
 }
