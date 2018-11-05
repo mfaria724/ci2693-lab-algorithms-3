@@ -1,0 +1,149 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Apagadores {
+
+  public void backtracking(Home home){
+    
+    ArrayList<int[]> result = new ArrayList<int[]>();
+    
+    int[] initialState = new int[home.getNumberOfRooms() + 1];
+    Arrays.fill(initialState, 0);
+    initialState[0] = 1;
+    initialState[1] = 1;
+
+    result.add(initialState);
+
+    result = BT(home, result);
+
+  }
+
+  public ArrayList<int[]> BT(Home home, ArrayList<int[]> initialState){
+    
+    ArrayList<ArrayList<int[]>> solutions = new ArrayList<ArrayList<int[]>>();
+
+    if(isSolutions(initialState)){
+      solutions.add(initialState);
+    }
+
+    
+
+
+    return solutions;
+
+  }
+
+  public boolean isSolution(ArrayList<int[]> initialState){
+    
+    int[] lastState = initialState.get(initialState.size() - 1);
+    
+    if(lastState[0] != lastState.length - 2){
+      return false;
+    }
+
+    for(int i = 1; i < lastState.length - 1; i++){
+      if(lastState[i] != 0){
+        return false;
+      }
+    }
+
+    if(lastState[lastState.length - 1] != 1){
+      return false;
+    }
+
+    return true;
+  }
+
+  public void validActions(){
+
+  } 
+
+  public void apply(){
+
+  }
+
+  public static Home readFile(String path){
+
+    // Variables declaration.
+    BufferedReader Lector;   
+    String line;
+    String[] quantities;
+    int rooms;
+    int connections;
+    int switches;
+    Home home = new Home(1);
+
+    try {
+      // Variables initialization.
+      Lector = new BufferedReader(new FileReader(path));
+      line = Lector.readLine();
+      quantities = line.split(" ");
+
+      rooms = Integer.parseInt(quantities[0]);  
+      connections = Integer.parseInt(quantities[1]);    
+      switches = Integer.parseInt(quantities[2]);  
+      
+      home = new Home(rooms);
+
+      // Add connections.
+      for(int i = 0; i < connections; i++){
+        
+        // Read line.
+        line = Lector.readLine();
+
+        // Gets rooms.
+        String[] roomsIndexes = line.split(" ");
+        int Room1 = Integer.parseInt(roomsIndexes[0]);
+        int Room2 = Integer.parseInt(roomsIndexes[1]);
+
+        // Adds connection.
+        home.addConnection(Room1, Room2);
+      }
+
+      // Add switches.
+      for(int i = 0; i < switches; i++){
+        
+        // Read line.
+        line = Lector.readLine();
+
+        // Gets rooms.
+        String[] roomsIndexes = line.split(" ");
+        int iRoom = Integer.parseInt(roomsIndexes[0]);
+        int fRoom = Integer.parseInt(roomsIndexes[1]);
+
+        // Adds connection.
+        home.addSwitch(iRoom, fRoom);
+      }
+
+    } catch (FileNotFoundException ex) { // If file doesn't exist.
+      System.out.println("El archivo especificado no existe, por favor, introduzca un archivo válido.");
+      System.exit(0);
+    } catch (IOException ex) { // If an I/O error occurs.
+      System.out.println("Ha ocurrido un error de entrada/salida.");
+      System.exit(0);
+    } catch (NumberFormatException ex) { // If file format is invalid.
+      System.out.println("El formato del archivo es incorrecto.");
+      System.exit(0);
+    } 
+
+    // Message to user.
+    System.out.println("El grafo de conexiones e interruputores de la casa fue leido correctamente.\n");
+    return home;
+
+  }
+  public static void main(String[] args) {
+
+    Home home;
+
+    if(args.length < 1){
+      System.out.println("Uso: java Apagadores <archivo>");
+    }else{
+      home = readFile(args[0]);
+      backtracking(home);
+    }
+
+
+
+  }
+
+}
