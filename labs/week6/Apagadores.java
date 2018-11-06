@@ -58,9 +58,36 @@ public class Apagadores {
     return true;
   }
 
-  public static void validActions(){
+  public ArrayList<int[]> validActions(Home home, ArrayList<int[]> initialState){
+    
+    ArrayList<int[]> result = new ArrayList<int[]>();
+    int[] finalState = result.get(result.size() - 1);
+    int n = finalState.length;
+    int[] possibleState = new int[n];
 
-  } 
+    // Prender o apagar las luces
+    for(int i=0; i<n - 1 ; i++){
+      if(finalState[i] == 0 && home.getSwitches()[finalState[n]][finalState[i]] == 1){
+        possibleState = finalState;
+        possibleState[i] = 1;
+        result.add(possibleState);
+
+      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n]][finalState[i]] == 0){
+        possibleState = finalState;
+        possibleState[i] = 0;
+        result.add(possibleState);
+      }
+
+      if(finalState[i] == 1 && home.getConnections()[finalState[n]][finalState[i]] == 1){
+        possibleState = finalState;
+        possibleState[n] = i;
+        result.add(possibleState);
+      }
+    }
+
+    return result;
+  
+  }
 
   public static void apply(){
 
