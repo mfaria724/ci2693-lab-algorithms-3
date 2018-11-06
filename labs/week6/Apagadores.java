@@ -1,36 +1,58 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class Apagadores {
 
   public static void backtracking(Home home){
     
-    ArrayList<int[]> result = new ArrayList<int[]>();
+    ArrayList<ArrayList<int[]>> result = new ArrayList<ArrayList<int[]>>();
+    ArrayList<int[]> initialState = new ArrayList<int[]>();
     
-    int[] initialState = new int[home.getNumberOfRooms() + 1];
-    Arrays.fill(initialState, 0);
-    initialState[0] = 1;
-    initialState[initialState.length - 1] = 0;
+    int[] first = new int[home.getNumberOfRooms() + 1];
+    Arrays.fill(first, 0);
+    first[0] = 1;
+    first[first.length - 1] = 0;
 
-    result.add(initialState);
+    initialState.add(first);
 
-    result = BT(home, result);
+    result = BT(home, initialState);
+
+    System.out.println("Resultados: " + result.size());
 
   }
 
-  public static ArrayList<int[]> BT(Home home, ArrayList<int[]> initialState){
+  public static ArrayList<ArrayList<int[]>> BT(Home home, ArrayList<int[]> initialState){
     
     ArrayList<ArrayList<int[]>> solutions = new ArrayList<ArrayList<int[]>>();
 
-    if(isSolutions(initialState)){
+    for(int i = 0; i < initialState.size(); i++){
+      System.out.println("Estado " + i + ": ");
+      System.out.print("[");
+      for(int j = 0; j < initialState.get(i).length; j++){
+        System.out.print(initialState.get(i)[j]);
+        System.out.print(",");
+      }
+      System.out.print("]\n");
+    }
+
+    if(isSolution(initialState)){
       solutions.add(initialState);
     }
 
+    System.out.println("Paso is solution:");
+
     ArrayList<int[]> validActions = validActions(home, initialState);
 
+    System.out.println("Paso acciones validas");
+
     for(int i = 0; i < validActions.size(); i++){
-      ArrayList<int[]> newState = apply(initialState, validActions.get(i));
-      solutions.add(BT(home, newState));
+      ArrayList<int[]> newState = new ArrayList<int[]>(initialState); 
+      newState.add(validActions.get(i));
+      solutions.addAll(BT(home, newState));
     }
 
     return solutions;
@@ -58,7 +80,7 @@ public class Apagadores {
     return true;
   }
 
-  public ArrayList<int[]> validActions(Home home, ArrayList<int[]> initialState){
+  public static ArrayList<int[]> validActions(Home home, ArrayList<int[]> initialState){
     
     ArrayList<int[]> result = new ArrayList<int[]>();
     int[] finalState = result.get(result.size() - 1);
@@ -89,10 +111,6 @@ public class Apagadores {
   
   }
 
-  public static void apply(){
-
-  }
-
   public static Home readFile(String path){
 
     // Variables declaration.
@@ -113,7 +131,7 @@ public class Apagadores {
       rooms = Integer.parseInt(quantities[0]);  
       connections = Integer.parseInt(quantities[1]);    
       switches = Integer.parseInt(quantities[2]);  
-      
+
       home = new Home(rooms);
 
       // Add connections.
@@ -124,8 +142,8 @@ public class Apagadores {
 
         // Gets rooms.
         String[] roomsIndexes = line.split(" ");
-        int Room1 = Integer.parseInt(roomsIndexes[0]);
-        int Room2 = Integer.parseInt(roomsIndexes[1]);
+        int Room1 = Integer.parseInt(roomsIndexes[0]) - 1;
+        int Room2 = Integer.parseInt(roomsIndexes[1]) - 1;
 
         // Adds connection.
         home.addConnection(Room1, Room2);
@@ -139,8 +157,8 @@ public class Apagadores {
 
         // Gets rooms.
         String[] roomsIndexes = line.split(" ");
-        int iRoom = Integer.parseInt(roomsIndexes[0]);
-        int fRoom = Integer.parseInt(roomsIndexes[1]);
+        int iRoom = Integer.parseInt(roomsIndexes[0]) - 1;
+        int fRoom = Integer.parseInt(roomsIndexes[1]) - 1;
 
         // Adds connection.
         home.addSwitch(iRoom, fRoom);
@@ -156,6 +174,29 @@ public class Apagadores {
       System.out.println("El formato del archivo es incorrecto.");
       System.exit(0);
     } 
+
+    // System.out.println("Rooms: " + home.getConnections().length);
+    // System.out.println("Connections: ");
+    // String ll = "";
+    // for(int i = 0; i < home.getConnections().length; i++){
+    //   for(int j = 0; j < home.getConnections().length; j++){
+    //     ll += home.getConnections()[i][j] + " ";
+    //   }
+    //   ll += "\n";
+    // }
+    // System.out.println(ll);
+
+    // System.out.println("Switches: ");
+    // ll = "";
+    // for(int i = 0; i < home.getSwitches().length; i++){
+    //   for(int j = 0; j < home.getSwitches().length; j++){
+    //     ll += home.getSwitches()[i][j] + " ";
+    //   }
+    //   ll += "\n";
+    // }
+
+    // System.out.println(ll);
+
 
     // Message to user.
     System.out.println("El grafo de conexiones e interruputores de la casa fue leido correctamente.\n");
