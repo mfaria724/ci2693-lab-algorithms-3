@@ -66,18 +66,18 @@ public class Apagadores {
     int[] possibleState = new int[n];
 
     for(int i=0; i<n - 1 ; i++){
-      if(finalState[i] == 0 && home.getSwitches()[finalState[n]][finalState[i]] == 1){
+      if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][finalState[i]] == 1){
         possibleState = finalState;
         possibleState[i] = 1;
         result.add(possibleState);
 
-      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n]][finalState[i]] == 0){
+      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][finalState[i]] == 0){
         possibleState = finalState;
         possibleState[i] = 0;
         result.add(possibleState);
       }
 
-      if(finalState[i] == 1 && home.getConnections()[finalState[n]][finalState[i]] == 1){
+      if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][finalState[i]] == 1){
         possibleState = finalState;
         possibleState[n-1] = i;
         result.add(possibleState);
