@@ -15,7 +15,7 @@ public class Apagadores {
     int[] first = new int[home.getNumberOfRooms() + 1];
     Arrays.fill(first, 0);
     first[0] = 1;
-    first[first.length - 1] = 0;
+    // first[first.length - 1] = 0;
 
     initialState.add(first);
 
@@ -109,19 +109,23 @@ public class Apagadores {
       // System.out.println("finalState[n-1]: " + finalState[n-1]);
       // System.out.println("finalState[i]: " + finalState[i]);
       // System.out.println("Iteracion: " + home);
-      if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][finalState[i]] == 1){
-        possibleState = finalState;
+
+      // Prender luz
+      if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][i] == 1){
+        possibleState = finalState.clone();
         possibleState[i] = 1;
         result.add(possibleState);
-
-      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][finalState[i]] == 0){
-        possibleState = finalState;
-        possibleState[i] = 0;
+        
+        // Apagar Luz
+      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][i] == 1){
+        possibleState = finalState.clone();
+        possibleState[i] = 0; 
         result.add(possibleState);
       }
 
-      if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][finalState[i]] == 1){
-        possibleState = finalState;
+      // Moverse
+      if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][i] == 1){
+        possibleState = finalState.clone();
         possibleState[n-1] = i;
         result.add(possibleState);
       }
@@ -195,27 +199,27 @@ public class Apagadores {
       System.exit(0);
     } 
 
-    // System.out.println("Rooms: " + home.getConnections().length);
-    // System.out.println("Connections: ");
-    // String ll = "";
-    // for(int i = 0; i < home.getConnections().length; i++){
-    //   for(int j = 0; j < home.getConnections().length; j++){
-    //     ll += home.getConnections()[i][j] + " ";
-    //   }
-    //   ll += "\n";
-    // }
-    // System.out.println(ll);
+    System.out.println("Rooms: " + home.getConnections().length);
+    System.out.println("Connections: ");
+    String ll = "";
+    for(int i = 0; i < home.getConnections().length; i++){
+      for(int j = 0; j < home.getConnections().length; j++){
+        ll += home.getConnections()[i][j] + " ";
+      }
+      ll += "\n";
+    }
+    System.out.println(ll);
 
-    // System.out.println("Switches: ");
-    // ll = "";
-    // for(int i = 0; i < home.getSwitches().length; i++){
-    //   for(int j = 0; j < home.getSwitches().length; j++){
-    //     ll += home.getSwitches()[i][j] + " ";
-    //   }
-    //   ll += "\n";
-    // }
+    System.out.println("Switches: ");
+    ll = "";
+    for(int i = 0; i < home.getSwitches().length; i++){
+      for(int j = 0; j < home.getSwitches().length; j++){
+        ll += home.getSwitches()[i][j] + " ";
+      }
+      ll += "\n";
+    }
 
-    // System.out.println(ll);
+    System.out.println(ll);
 
 
     // Message to user.
