@@ -7,150 +7,43 @@ import java.io.FileReader;
 
 public class Apagadores {
 
-  public static int contador = 0;
-  public static ArrayList<int[]> shortestWay = new ArrayList<>();
+  public static ArrayList<int[]> BFS(Home home){
 
-  public static void backtracking(Home home){
-    
-    ArrayList<ArrayList<int[]>> result = new ArrayList<ArrayList<int[]>>();
-    ArrayList<int[]> initialState = new ArrayList<int[]>();
-    
+    ArrayList<int[]> shortestWay = new ArrayList<int[]>();
+
     int[] first = new int[home.getNumberOfRooms() + 1];
     Arrays.fill(first, 0);
     first[0] = 1;
-    // first[first.length - 1] = 0;
+    shortestWay.add(first);
 
-    initialState.add(first);
+    ArrayList<ArrayList<int[]>> queue = new ArrayList<ArrayList<int[]>>();
+    queue.add(shortestWay);
 
-    result = BT(home, initialState);
+    while (queue.size() != 0){
 
-    String ll = "";
-      
-    for(int i=0; i< result.size();i++){  
-      ll += "<";
-      for(int j = 0; j < result.get(i).size(); j++){
-        ll += "[";
-        for(int k = 0; k < result.get(i).get(j).length; k++){
-          ll += result.get(i).get(j)[k] + ",";
+      ArrayList<int[]> x = queue.get(0);
+      queue.remove(0);
+
+      ArrayList<int[]> validActions = validActions(home, x);
+
+      for(int i = 0; i < validActions.size(); i++){
+        shortestWay = new ArrayList<int[]>(x);
+        int[] action = validActions.get(i);
+
+        shortestWay.add(action);
+
+        if(isSolution(shortestWay)){
+          printResult(shortestWay);
+          return shortestWay;
         }
-        ll += "],";
+        
+        queue.add(shortestWay);
       }
-      ll += ">\n";
-    }
-    System.out.println(ll);
-    
-    System.out.println("shortestWay validActions: ");
-    for(int i = 0; i < shortestWay.size(); i++){
-      System.out.print("[");
-      for(int j = 0; j < shortestWay.get(i).length; j++){
-        System.out.print(shortestWay.get(i)[j]);
-        System.out.print(",");
-      }
-      System.out.print("]\n");  
-    }
-
-    
-
-    System.out.println("Resultados: " + result.size());
-
-  }
-
-  public static ArrayList<ArrayList<int[]>> BT(Home home, ArrayList<int[]> initialState){
-    
-    System.out.println("Esta iniciando BT");
-    ArrayList<ArrayList<int[]>> solutions = new ArrayList<ArrayList<int[]>>();
-
-    for(int i = 0; i < initialState.size(); i++){
-      if(i > 9){
-        System.exit(0);
-      }
-      System.out.println("Estado " + i + ": ");
-      System.out.print("[");
-      for(int j = 0; j < initialState.get(i).length; j++){
-        System.out.print(initialState.get(i)[j]);
-        System.out.print(",");
-      }
-      System.out.print("]\n");
-    }
-
-    if(isSolution(initialState)){
-      if(shortestWay.size() == 0){
-        shortestWay = initialState;
-        solutions.add(initialState);
-      } else {
-        if(initialState.size() < shortestWay.size()){
-          shortestWay = initialState;
-          solutions.add(initialState);
-        } else{
-          solutions.add(initialState);
-          
-        }
-      }
-    }
-
-    // if(Arrays.equals(initialState.get(initialState.size() - 1), [1,1,1,1,0,1]) ){
-    //   System.exit(0);
-    // }
-
-    System.out.println("Paso is solution:");
-
-    ArrayList<int[]> validActions = validActions(home, initialState);
-
-    System.out.println("Paso acciones validas " + validActions.size());
-
-    for(int i = 0; i < validActions.size(); i++){
-
-      System.out.print("validAction " + i + ": ");
-      System.out.print("[");
-      for(int j = 0; j < validActions.get(i).length; j++){
-        System.out.print(validActions.get(i)[j]);
-        System.out.print(",");
-      }
-      System.out.print("]\n");
-
-      ArrayList<int[]> newState = new ArrayList<int[]>(initialState); 
-
-      String ll = "";
-      
-      System.out.println("newState antes: " + newState.size());
-      for(int j = 0; j < newState.size(); j++){
-        ll = "[";
-        for(int k = 0; k < newState.get(j).length; k++){
-          ll += newState.get(j)[k] + ",";
-        }
-        ll += "]\n";
-      }
-      System.out.println(ll);
-
-
-      newState.add(validActions.get(i));
-
-
-      System.out.println("newState despues: " + newState.size());
-      for(int j = 0; j < newState.size(); j++){
-        System.out.println("Elemento " + j);
-        ll = "[";
-        for(int k = 0; k < newState.get(j).length; k++){
-          ll += newState.get(j)[k] + ",";
-        }
-        ll += "]\n";
-        System.out.println(ll);
-      }
-
-      System.out.println("Aqui");
-      
-      // if(contador > 80){
-        // System.exit(0);
-      // }
-
-      contador += 1;
-      System.out.println("Entro recursion");
-      solutions.addAll(BT(home, newState));
-      System.out.println("Salgo recursion");
 
     }
 
-    return solutions;
+    printResult(shortestWay);
+    return shortestWay;
 
   }
 
@@ -173,28 +66,17 @@ public class Apagadores {
     }
 
     return true;
+  
   }
 
   public static ArrayList<int[]> validActions(Home home, ArrayList<int[]> initialState){
-    
+
     ArrayList<int[]> result = new ArrayList<int[]>();
     int[] finalState = initialState.get(initialState.size() - 1);
     int n = finalState.length;
     int[] possibleState = new int[n];
 
-    // System.out.print("finalState validActions: ");
-    // System.out.print("[");
-    // for(int j = 0; j < finalState.length; j++){
-    //   System.out.print(finalState[j]);
-    //   System.out.print(",");
-    // }
-    // System.out.print("]\n");
-    // Prender o apagar las luces
     for(int i = 0; i < n-1 ; i++){
-      // System.out.println("Iteracion: " + i);
-      // System.out.println("finalState[n-1]: " + finalState[n-1]);
-      // System.out.println("finalState[i]: " + finalState[i]);
-      // System.out.println("Iteracion: " + home);
 
       // Prender luz
       if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][i] == 1){
@@ -226,19 +108,6 @@ public class Apagadores {
       }
     }
 
-    
-
-    // System.out.println("result validActions: ");
-    // for(int i = 0; i < result.size(); i++){
-    //   System.out.print("[");
-    //   for(int j = 0; j < result.get(i).length; j++){
-    //     System.out.print(result.get(i)[j]);
-    //     System.out.print(",");
-    //   }
-    //   System.out.print("]\n");  
-    // }
-
-
     return result;
   
   }
@@ -252,6 +121,43 @@ public class Apagadores {
       }
     }
     return result;
+  }
+
+  public static void printResult(ArrayList<int[]> way){
+
+    if(way.size() != 1){
+      System.out.println("El problema puede ser resuelto en " + (way.size() - 1) + " pasos.");
+
+      for(int i = 1; i < way.size(); i++){
+        int[] last = way.get(i - 1);
+        int[] actual = way.get(i);
+
+        if(last[last.length - 1] != actual[actual.length - 1]){
+          System.out.println("- Muévete a la habitación " + (actual[actual.length - 1] + 1));
+        }else{
+
+          for(int j = 0; j < last.length - 1; j++){
+
+            // System.out.println("Last[j] " + last);
+            // System.out.println();
+
+            if(last[j] < actual[j]){
+              System.out.println("- Enciende la luz de la habitación " + (j + 1));
+              break;
+            }else if(last[j] > actual[j]) {
+              System.out.println("- Apaga la luz de la habitación " + (j + 1));
+              break;
+            }
+          }
+
+        }
+
+      }
+
+    }else {
+      System.out.println("El problema no puede ser resuelto.");
+    }
+
   }
 
   public static Home readFile(String path){
@@ -318,29 +224,6 @@ public class Apagadores {
       System.exit(0);
     } 
 
-    System.out.println("Rooms: " + home.getConnections().length);
-    System.out.println("Connections: ");
-    String ll = "";
-    for(int i = 0; i < home.getConnections().length; i++){
-      for(int j = 0; j < home.getConnections().length; j++){
-        ll += home.getConnections()[i][j] + " ";
-      }
-      ll += "\n";
-    }
-    System.out.println(ll);
-
-    System.out.println("Switches: ");
-    ll = "";
-    for(int i = 0; i < home.getSwitches().length; i++){
-      for(int j = 0; j < home.getSwitches().length; j++){
-        ll += home.getSwitches()[i][j] + " ";
-      }
-      ll += "\n";
-    }
-
-    System.out.println(ll);
-
-
     // Message to user.
     System.out.println("El grafo de conexiones e interruputores de la casa fue leido correctamente.\n");
     return home;
@@ -354,7 +237,7 @@ public class Apagadores {
       System.out.println("Uso: java Apagadores <archivo>");
     }else{
       home = readFile(args[0]);
-      backtracking(home);
+      BFS(home);
     }
 
 
