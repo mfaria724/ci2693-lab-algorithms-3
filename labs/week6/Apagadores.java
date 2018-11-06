@@ -65,7 +65,6 @@ public class Apagadores {
     int n = finalState.length;
     int[] possibleState = new int[n];
 
-    // Prender o apagar las luces
     for(int i=0; i<n - 1 ; i++){
       if(finalState[i] == 0 && home.getSwitches()[finalState[n]][finalState[i]] == 1){
         possibleState = finalState;
@@ -80,7 +79,7 @@ public class Apagadores {
 
       if(finalState[i] == 1 && home.getConnections()[finalState[n]][finalState[i]] == 1){
         possibleState = finalState;
-        possibleState[n] = i;
+        possibleState[n-1] = i;
         result.add(possibleState);
       }
     }
