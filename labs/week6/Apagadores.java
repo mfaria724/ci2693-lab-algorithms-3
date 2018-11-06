@@ -47,12 +47,21 @@ public class Apagadores {
 
     ArrayList<int[]> validActions = validActions(home, initialState);
 
-    System.out.println("Paso acciones validas");
+    System.out.println("Paso acciones validas " + validActions.size());
 
     for(int i = 0; i < validActions.size(); i++){
+
+      System.out.print("validAction " + i + ": ");
+      System.out.print("[");
+      for(int j = 0; j < validActions.get(i).length; j++){
+        System.out.print(validActions.get(i)[j]);
+        System.out.print(",");
+      }
+      System.out.print("]\n");
+
       ArrayList<int[]> newState = new ArrayList<int[]>(initialState); 
       newState.add(validActions.get(i));
-      solutions.addAll(BT(home, newState));
+      // solutions.addAll(BT(home, newState));
     }
 
     return solutions;
@@ -87,22 +96,33 @@ public class Apagadores {
     int n = finalState.length;
     int[] possibleState = new int[n];
 
+    // System.out.print("finalState validActions: ");
+    // System.out.print("[");
+    // for(int j = 0; j < finalState.length; j++){
+    //   System.out.print(finalState[j]);
+    //   System.out.print(",");
+    // }
+    // System.out.print("]\n");
     // Prender o apagar las luces
-    for(int i=0; i<n - 1 ; i++){
-      if(finalState[i] == 0 && home.getSwitches()[finalState[n]][finalState[i]] == 1){
+    for(int i = 0; i < n-1 ; i++){
+      // System.out.println("Iteracion: " + i);
+      // System.out.println("finalState[n-1]: " + finalState[n-1]);
+      // System.out.println("finalState[i]: " + finalState[i]);
+      // System.out.println("Iteracion: " + home);
+      if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][finalState[i]] == 1){
         possibleState = finalState;
         possibleState[i] = 1;
         result.add(possibleState);
 
-      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n]][finalState[i]] == 0){
+      } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][finalState[i]] == 0){
         possibleState = finalState;
         possibleState[i] = 0;
         result.add(possibleState);
       }
 
-      if(finalState[i] == 1 && home.getConnections()[finalState[n]][finalState[i]] == 1){
+      if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][finalState[i]] == 1){
         possibleState = finalState;
-        possibleState[n] = i;
+        possibleState[n-1] = i;
         result.add(possibleState);
       }
     }
