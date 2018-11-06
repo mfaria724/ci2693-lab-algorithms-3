@@ -61,7 +61,7 @@ public class Apagadores {
   public ArrayList<int[]> validActions(Home home, ArrayList<int[]> initialState){
     
     ArrayList<int[]> result = new ArrayList<int[]>();
-    int[] finalState = result.get(result.size() - 1);
+    int[] finalState = initialState.get(result.size() - 1);
     int n = finalState.length;
     int[] possibleState = new int[n];
 
