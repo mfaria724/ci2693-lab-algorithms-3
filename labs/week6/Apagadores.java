@@ -7,6 +7,8 @@ import java.io.FileReader;
 
 public class Apagadores {
 
+  public static int contador = 0;
+
   public static void backtracking(Home home){
     
     ArrayList<ArrayList<int[]>> result = new ArrayList<ArrayList<int[]>>();
@@ -61,7 +63,39 @@ public class Apagadores {
       System.out.print("]\n");
 
       ArrayList<int[]> newState = new ArrayList<int[]>(initialState); 
+
+      String ll = "";
+      
+      System.out.println("newState antes: " + newState.size());
+      for(int j = 0; j < newState.size(); j++){
+        ll = "[";
+        for(int k = 0; k < newState.get(j).length; k++){
+          ll += newState.get(j)[k] + ",";
+        }
+        ll += "]\n";
+      }
+      System.out.println(ll);
+
+
       newState.add(validActions.get(i));
+
+
+      System.out.println("newState despues: " + newState.size());
+      for(int j = 0; j < newState.size(); j++){
+        System.out.println("Elemento " + j);
+        ll = "[";
+        for(int k = 0; k < newState.get(j).length; k++){
+          ll += newState.get(j)[k] + ",";
+        }
+        ll += "]\n";
+        System.out.println(ll);
+      }
+
+      System.out.println("Aqui");
+      if(contador > 1){
+        System.exit(0);
+      }
+      contador += 1;
       solutions.addAll(BT(home, newState));
     }
 
@@ -139,7 +173,7 @@ public class Apagadores {
 
     
 
-    System.out.print("result validActions: ");
+    System.out.println("result validActions: ");
     for(int i = 0; i < result.size(); i++){
       System.out.print("[");
       for(int j = 0; j < result.get(i).length; j++){
