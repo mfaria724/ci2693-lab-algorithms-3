@@ -10,7 +10,7 @@ public class Apagadores {
     int[] initialState = new int[home.getNumberOfRooms() + 1];
     Arrays.fill(initialState, 0);
     initialState[0] = 1;
-    initialState[1] = 1;
+    initialState[initialState.length - 1] = 0;
 
     result.add(initialState);
 
@@ -40,18 +40,18 @@ public class Apagadores {
   public static boolean isSolution(ArrayList<int[]> initialState){
     
     int[] lastState = initialState.get(initialState.size() - 1);
-    
-    if(lastState[0] != lastState.length - 2){
-      return false;
-    }
 
-    for(int i = 1; i < lastState.length - 1; i++){
+    for(int i = 0; i < lastState.length - 2; i++){
       if(lastState[i] != 0){
         return false;
       }
     }
 
-    if(lastState[lastState.length - 1] != 1){
+    if(lastState[lastState.length - 2] != 1){
+      return false;
+    }
+
+    if(lastState[lastState.length - 1] != lastState.length - 2){
       return false;
     }
 
