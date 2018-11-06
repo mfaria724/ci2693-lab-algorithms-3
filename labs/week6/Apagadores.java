@@ -27,6 +27,7 @@ public class Apagadores {
 
   public static ArrayList<ArrayList<int[]>> BT(Home home, ArrayList<int[]> initialState){
     
+    System.out.println("Esta iniciando BT");
     ArrayList<ArrayList<int[]>> solutions = new ArrayList<ArrayList<int[]>>();
 
     for(int i = 0; i < initialState.size(); i++){
@@ -114,22 +115,29 @@ public class Apagadores {
       if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][i] == 1){
         possibleState = finalState.clone();
         possibleState[i] = 1;
-        result.add(possibleState);
-        
+        if(!initialState.contains(possibleState)){
+          result.add(possibleState);
+        }
         // Apagar Luz
       } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][i] == 1){
         possibleState = finalState.clone();
         possibleState[i] = 0; 
-        result.add(possibleState);
+        if(!initialState.contains(possibleState)){
+          result.add(possibleState);
+        }
       }
 
       // Moverse
       if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][i] == 1){
         possibleState = finalState.clone();
         possibleState[n-1] = i;
-        result.add(possibleState);
+        if(!initialState.contains(possibleState)){
+          result.add(possibleState);
+        }
       }
     }
+
+    
 
     System.out.print("result validActions: ");
     for(int i = 0; i < result.size(); i++){
@@ -140,6 +148,7 @@ public class Apagadores {
       }
       System.out.print("]\n");  
     }
+
 
     return result;
   
