@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class Apagadores {
 
-  public void backtracking(Home home){
+  public static void backtracking(Home home){
     
     ArrayList<int[]> result = new ArrayList<int[]>();
     
@@ -18,7 +18,7 @@ public class Apagadores {
 
   }
 
-  public ArrayList<int[]> BT(Home home, ArrayList<int[]> initialState){
+  public static ArrayList<int[]> BT(Home home, ArrayList<int[]> initialState){
     
     ArrayList<ArrayList<int[]>> solutions = new ArrayList<ArrayList<int[]>>();
 
@@ -26,14 +26,18 @@ public class Apagadores {
       solutions.add(initialState);
     }
 
-    
+    ArrayList<int[]> validActions = validActions(home, initialState);
 
+    for(int i = 0; i < validActions.size(); i++){
+      ArrayList<int[]> newState = apply(initialState, validActions.get(i));
+      solutions.add(BT(home, newState));
+    }
 
     return solutions;
 
   }
 
-  public boolean isSolution(ArrayList<int[]> initialState){
+  public static boolean isSolution(ArrayList<int[]> initialState){
     
     int[] lastState = initialState.get(initialState.size() - 1);
     
@@ -54,11 +58,11 @@ public class Apagadores {
     return true;
   }
 
-  public void validActions(){
+  public static void validActions(){
 
   } 
 
-  public void apply(){
+  public static void apply(){
 
   }
 
