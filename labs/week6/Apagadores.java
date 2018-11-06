@@ -61,7 +61,7 @@ public class Apagadores {
 
       ArrayList<int[]> newState = new ArrayList<int[]>(initialState); 
       newState.add(validActions.get(i));
-      // solutions.addAll(BT(home, newState));
+      solutions.addAll(BT(home, newState));
     }
 
     return solutions;
@@ -129,6 +129,16 @@ public class Apagadores {
         possibleState[n-1] = i;
         result.add(possibleState);
       }
+    }
+
+    System.out.print("result validActions: ");
+    for(int i = 0; i < result.size(); i++){
+      System.out.print("[");
+      for(int j = 0; j < result.get(i).length; j++){
+        System.out.print(result.get(i)[j]);
+        System.out.print(",");
+      }
+      System.out.print("]\n");  
     }
 
     return result;
