@@ -8,6 +8,7 @@ import java.io.FileReader;
 public class Apagadores {
 
   public static int contador = 0;
+  public static ArrayList<int[]> shortestWay = new ArrayList<>();
 
   public static void backtracking(Home home){
     
@@ -23,6 +24,33 @@ public class Apagadores {
 
     result = BT(home, initialState);
 
+    String ll = "";
+      
+    for(int i=0; i< result.size();i++){  
+      ll += "<";
+      for(int j = 0; j < result.get(i).size(); j++){
+        ll += "[";
+        for(int k = 0; k < result.get(i).get(j).length; k++){
+          ll += result.get(i).get(j)[k] + ",";
+        }
+        ll += "],";
+      }
+      ll += ">\n";
+    }
+    System.out.println(ll);
+    
+    System.out.println("shortestWay validActions: ");
+    for(int i = 0; i < shortestWay.size(); i++){
+      System.out.print("[");
+      for(int j = 0; j < shortestWay.get(i).length; j++){
+        System.out.print(shortestWay.get(i)[j]);
+        System.out.print(",");
+      }
+      System.out.print("]\n");  
+    }
+
+    
+
     System.out.println("Resultados: " + result.size());
 
   }
@@ -33,6 +61,9 @@ public class Apagadores {
     ArrayList<ArrayList<int[]>> solutions = new ArrayList<ArrayList<int[]>>();
 
     for(int i = 0; i < initialState.size(); i++){
+      if(i > 9){
+        System.exit(0);
+      }
       System.out.println("Estado " + i + ": ");
       System.out.print("[");
       for(int j = 0; j < initialState.get(i).length; j++){
@@ -43,8 +74,23 @@ public class Apagadores {
     }
 
     if(isSolution(initialState)){
-      solutions.add(initialState);
+      if(shortestWay.size() == 0){
+        shortestWay = initialState;
+        solutions.add(initialState);
+      } else {
+        if(initialState.size() < shortestWay.size()){
+          shortestWay = initialState;
+          solutions.add(initialState);
+        } else{
+          solutions.add(initialState);
+          
+        }
+      }
     }
+
+    // if(Arrays.equals(initialState.get(initialState.size() - 1), [1,1,1,1,0,1]) ){
+    //   System.exit(0);
+    // }
 
     System.out.println("Paso is solution:");
 
@@ -92,11 +138,16 @@ public class Apagadores {
       }
 
       System.out.println("Aqui");
-      if(contador > 1){
-        System.exit(0);
-      }
+      
+      // if(contador > 80){
+        // System.exit(0);
+      // }
+
       contador += 1;
+      System.out.println("Entro recursion");
       solutions.addAll(BT(home, newState));
+      System.out.println("Salgo recursion");
+
     }
 
     return solutions;
@@ -149,14 +200,16 @@ public class Apagadores {
       if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][i] == 1){
         possibleState = finalState.clone();
         possibleState[i] = 1;
-        if(!initialState.contains(possibleState)){
+        if(!containsArray(initialState,possibleState)){
+        
           result.add(possibleState);
         }
         // Apagar Luz
       } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][i] == 1){
         possibleState = finalState.clone();
         possibleState[i] = 0; 
-        if(!initialState.contains(possibleState)){
+        if(!containsArray(initialState,possibleState)){
+
           result.add(possibleState);
         }
       }
@@ -165,7 +218,9 @@ public class Apagadores {
       if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][i] == 1){
         possibleState = finalState.clone();
         possibleState[n-1] = i;
-        if(!initialState.contains(possibleState)){
+
+        if(!containsArray(initialState,possibleState)){
+
           result.add(possibleState);
         }
       }
@@ -173,19 +228,30 @@ public class Apagadores {
 
     
 
-    System.out.println("result validActions: ");
-    for(int i = 0; i < result.size(); i++){
-      System.out.print("[");
-      for(int j = 0; j < result.get(i).length; j++){
-        System.out.print(result.get(i)[j]);
-        System.out.print(",");
-      }
-      System.out.print("]\n");  
-    }
+    // System.out.println("result validActions: ");
+    // for(int i = 0; i < result.size(); i++){
+    //   System.out.print("[");
+    //   for(int j = 0; j < result.get(i).length; j++){
+    //     System.out.print(result.get(i)[j]);
+    //     System.out.print(",");
+    //   }
+    //   System.out.print("]\n");  
+    // }
 
 
     return result;
   
+  }
+
+  private static boolean containsArray(ArrayList<int[]> states, int[] possibleState){
+    boolean result = false;
+
+    for(int i=0;i<states.size();i++){
+      if(Arrays.equals(states.get(i),possibleState)){
+        result = true;
+      }
+    }
+    return result;
   }
 
   public static Home readFile(String path){
