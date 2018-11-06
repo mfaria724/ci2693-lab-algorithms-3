@@ -20,5 +20,15 @@ public class Home {
   public int getNumberOfRooms(){
     return this.connections.length;
   }
+
+  public int[][] getSwitches(){
+    int[][] result = this.switches;
+    return result;
+  }
+
+  public int[][] getConnections(){
+    int[][] result = this.connections;
+    return result;
+  }
   
 }
