@@ -101,52 +101,88 @@ public class Apagadores {
   
   }
 
+  /**
+   * Method that return all the valid actions from the current state
+   * @param home class that contains the matrix of light switches and connections between rooms
+   * @param initialState current way
+   * @return a list with the valid actions (states)
+   */
   public static ArrayList<int[]> validActions(Home home, ArrayList<int[]> initialState){
 
+    // Initialize variables
     ArrayList<int[]> result = new ArrayList<int[]>();
+
+    // Takes current state of the current way
     int[] finalState = initialState.get(initialState.size() - 1);
     int n = finalState.length;
+    
     int[] possibleState = new int[n];
 
+    // Iterates over the rooms of the current state 
     for(int i = 0; i < n-1 ; i++){
 
-      // Prender luz
+      // Checks if the light of an room is off and it can be turned on
       if(finalState[i] == 0 && home.getSwitches()[finalState[n-1]][i] == 1){
+
+        // Modify the current state, turning on the light
         possibleState = finalState.clone();
         possibleState[i] = 1;
+
+        // Checks if the possible new state isn't already in the way.
         if(!containsArray(initialState,possibleState)){
-        
+          
+          // Add the action to the result
           result.add(possibleState);
         }
-        // Apagar Luz
+        
+        // Checks if the light of an room is on and it can be turned off
       } else if(finalState[i] == 1 && home.getSwitches()[finalState[n-1]][i] == 1){
+
+        // Modify the current state, turning off the light
         possibleState = finalState.clone();
         possibleState[i] = 0; 
+
+        // Checks if the possible new state isn't already in the way
         if(!containsArray(initialState,possibleState)){
 
+          // Add the action to the result
           result.add(possibleState);
         }
       }
 
-      // Moverse
+      // Checks if the light of an room is on, there is connection between this one and the current one
       if(finalState[i] == 1 && home.getConnections()[finalState[n-1]][i] == 1){
+
+        // Modify the current state, changing the location 
         possibleState = finalState.clone();
         possibleState[n-1] = i;
 
+        // Checks if the possibe new sate isn't already in the way
         if(!containsArray(initialState,possibleState)){
 
+          // Add the action to the result
           result.add(possibleState);
         }
       }
     }
 
+
     return result;
   
   }
 
+  /**
+   * Method that checks if a given list contains a given array
+   * @param states list where the array can be
+   * @param possibleState array that can be in the list
+   * @return true if the array is in the list, false if not
+   */
   private static boolean containsArray(ArrayList<int[]> states, int[] possibleState){
+
+    // Initialize return variables
     boolean result = false;
 
+    // Iterate over the list comparing every element with the array
     for(int i=0;i<states.size();i++){
       if(Arrays.equals(states.get(i),possibleState)){
         result = true;
