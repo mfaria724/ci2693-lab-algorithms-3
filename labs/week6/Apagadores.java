@@ -5,62 +5,94 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+/**
+ * Main class to implement main method an lab function.
+ */
 public class Apagadores {
 
+  /**
+   * Applies BFS over the implicit graph.
+   * @param home // Graph to calculate implicit graph.
+   * @return
+   */
   public static ArrayList<int[]> BFS(Home home){
 
+    // Variables initialization.
     ArrayList<int[]> shortestWay = new ArrayList<int[]>();
 
+    // Initial state.
     int[] first = new int[home.getNumberOfRooms() + 1];
     Arrays.fill(first, 0);
     first[0] = 1;
     shortestWay.add(first);
 
+    // Queue of states.
     ArrayList<ArrayList<int[]>> queue = new ArrayList<ArrayList<int[]>>();
     queue.add(shortestWay);
 
+    // Until there is no elements in the queue.
     while (queue.size() != 0){
 
+      // Pick an element from queue.
       ArrayList<int[]> x = queue.get(0);
       queue.remove(0);
 
+      // Gets all valid actions.
       ArrayList<int[]> validActions = validActions(home, x);
 
+      // Applies all valid actions.
       for(int i = 0; i < validActions.size(); i++){
+        
+        // Initializes a new way.
         shortestWay = new ArrayList<int[]>(x);
         int[] action = validActions.get(i);
 
+        // Adds new action to that way.
         shortestWay.add(action);
 
+        // Checks if you found solution.
         if(isSolution(shortestWay)){
+
+          // Prints result and returns.
           printResult(shortestWay);
           return shortestWay;
         }
         
+        // Adds new action to the queue.
         queue.add(shortestWay);
       }
 
     }
 
+    // Prints result.
     printResult(shortestWay);
     return shortestWay;
 
   }
 
+  /**
+   * Checks if a solution has been found.
+   * @param initialState // State for the solution.
+   * @return
+   */
   public static boolean isSolution(ArrayList<int[]> initialState){
     
+    // Gets last element.
     int[] lastState = initialState.get(initialState.size() - 1);
 
+    // Checks a room has lights off.
     for(int i = 0; i < lastState.length - 2; i++){
       if(lastState[i] != 0){
         return false;
       }
     }
 
+    // Checks if  last room has lights on.
     if(lastState[lastState.length - 2] != 1){
       return false;
     }
 
+    // Checks if is in the last room.
     if(lastState[lastState.length - 1] != lastState.length - 2){
       return false;
     }
@@ -123,43 +155,53 @@ public class Apagadores {
     return result;
   }
 
+  /**
+   * Prints result in specified way.
+   * @param way
+   */
   public static void printResult(ArrayList<int[]> way){
 
+    // Checks if there is a way.
     if(way.size() != 1){
+
+      // Number of steps.
       System.out.println("El problema puede ser resuelto en " + (way.size() - 1) + " pasos.");
 
+      // Prints each step.
       for(int i = 1; i < way.size(); i++){
         int[] last = way.get(i - 1);
         int[] actual = way.get(i);
 
+        // Movement or lights.
         if(last[last.length - 1] != actual[actual.length - 1]){
           System.out.println("- Muévete a la habitación " + (actual[actual.length - 1] + 1));
         }else{
 
           for(int j = 0; j < last.length - 1; j++){
-
-            // System.out.println("Last[j] " + last);
-            // System.out.println();
-
-            if(last[j] < actual[j]){
+            if(last[j] < actual[j]){ // Lights on
               System.out.println("- Enciende la luz de la habitación " + (j + 1));
               break;
-            }else if(last[j] > actual[j]) {
+            }else if(last[j] > actual[j]) { // Lights off
               System.out.println("- Apaga la luz de la habitación " + (j + 1));
               break;
             }
           }
-
+          
         }
-
       }
 
-    }else {
+    }else { // There is no way.
       System.out.println("El problema no puede ser resuelto.");
     }
 
   }
 
+  /**
+   * Reads a file with an specific format and charges it into Home representation (Graph with 
+   * two types of edges.)
+   * @param path // Path to file.
+   * @return
+   */
   public static Home readFile(String path){
 
     // Variables declaration.
@@ -219,28 +261,36 @@ public class Apagadores {
     } catch (IOException ex) { // If an I/O error occurs.
       System.out.println("Ha ocurrido un error de entrada/salida.");
       System.exit(0);
-    } catch (NumberFormatException ex) { // If file format is invalid.
+    } catch (Exception e){ // If file firmat is incorrect.
       System.out.println("El formato del archivo es incorrecto.");
       System.exit(0);
-    } 
+    }
 
     // Message to user.
     System.out.println("El grafo de conexiones e interruputores de la casa fue leido correctamente.\n");
     return home;
 
   }
+
+  /**
+   * Main program to run application.
+   * @param args
+   */
   public static void main(String[] args) {
 
+    // Variables initialization.
     Home home;
 
+    // Checks if file was provided.
     if(args.length < 1){
       System.out.println("Uso: java Apagadores <archivo>");
     }else{
+      // Reads home graph from file.
       home = readFile(args[0]);
+
+      // Applies BFS in implicit graph.
       BFS(home);
     }
-
-
 
   }
 
