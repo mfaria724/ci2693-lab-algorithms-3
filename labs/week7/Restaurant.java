@@ -32,8 +32,8 @@ public class Restaurant {
     Double[] cost = new Double[this.restaurant.size()];
     Integer[] father = new Integer[this.restaurant.size()];
 
-    Arrays.fill(cost, -1.0);
-    Arrays.fill(father, -1);
+    Arrays.fill(cost, null);
+    Arrays.fill(father, null);
 
   }
 
