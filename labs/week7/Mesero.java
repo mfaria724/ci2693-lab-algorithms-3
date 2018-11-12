@@ -14,20 +14,20 @@ public class Mesero {
     int tables;
     int connections;
     Restaurant restaurant = new Restaurant();
-    int[][] coordinates;
+    double[][] coordinates;
 
     try {
       // Variables initialization.
       Lector = new BufferedReader(new FileReader(path));
       line = Lector.readLine();
       tables = Integer.parseInt(line);
-      coordinates = new int[tables][2];
+      coordinates = new double[tables][2];
       restaurant = new Restaurant(tables);
 
       // Checks valid origin.
       if(origin >= tables){
         Lector.close();
-        throw new Exception("Invalid Origin");
+        // throw new Exception("Invalid Origin");
       }
 
       // Add tables.
@@ -40,8 +40,8 @@ public class Mesero {
         String[] tableCoord = line.split(" ");
 
         // Saves coordinates
-        coordinates[i][0] = Integer.parseInt(tableCoord[0]);
-        coordinates[i][1] = Integer.parseInt(tableCoord[1]);
+        coordinates[i][0] = Double.parseDouble(tableCoord[0]);
+        coordinates[i][1] = Double.parseDouble(tableCoord[1]);
         
       }
 
@@ -88,9 +88,9 @@ public class Mesero {
 
   }
 
-  public static double costE(int t1, int t2, int[][] coordinates){
-    int x = coordinates[t1][0] - coordinates[t2][0];
-    int y = coordinates[t1][1] - coordinates[t2][1];
+  public static double costE(int t1, int t2, double[][] coordinates){
+    double x = coordinates[t1][0] - coordinates[t2][0];
+    double y = coordinates[t1][1] - coordinates[t2][1];
     return Math.sqrt(( x * x ) + ( y * y ));
   }
 

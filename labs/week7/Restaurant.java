@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,10 +40,6 @@ public class Restaurant {
     while (queue.size() > 0){
       int w = minimunCost(queue, cost);
 
-      for(int i = 0; i < queue.size(); i++){
-        System.out.println(queue.get(i));
-      }
-
       HashSet<Integer> adj = adjacencies(w); 
       for (int v : adj) {
         if(cost[v] > cost[w] + this.graph[v][w]){
@@ -53,19 +50,7 @@ public class Restaurant {
 
     }
 
-    String ll = "[";
-    for(int i = 0; i < cost.length; i++){
-      ll += cost[i] + ",";
-    }
-    ll += "]";
-    System.out.println("Costos: " + ll);
-
-    ll = "[";
-    for(int i = 0; i < predecessors.length; i++){
-      ll += predecessors[i] + ",";
-    }
-    ll += "]";
-    System.out.println("Papas: " + ll);
+    this.printResult(cost, predecessors);
 
   }
 
@@ -85,7 +70,6 @@ public class Restaurant {
     }
 
     queue.remove(j);
-    System.out.println("Elemento min: " + min);
     return min;
   }
 
@@ -100,6 +84,35 @@ public class Restaurant {
     }
 
     return adj;
+
+  }
+
+  private void printResult(double[] cost, int[] predecessors){
+    
+    String result = "";
+
+    for(int i = 0; i < this.graph.length; i++){
+      result = "Nodo " + i + ": ";
+      int n = 0;
+      int x = predecessors[i];
+      String way = i + "";
+      
+      while (x != predecessors[x]){
+        way = x + "-->" + way;
+        n += 1;
+        x = predecessors[x];
+      }
+
+      if(i != predecessors[i]){
+        way = x + "-->" + way;
+        n += 1;
+      }
+
+      String thirdColumn = n + " lados (costo " + new DecimalFormat("0.0#").format(cost[i]) + ")";
+
+      String template = "%-9s%-20s%-13s%n";
+      System.out.printf(template, result, way, thirdColumn);
+    }
 
   }
 
