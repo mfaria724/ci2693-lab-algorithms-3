@@ -14,12 +14,15 @@ public class Mesero {
     int tables;
     int connections;
     Restaurant restaurant = new Restaurant();
+    int[][] coordinates;
 
     try {
       // Variables initialization.
       Lector = new BufferedReader(new FileReader(path));
       line = Lector.readLine();
       tables = Integer.parseInt(line);
+      coordinates = new int[tables][2];
+      restaurant = new Restaurant(tables);
 
       // Checks valid origin.
       if(origin >= tables){
@@ -35,15 +38,11 @@ public class Mesero {
 
         // Gets coordinates.
         String[] tableCoord = line.split(" ");
-        int x = Integer.parseInt(tableCoord[0]);
-        int y = Integer.parseInt(tableCoord[1]);
 
-        // Adds table.
-        if(i == origin){
-          restaurant.addTable(x, y, true);
-        }else {
-          restaurant.addTable(x, y, false);
-        }
+        // Saves coordinates
+        coordinates[i][0] = Integer.parseInt(tableCoord[0]);
+        coordinates[i][1] = Integer.parseInt(tableCoord[1]);
+        
       }
 
       // Read line.
@@ -60,9 +59,10 @@ public class Mesero {
         String[] tablesInd = line.split(" ");
         int t1 = Integer.parseInt(tablesInd[0]);
         int t2 = Integer.parseInt(tablesInd[1]);
+        double cost = costE(t1,t2, coordinates);
 
         // Adds connection.
-        restaurant.addConnection(t1, t2);
+        restaurant.addConnection(t1, t2, cost);
       }
 
     } catch (FileNotFoundException ex) { // If file doesn't exist.
@@ -88,6 +88,12 @@ public class Mesero {
 
   }
 
+  public static double costE(int t1, int t2, int[][] coordinates){
+    int x = coordinates[t1][0] - coordinates[t2][0];
+    int y = coordinates[t1][1] - coordinates[t2][1];
+    return Math.sqrt(( x * x ) + ( y * y ));
+  }
+
   public static void main(String[] args) {
     if(args.length < 2){
       System.out.println("Uso: java Mesero <instancia> <origen>");
@@ -99,10 +105,10 @@ public class Mesero {
       } catch (NumberFormatException e) {
         System.out.println("Nodo de origen inválido");
         System.out.println("Por favor, introduzca un nodo de origen válido.");
-      }// catch (Exception e){
-        //System.out.println("Ha ocurrido un error desconocido.");
-      //  System.out.println("El programa finalizará.");
-      //}
+      } catch (Exception e){
+        System.out.println("Ha ocurrido un error desconocido.");
+        System.out.println("El programa finalizará.");
+      }
     }
   }
 
