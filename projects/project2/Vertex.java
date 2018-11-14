@@ -5,10 +5,10 @@ import java.util.ArrayList;
  */
 public class Vertex{
   
-  // Vertex data.
+  // Vertex capacity.
   private String id;
-  private int data;
-  private int weight;
+  private int capacity;
+  private int floors;
   private ArrayList<Vertex> adjacents = new ArrayList<>();
 
   /**
@@ -21,26 +21,26 @@ public class Vertex{
   /**
    * Creates a new vertex.
    * @param id // Vertex's id.
-   * @param data // Vertex's data.
-   * @param weight // Vertex's weight.
+   * @param capacity // Vertex's capacity.
+   * @param floors // Vertex's floors.
    * @return // New Vertex.
    */
-  public Vertex(String id, int data, int weight){
+  public Vertex(String id, int capacity, int floors){
 
     // Initialice vertex.
     this.id = id;
-    this.data = data;
-    this.weight = weight;
+    this.capacity = capacity;
+    this.floors = floors;
     this.adjacents =  new ArrayList<Vertex>();
 
   }
 
   /**
-   * Gets the Vertex's weight 
-   * @return // Vertex's weight
+   * Gets the Vertex's floors 
+   * @return // Vertex's floors
    */
-  public int getWeight(){
-    return this.weight;
+  public int getFloors(){
+    return this.floors;
   };
 
   /**
@@ -52,11 +52,11 @@ public class Vertex{
   }
 
   /**
-   * Gets Vertex's data.
-   * @return // Vertex data.
+   * Gets Vertex's capacity.
+   * @return // Vertex capacity.
    */
-  public int getData(){
-    return this.data;
+  public int getCapacity(){
+    return this.capacity;
   }
 
   /**
@@ -66,8 +66,8 @@ public class Vertex{
   public String toString(){
     String vString = "";
     vString += "Id: " + this.id + "\n";
-    vString += "Dato: " + this.data + "\n";
-    vString += "Peso: " + this.weight + "\n";
+    vString += "Dato: " + this.capacity + "\n";
+    vString += "Peso: " + this.floors + "\n";
     return vString;
   }
 
