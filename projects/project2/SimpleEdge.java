@@ -1,40 +1,39 @@
 /**
  * Class to implement all Simple Edges TAD methods.
- * @param  // Type of data edge.
  */
 public class SimpleEdge{
   
   // Edge data.
   protected String id;
-  protected int data;
-  protected int weight;
+  protected double distance;
+  protected int capacity;
   protected String v1;
   protected String v2;
   
   /**
    * // Creates a new simple edge
    * @param id // Edge's id.
-   * @param data // Edge's data.
-   * @param weight // Edge's weight.
+   * @param distance // Edge's distance.
+   * @param capacity // Edge's capacity.
    * @param v1 // Vertex 1.
    * @param v2 // Vertex 2.
    * @return // Edge object.
    * @return
    */
-  public SimpleEdge(String id, int data, int weight, String v1, String v2){
+  public SimpleEdge(String id, double distance, int capacity, String v1, String v2){
     this.id = id;
-    this.data = data;
-    this.weight = weight;
+    this.distance = distance;
+    this.capacity = capacity;
     this.v1 = v1;
     this.v2 = v2;
   }
 
   /**
-   * Get the weight of an egde
-   * @return // Edge's weight
+   * Get the capacity of an egde
+   * @return // Edge's capacity
    */
-  protected int getWeight(){
-      return this.weight;
+  protected int getCapacity(){
+      return this.capacity;
   }
 
   /**
@@ -46,11 +45,11 @@ public class SimpleEdge{
   }
 
   /**
-   * Get data of an Edge
-   * @return // Edge's data
+   * Get distance of an Edge
+   * @return // Edge's distance
    */
-  protected int getData(){
-      return this.data;
+  protected int getDistance(){
+      return this.distance;
   }
   
 
@@ -79,8 +78,8 @@ public class SimpleEdge{
   public String toString(){
     String eString = "";
     eString += "Edge's id: " + this.id + "\n";
-    eString += "Edge's data: " + this.data + "\n";
-    eString += "Edge's weight: " + this.weight + "\n";
+    eString += "Edge's distance: " + this.distance + "\n";
+    eString += "Edge's capacity: " + this.capacity + "\n";
     eString += "Edge's vertex 1: " + this.v1 + "\n";
     eString += "Edge's vertex 2: " + this.v2 + "\n";
 

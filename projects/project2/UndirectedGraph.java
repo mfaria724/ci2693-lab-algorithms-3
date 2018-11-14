@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.List;
 import java.io.FileReader;
@@ -142,6 +143,25 @@ public class UndirectedGraph{
     for(int i=0;i<this.graph.size(); i++){
       if(this.graph.get(i).getId().equals(id)){
         return this.graph.get(i);
+      }
+    }
+
+    // If there is no vertex with that id
+    throw new NoSuchElementException("Vertex doesn't exist");
+  }
+
+    /**
+   * Gets the vertex with the specified id.
+   * @param id // Vertex id.
+   * @return // The vertex.
+   * @throws NoSuchElementException // If there is no vertex with that id.
+   */
+  public Vertex getVertexIndex(String id) throws NoSuchElementException{
+
+    // Iterates over the list to get the vertex
+    for(int i=0;i<this.graph.size(); i++){
+      if(this.graph.get(i).getId().equals(id)){
+        return i;
       }
     }
 
@@ -432,6 +452,7 @@ public class UndirectedGraph{
 
     return result;
   }
+
   /**
    * Gets an existing simple edge
    * @param id // Edge's id
@@ -449,6 +470,70 @@ public class UndirectedGraph{
 
     // If there is no edge
     throw new NoSuchElementException("Edge doesn't exist");
+  }
+
+    /**
+   * Verifies if a edge is in the graph.
+   * @param id1 // End 1 id
+   * @param id2 // End 2 id
+   * @return // true if the edge is in the graph, othercase false.
+   */
+  public SimpleEdge getSimpleEdge(String id1, String id2){
+    // Iterates over the edge's list
+    for(int i=0; i<this.edges.size();i++){
+      // Checks if there's an edge with both vertex
+      if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
+      || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
+        return this.edges.get(i);
+      }
+    }
+
+    // If there isn't edfe
+    return false;
+  }
+
+  public void bellmanFord(String originId){
+
+    double[] distance = new double[this.graph.size()];
+    String[] predecessors = new String[this.graph.size()];
+
+    Arrays.fill(distance, Double.POSITIVE_INFINITY);
+
+    Arrays.fill(predecessors, -1);
+
+    distance[this.getVertexIndex(originId)] = 0;
+
+    predecessors[this.getVertexIndex(originId)] = this.getVertexIndex(originId);
+
+    boolean change = true;
+
+    String m;
+    String n;
+
+    for(int i=0 ; i<this.graph.size(); i++){
+      change = false;
+
+      for(int j=0; j < this.edges.size(); j++){
+        n = this.getVertexIndex(this.edges.get(j).getEnd1());
+        m = this.getVertexIndex(this.edges.get(j).getEnd2());
+
+        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25 ){
+          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25;
+          predecessors[this.getVertexIndex(m)] = n;
+          change = true;
+        }
+      }
+    }
+
+    for(int i=0; i<this.edges.size();i++){
+      if(distance[this])
+    }
+
+
+    
+    
+    
+
   }
 
 //   /**
