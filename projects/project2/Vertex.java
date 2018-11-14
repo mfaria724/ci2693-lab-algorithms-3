@@ -2,15 +2,14 @@ import java.util.ArrayList;
 
 /**
  * Class to implement TAD Vertex methods.
- * @param <T> // Type of data.
  */
-public class Vertex<T> {
+public class Vertex{
   
   // Vertex data.
   private String id;
-  private T data;
-  private double weight;
-  private ArrayList<Vertex<T>> adjacents = new ArrayList<>();
+  private int data;
+  private int weight;
+  private ArrayList<Vertex> adjacents = new ArrayList<>();
 
   /**
    * Initializes empty vertex.
@@ -26,13 +25,13 @@ public class Vertex<T> {
    * @param weight // Vertex's weight.
    * @return // New Vertex.
    */
-  public Vertex(String id, T data, double weight){
+  public Vertex(String id, int data, int weight){
 
     // Initialice vertex.
     this.id = id;
     this.data = data;
     this.weight = weight;
-    this.adjacents =  new ArrayList<Vertex<T>>();
+    this.adjacents =  new ArrayList<Vertex>();
 
   }
 
@@ -40,7 +39,7 @@ public class Vertex<T> {
    * Gets the Vertex's weight 
    * @return // Vertex's weight
    */
-  public Double getWeight(){
+  public int getWeight(){
     return this.weight;
   };
 
@@ -56,7 +55,7 @@ public class Vertex<T> {
    * Gets Vertex's data.
    * @return // Vertex data.
    */
-  public T getData(){
+  public int getData(){
     return this.data;
   }
 
@@ -76,8 +75,8 @@ public class Vertex<T> {
    * Get list of adjacent vertices.
    * @return
    */
-  public ArrayList<Vertex<T>> getAdjacencies(){
-    ArrayList<Vertex<T>> adj = new ArrayList<Vertex<T>>(this.adjacents);
+  public ArrayList<Vertex> getAdjacencies(){
+    ArrayList<Vertex> adj = new ArrayList<Vertex>(this.adjacents);
     return adj;
   }
 
@@ -85,7 +84,7 @@ public class Vertex<T> {
    * Sets a new list of adjacents to the current one.
    * @param newAdj
    */
-  public void setAdjacencies(ArrayList<Vertex<T>> newAdj){
+  public void setAdjacencies(ArrayList<Vertex> newAdj){
     this.adjacents = newAdj;
   }
 

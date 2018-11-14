@@ -1,8 +1,15 @@
 /**
  * Class to implement all Simple Edges TAD methods.
- * @param <T> // Type of data edge.
+ * @param  // Type of data edge.
  */
-public class SimpleEdge<T> extends Edge<T> {
+public class SimpleEdge{
+  
+  // Edge data.
+  protected String id;
+  protected int data;
+  protected int weight;
+  protected String v1;
+  protected String v2;
   
   /**
    * // Creates a new simple edge
@@ -14,13 +21,38 @@ public class SimpleEdge<T> extends Edge<T> {
    * @return // Edge object.
    * @return
    */
-    SimpleEdge(String id, T data, double weight, String v1, String v2){
-      this.id = id;
-      this.data = data;
-      this.weight = weight;
-      this.v1 = v1;
-      this.v2 = v2;
+  public SimpleEdge(String id, int data, int weight, String v1, String v2){
+    this.id = id;
+    this.data = data;
+    this.weight = weight;
+    this.v1 = v1;
+    this.v2 = v2;
   }
+
+  /**
+   * Get the weight of an egde
+   * @return // Edge's weight
+   */
+  protected int getWeight(){
+      return this.weight;
+  }
+
+  /**
+   * Get id of an Edge
+   * @return // Edge's id
+   */
+  protected String getId(){
+      return this.id;
+  }
+
+  /**
+   * Get data of an Edge
+   * @return // Edge's data
+   */
+  protected int getData(){
+      return this.data;
+  }
+  
 
   /**
    * Gets first end from edge.
