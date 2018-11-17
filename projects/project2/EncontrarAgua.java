@@ -47,7 +47,7 @@ public class EncontrarAgua {
       line = reader.readLine();
       String[] data = line.split(" ");
       int capacity = Integer.parseInt(data[2]);
-      int distance = Double.parseDouble(data[3]);
+      double distance = Double.parseDouble(data[3]);
       graph.addSimpleEdge(i, capacity, distance, data[0], data[1]);
     }
 

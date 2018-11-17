@@ -28,11 +28,12 @@ public class SimpleEdge{
     this.v2 = v2;
   }
 
+
   /**
    * Get the capacity of an egde
    * @return // Edge's capacity
    */
-  protected int getCapacity(){
+  public int getCapacity(){
       return this.capacity;
   }
 
@@ -40,7 +41,7 @@ public class SimpleEdge{
    * Get id of an Edge
    * @return // Edge's id
    */
-  protected String getId(){
+  public String getId(){
       return this.id;
   }
 
@@ -48,8 +49,12 @@ public class SimpleEdge{
    * Get distance of an Edge
    * @return // Edge's distance
    */
-  protected int getDistance(){
+  public int getDistance(){
       return this.distance;
+  }
+
+  public void editCapacity(int substract){
+    this.capacity = this.capacity - substract;
   }
   
 

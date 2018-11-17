@@ -88,4 +88,8 @@ public class Vertex{
     this.adjacents = newAdj;
   }
 
+  public void editCapacity(int substract){
+    this.capacity = this.capacity - substract;
+  }
+
 }

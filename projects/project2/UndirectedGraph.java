@@ -14,6 +14,8 @@ public class UndirectedGraph{
   // UndirectedGraph atributes
   private ArrayList<Vertex> graph; // Adjacencies List
   private ArrayList<SimpleEdge> edges; // Edges List
+  private boolean haveWays = true;
+
 
   // Initialices an empty graph
   UndirectedGraph(){
@@ -151,7 +153,7 @@ public class UndirectedGraph{
   }
 
     /**
-   * Gets the vertex with the specified id.
+   * Gets the vertex index with the specified id.
    * @param id // Vertex id.
    * @return // The vertex.
    * @throws NoSuchElementException // If there is no vertex with that id.
@@ -168,6 +170,8 @@ public class UndirectedGraph{
     // If there is no vertex with that id
     throw new NoSuchElementException("Vertex doesn't exist");
   }
+
+
 
   /**
    * Verifies if a vertex is in the graph.
@@ -459,7 +463,7 @@ public class UndirectedGraph{
    * @return
    * @throws NoSuchElementException // If there is no edge
    */
-  public Edge getSimpleEdge(String id) throws NoSuchElementException{
+  public SimpleEdge getSimpleEdge(String id) throws NoSuchElementException{
     
     // Iterates over edges' list to find the edge
     for(int i=0; i<this.edges.size();i++){
@@ -472,6 +476,7 @@ public class UndirectedGraph{
     throw new NoSuchElementException("Edge doesn't exist");
   }
 
+  
     /**
    * Verifies if a edge is in the graph.
    * @param id1 // End 1 id
@@ -488,18 +493,37 @@ public class UndirectedGraph{
       }
     }
 
-    // If there isn't edfe
-    return false;
+    // If there is no edge
+    throw new NoSuchElementException("Edge doesn't exist");
   }
+
+  public int getSimpleEdgeIndex(String id1, String id2){
+    // Iterates over the edge's list
+    for(int i=0; i<this.edges.size();i++){
+      // Checks if there's an edge with both vertex
+      if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
+      || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
+        return i;
+      }
+    }
+
+    // If there is no edge
+    throw new NoSuchElementException("Edge doesn't exist");
+  }
+
 
   public void applyBellmanFord(String originId, int people){
     
+    while(people != 0 && this.haveWays){
+      people = bellmanFord(originId, people);
+    }
+
   }
 
-  private void bellmanFord(String originId){
+  private int bellmanFord(String originId, int people){
 
     double[] distance = new double[this.graph.size()];
-    String[] predecessors = new String[this.graph.size()];
+    int[] predecessors = new String[this.graph.size()];
 
     Arrays.fill(distance, Double.POSITIVE_INFINITY);
 
@@ -533,7 +557,7 @@ public class UndirectedGraph{
       n = this.getVertexIndex(this.edges.get(j).getEnd1());
       m = this.getVertexIndex(this.edges.get(j).getEnd2());
 
-      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25){
+      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance()){
         System.out.println("Error, hay un circuito de peso negativo");
       }
     }
@@ -541,6 +565,99 @@ public class UndirectedGraph{
     for(int i=0; i<distance.length;i++){
       distance[i] = distance[i] + Math.abs(this.graph.get(i).getFloors())*25;
     }
+
+    int destination = betterOption(distance);
+
+    if(destination == -1){
+      this.haveWays = false;
+    } else{
+      ArrayList<Vertex> bestWay = reconstrucWay(destination, predecessors);
+
+      for(int i =0 ; bestWay.size();i++){
+        System.out.println(bestWay.get(i).getId());
+      }
+  
+      people -= modifyGraph(bestWay);
+
+      
+    }
+    
+    return people;
+
+  }
+
+  private int betterOption(double[] distance){
+    int min = 0;
+    boolean empty = true;
+
+    for(int i=0; i<distance.length;i++){
+      if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != 0){
+        empty =false;
+      }
+      if((distance[min] > distance[i] || distance[min] == 0) && distance[i] != 0 && this.graph.get(i).getCapacity() != 0){
+        min = i;
+      }
+    }
+    if(empty){
+      min = -1;
+    }
+
+    return min;
+  }
+
+  private int modifyGraph(ArrayList<Vertex> bestWay){
+
+    int minCapacity = getMinCapacity(bestWay);
+    String m;
+    String n;
+
+    for(int i=0; i<bestWay.size(); i++){
+      m = bestWay.get(i).getId();
+      n = bestWay.get(i + 1).getId();
+
+      this.edges.get(this.getSimpleEdgeIndex(m, n)).editCapacity(minCapacity);
+    }
+
+    this.graph.get(this.getVertexIndex(bestWay.get(bestWay.size() - 1).getId())).editCapacity(minCapacity);
+
+    for(int i=0; i<this.edges.size();i++){
+      if(this.edges.get(i).getCapacity() == 0){
+        this.deleteSimpleEdge(this.edges.get(i).getId());
+      }
+    }
+
+    return minCapacity;
+
+  }
+
+  private ArrayList<Vertex> reconstrucWay(int destination, int[] predecessors){
+    ArrayList<Vertex> way = new ArrayList<>();
+
+    j = destination;
+
+    do{
+      way.add(this.graph.get(j));
+      j = predecessors[j];
+    }while(j != predecessors[j]);
+
+
+    return way;
+  }
+
+  private int getMinCapacity(ArrayList<Vertex> way){
+    int min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();
+
+    for(int i=0; i< way.size() - 1;i++){
+      if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
+        min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
+      }
+    }
+
+    if(min > way.get(way.size() - 1).getCapacity()){
+      min = way.get(way.size() -1).getCapacity();
+    }
+
+    return min;
   }
 
 //   /**
