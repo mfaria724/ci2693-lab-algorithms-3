@@ -16,9 +16,11 @@ public class EncontrarAgua {
 
       UndirectedGraph graph = readGraph(args[0]);
       int people = Integer.parseInt(args[3]);
-      readCases(args[1], graph, args[2], people);
+      System.out.println("Cantidad de personas: " + people);
+      // readCases(args[1], graph, args[2], people);
 
     }else{
+      System.exit(0);
       System.out.println("Uso: java EncontrarAgua <grafo> <casos> <edif> <personas>");
     }
 
@@ -26,83 +28,92 @@ public class EncontrarAgua {
 
   public static UndirectedGraph readGraph(String file){
 
-    BufferedReader reader = new BufferedReader(new FileReader(file));
     UndirectedGraph graph = new UndirectedGraph();
 
-    String line;
-    line = reader.readLine();
-    int vertices = Integer.parseInt(line);
-    line = reader.readLine();
-    int edges = Integer.parseInt(line);
-    
-    for(int i = 0; i < vertices; i++){
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader(file));
+
+      String line;
       line = reader.readLine();
-      String[] data = line.split(" ");
-      int capacity = Integer.parseInt(data[1]);
-      int floors = Integer.parseInt(data[2]);
-      graph.addVertex(data[0], capacity, floors);
+      int vertices = Integer.parseInt(line);
+      line = reader.readLine();
+      int edges = Integer.parseInt(line);
+      
+      for(int i = 0; i < vertices; i++){
+        line = reader.readLine();
+        String[] data = line.split(" ");
+        int capacity = Integer.parseInt(data[1]);
+        int floors = Integer.parseInt(data[2]);
+        graph.addVertex(data[0], capacity, floors);
+      }
+
+      for(int i = 0; i < edges; i++){
+        line = reader.readLine();
+        String[] data = line.split(" ");
+        int capacity = Integer.parseInt(data[2]);
+        double distance = Double.parseDouble(data[3]);
+        graph.addSimpleEdge(Integer.toString(i), capacity, distance, data[0], data[1]);
+      }
+
+      reader.close();
+
+      graph.toString();
+    } catch (Exception e) {
+      System.out.println("Finalizo en readGraph.");
+      System.exit(0);
     }
 
-    for(int i = 0; i < edges; i++){
-      line = reader.readLine();
-      String[] data = line.split(" ");
-      int capacity = Integer.parseInt(data[2]);
-      int distance = Double.parseDouble(data[3]);
-      graph.addSimpleEdge(i, capacity, distance, data[0], data[1]);
-    }
-
-    reader.close();
     return graph;
 
   }
 
-  public static void readCases(String file, UndirectedGraph graph, String origin, int people){
+  // public static void readCases(String file, UndirectedGraph graph, String origin, int people){
 
-    BufferedReader reader = new BufferedReader(new FileReader(file));
-    UndirectedGraph cloneGraph;
-    String line;
-    String caseId = reader.readLine();
+  //   BufferedReader reader = new BufferedReader(new FileReader(file));
+  //   UndirectedGraph cloneGraph;
+  //   String line;
+  //   String caseId = reader.readLine();
 
-    while(caseId != null){
+  //   while(caseId != null){
 
-      System.out.println(caseId);
-      cloneGraph = graph.clone();
+  //     System.out.println(caseId);
+  //     cloneGraph = graph.clone();
 
-      line = reader.readLine();
-      int buildings = Integer.parseInt(line);
-      line = reader.readLine();
-      int afectedWays = Integer.parseInt(line);
+  //     line = reader.readLine();
+  //     int buildings = Integer.parseInt(line);
+  //     line = reader.readLine();
+  //     int afectedWays = Integer.parseInt(line);
 
-      boolean[] exists = cloneGraph.numVertices();
-      Arrays.fill(exists, false);
+  //     boolean[] exists = cloneGraph.numVertices();
+  //     Arrays.fill(exists, false);
 
-      for(int i = 0; i < buildings; i++){
-        line = reader.readLine();
-        String[] data = line.split(" ");
+  //     for(int i = 0; i < buildings; i++){
+  //       line = reader.readLine();
+  //       String[] data = line.split(" ");
         
-        exists[cloneGraph.getVertexIndex(data[0])] = true;
+  //       exists[cloneGraph.getVertexIndex(data[0])] = true;
 
-        if(data.length == 2){
-          int newFloor = Integer.parseInt(data[1]);
-          cloneGraph.editVertexFloor(data[0], newFloor);
-        }
-      }
+  //       if(data.length == 2){
+  //         int newFloor = Integer.parseInt(data[1]);
+  //         cloneGraph.editVertexFloor(data[0], newFloor);
+  //       }
+  //     }
 
-      for(int i = 0; i < exists.length; i++){
-        if(!exists[i]){
-          cloneGraph.deleteVertex(String.parseInt(i));
-        }
-      }
+  //     for(int i = 0; i < exists.length; i++){
+  //       if(!exists[i]){
+  //         cloneGraph.deleteVertex(String.parseInt(i));
+  //       }
+  //     }
 
-      for(int i = 0; i < afectedWays; i++){
-        line = reader.readLine();
-        cloneGraph.deleteSimpleEdge(line);
-      }
+  //     for(int i = 0; i < afectedWays; i++){
+  //       line = reader.readLine();
+  //       cloneGraph.deleteSimpleEdge(line);
+  //     }
 
-      line = reader.readLine();
-      caseId = reader.readLine();
+  //     line = reader.readLine();
+  //     caseId = reader.readLine();
 
-      cloneGraph.applyBellmanFord(origin, people);
-    }
-  }
+  //     cloneGraph.applyBellmanFord(origin, people);
+  //   }
+  // }
 }

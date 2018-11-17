@@ -22,64 +22,6 @@ public class UndirectedGraph{
   }
 
   /**
-   * Reads a file and charges a graph
-   * @param file // File path
-   * @param numVertices // Number of vertices
-   * @param numEdges // Number of edges
-   * @param verTrans // Vertices' transformer
-   * @param edgeTrans // Edges' transformer
-   * @return
-   * @throws IOException // If there is a problem in the O.S
-   */
-  public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer verTrans, TypeTransformer edgeTrans) throws IOException{
-    
-    // Initialice BufferReader
-    BufferedReader reader = new BufferedReader(new FileReader(file));
-
-    // Read lines pre-read
-    String line = reader.readLine();
-    for(int i = 0; i < 5; i++){
-      line = reader.readLine();
-    }
-    // Add vertexes
-    for(int i = 0; i < numVertices; i++){
-
-      // Transform line data
-      String[] info = line.split(" ");
-      
-      // Parse data types
-      String id = info[0];
-      V data = verTrans.transform(info[1]);
-      Double weight = Double.parseDouble(info[2]);
-
-      // Add vertex to graph
-      this.addVertex(id, data, weight);
-
-      // Next vertex
-      line = reader.readLine();
-    }
-    // Add edges
-    for(int i = 0; i < numEdges; i++){
-
-      // Parse data types
-      String[] info = line.split(" ");
-      String id = info[0];
-      E data = edgeTrans.transform(info[1]);
-      Double weight = Double.parseDouble(info[2]);
-      String v1 = info[3];
-      String v2 = info[4];
-      
-      // Add edge
-      this.addSimpleEdge(id, data, weight, v1, v2);
-      
-      // Next line
-      line = reader.readLine();
-    }
-
-    return true;
-  }
-
-  /**
    * Gets the number of vertices in a graph. 
    * @return // The number of vertices.
    */
@@ -156,7 +98,7 @@ public class UndirectedGraph{
    * @return // The vertex.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public Vertex getVertexIndex(String id) throws NoSuchElementException{
+  public int getVertexIndex(String id) throws NoSuchElementException{
 
     // Iterates over the list to get the vertex
     for(int i=0;i<this.graph.size(); i++){
@@ -235,8 +177,8 @@ public class UndirectedGraph{
    * @param v // Edge's second vertex id.
    * @return
    */
-  public boolean addSimpleEdge(String id, int data, int weight, String v1, String v2){
-    SimpleEdge e = new SimpleEdge(id, data, weight, v1, v2);
+  public boolean addSimpleEdge(String id, int capacity, double distance, String v1, String v2){
+    SimpleEdge e = new SimpleEdge(id, capacity, distance, v1, v2);
     return this.addSimpleEdge(e);
   }
 
@@ -312,18 +254,6 @@ public class UndirectedGraph{
 
     return vertices;
   }
-  
-  /**
-   * Gets the list of edges.
-   * @return //  The list of edges.
-   */
-  public ArrayList<Edge> edges(){
-
-    // Creates a new list
-    ArrayList<Edge> out = new ArrayList<Edge>(this.edges);
-
-    return out;
-  }
 
   /**
    * Gets the degree of one vertex in the graph.
@@ -357,30 +287,6 @@ public class UndirectedGraph{
     }
 
     throw new NoSuchElementException("Vertex doesn't exist");
-  }
-
-    
-
-  /**
-   * Gets all vertex incident edges. 
-   * @param id // Vertex's id.
-   * @return // The list of edges.
-   * @throws NoSuchElementException // If there is no vertex with that id.
-   */
-  public ArrayList<Edge> incidents(String id) throws NoSuchElementException{
-    
-    // Creates new list
-    ArrayList<Edge> incidents = new ArrayList<Edge>();
-
-    //Iterates over edges' list
-    for(int i=0;i<this.edges.size(); i++){
-      // If the edge incise in the vertex, it's added to the list
-      if(this.edges.get(i).getEnd1().equals(id) || this.edges.get(i).getEnd2().equals(id) ){
-        incidents.add(this.edges.get(i));
-      }
-    }
-
-    return incidents;
   }
 
   /**
@@ -453,32 +359,13 @@ public class UndirectedGraph{
     return result;
   }
 
-  /**
-   * Gets an existing simple edge
-   * @param id // Edge's id
-   * @return
-   * @throws NoSuchElementException // If there is no edge
-   */
-  public Edge getSimpleEdge(String id) throws NoSuchElementException{
-    
-    // Iterates over edges' list to find the edge
-    for(int i=0; i<this.edges.size();i++){
-      if(this.edges.get(i).getId().equals(id)){
-        return this.edges.get(i);
-      }
-    }
-
-    // If there is no edge
-    throw new NoSuchElementException("Edge doesn't exist");
-  }
-
     /**
    * Verifies if a edge is in the graph.
    * @param id1 // End 1 id
    * @param id2 // End 2 id
    * @return // true if the edge is in the graph, othercase false.
    */
-  public SimpleEdge getSimpleEdge(String id1, String id2){
+  public SimpleEdge getSimpleEdge(String id1, String id2) throws NoSuchElementException{
     // Iterates over the edge's list
     for(int i=0; i<this.edges.size();i++){
       // Checks if there's an edge with both vertex
@@ -489,7 +376,7 @@ public class UndirectedGraph{
     }
 
     // If there isn't edfe
-    return false;
+    throw new NoSuchElementException("No hay tal lado.");
   }
 
   public void applyBellmanFord(String originId, int people){

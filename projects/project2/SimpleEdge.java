@@ -4,11 +4,11 @@
 public class SimpleEdge{
   
   // Edge data.
-  protected String id;
-  protected double distance;
-  protected int capacity;
-  protected String v1;
-  protected String v2;
+  private String id;
+  private double distance;
+  private int capacity;
+  private String v1;
+  private String v2;
   
   /**
    * // Creates a new simple edge
@@ -20,7 +20,7 @@ public class SimpleEdge{
    * @return // Edge object.
    * @return
    */
-  public SimpleEdge(String id, double distance, int capacity, String v1, String v2){
+  public SimpleEdge(String id, int capacity, double distance, String v1, String v2){
     this.id = id;
     this.distance = distance;
     this.capacity = capacity;
