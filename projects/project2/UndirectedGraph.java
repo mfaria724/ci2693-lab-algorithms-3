@@ -492,7 +492,11 @@ public class UndirectedGraph{
     return false;
   }
 
-  public void bellmanFord(String originId){
+  public void applyBellmanFord(String originId, int people){
+    
+  }
+
+  private void bellmanFord(String originId){
 
     double[] distance = new double[this.graph.size()];
     String[] predecessors = new String[this.graph.size()];
@@ -519,21 +523,20 @@ public class UndirectedGraph{
 
         if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25 ){
           distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25;
-          predecessors[this.getVertexIndex(m)] = n;
+          predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
           change = true;
         }
       }
     }
 
     for(int i=0; i<this.edges.size();i++){
-      if(distance[this])
+      n = this.getVertexIndex(this.edges.get(j).getEnd1());
+      m = this.getVertexIndex(this.edges.get(j).getEnd2());
+
+      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25){
+        System.out.println("Error, hay un circuito de peso negativo");
+      }
     }
-
-
-    
-    
-    
-
   }
 
 //   /**
