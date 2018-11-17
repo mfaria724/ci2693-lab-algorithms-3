@@ -11,11 +11,12 @@ public class EncontrarAgua {
     // args[1] cases file
     // args[2] building name
     // args[3] number of people
-
+    
     if(args.length < 4){
 
       UndirectedGraph graph = readGraph(args[0]);
-      readCases(args[1], graph, args[2]);
+      int people = Integer.parseInt(args[3]);
+      readCases(args[1], graph, args[2], people);
 
     }else{
       System.out.println("Uso: java EncontrarAgua <grafo> <casos> <edif> <personas>");
@@ -55,7 +56,7 @@ public class EncontrarAgua {
 
   }
 
-  public static void readCases(String file, UndirectedGraph graph, String origin){
+  public static void readCases(String file, UndirectedGraph graph, String origin, int people){
 
     BufferedReader reader = new BufferedReader(new FileReader(file));
     UndirectedGraph cloneGraph;
@@ -63,6 +64,8 @@ public class EncontrarAgua {
     String caseId = reader.readLine();
 
     while(caseId != null){
+
+      System.out.println(caseId);
       cloneGraph = graph.clone();
 
       line = reader.readLine();
@@ -99,7 +102,7 @@ public class EncontrarAgua {
       line = reader.readLine();
       caseId = reader.readLine();
 
-      cloneGraph.bellmanFord(origin);
+      cloneGraph.applyBellmanFord(origin, people);
     }
   }
 }
