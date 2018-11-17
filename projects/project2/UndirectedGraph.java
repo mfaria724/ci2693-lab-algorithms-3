@@ -156,7 +156,7 @@ public class UndirectedGraph{
    * @return // The vertex.
    * @throws NoSuchElementException // If there is no vertex with that id.
    */
-  public Vertex getVertexIndex(String id) throws NoSuchElementException{
+  public int getVertexIndex(String id) throws NoSuchElementException{
 
     // Iterates over the list to get the vertex
     for(int i=0;i<this.graph.size(); i++){
@@ -235,8 +235,8 @@ public class UndirectedGraph{
    * @param v // Edge's second vertex id.
    * @return
    */
-  public boolean addSimpleEdge(String id, int data, int weight, String v1, String v2){
-    SimpleEdge e = new SimpleEdge(id, data, weight, v1, v2);
+  public boolean addSimpleEdge(String id, int capacity, double distance, String v1, String v2){
+    SimpleEdge e = new SimpleEdge(id, distance, capacity, v1, v2);
     return this.addSimpleEdge(e);
   }
 
@@ -521,8 +521,8 @@ public class UndirectedGraph{
         n = this.getVertexIndex(this.edges.get(j).getEnd1());
         m = this.getVertexIndex(this.edges.get(j).getEnd2());
 
-        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25 ){
-          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25;
+        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance()){
+          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance();
           predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
           change = true;
         }
@@ -536,6 +536,10 @@ public class UndirectedGraph{
       if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25){
         System.out.println("Error, hay un circuito de peso negativo");
       }
+    }
+
+    for(int i=0; i<distance.length;i++){
+      distance[i] = distance[i] + Math.abs(this.graph.get(i).getFloors())*25;
     }
   }
 
