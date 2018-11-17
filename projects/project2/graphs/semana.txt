@@ -24,7 +24,6 @@ miercoles
 BIB -1
 MEM -1
 MEU
-ENE
 0
 9
 11
@@ -38,7 +37,6 @@ jueves
 BIB -1
 MEM -1
 MEU
-ENE
 0
 9
 11

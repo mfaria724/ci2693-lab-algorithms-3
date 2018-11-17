@@ -24,64 +24,6 @@ public class UndirectedGraph{
   }
 
   /**
-   * Reads a file and charges a graph
-   * @param file // File path
-   * @param numVertices // Number of vertices
-   * @param numEdges // Number of edges
-   * @param verTrans // Vertices' transformer
-   * @param edgeTrans // Edges' transformer
-   * @return
-   * @throws IOException // If there is a problem in the O.S
-   */
-  public boolean loadGraph(String file, int numVertices, int numEdges, TypeTransformer verTrans, TypeTransformer edgeTrans) throws IOException{
-    
-    // Initialice BufferReader
-    BufferedReader reader = new BufferedReader(new FileReader(file));
-
-    // Read lines pre-read
-    String line = reader.readLine();
-    for(int i = 0; i < 5; i++){
-      line = reader.readLine();
-    }
-    // Add vertexes
-    for(int i = 0; i < numVertices; i++){
-
-      // Transform line data
-      String[] info = line.split(" ");
-      
-      // Parse data types
-      String id = info[0];
-      V data = verTrans.transform(info[1]);
-      Double weight = Double.parseDouble(info[2]);
-
-      // Add vertex to graph
-      this.addVertex(id, data, weight);
-
-      // Next vertex
-      line = reader.readLine();
-    }
-    // Add edges
-    for(int i = 0; i < numEdges; i++){
-
-      // Parse data types
-      String[] info = line.split(" ");
-      String id = info[0];
-      E data = edgeTrans.transform(info[1]);
-      Double weight = Double.parseDouble(info[2]);
-      String v1 = info[3];
-      String v2 = info[4];
-      
-      // Add edge
-      this.addSimpleEdge(id, data, weight, v1, v2);
-      
-      // Next line
-      line = reader.readLine();
-    }
-
-    return true;
-  }
-
-  /**
    * Gets the number of vertices in a graph. 
    * @return // The number of vertices.
    */
@@ -240,7 +182,8 @@ public class UndirectedGraph{
    * @return
    */
   public boolean addSimpleEdge(String id, int capacity, double distance, String v1, String v2){
-    SimpleEdge e = new SimpleEdge(id, distance, capacity, v1, v2);
+
+    SimpleEdge e = new SimpleEdge(id, capacity, distance, v1, v2);
     return this.addSimpleEdge(e);
   }
 
@@ -316,18 +259,6 @@ public class UndirectedGraph{
 
     return vertices;
   }
-  
-  /**
-   * Gets the list of edges.
-   * @return //  The list of edges.
-   */
-  public ArrayList<Edge> edges(){
-
-    // Creates a new list
-    ArrayList<Edge> out = new ArrayList<Edge>(this.edges);
-
-    return out;
-  }
 
   /**
    * Gets the degree of one vertex in the graph.
@@ -361,30 +292,6 @@ public class UndirectedGraph{
     }
 
     throw new NoSuchElementException("Vertex doesn't exist");
-  }
-
-    
-
-  /**
-   * Gets all vertex incident edges. 
-   * @param id // Vertex's id.
-   * @return // The list of edges.
-   * @throws NoSuchElementException // If there is no vertex with that id.
-   */
-  public ArrayList<Edge> incidents(String id) throws NoSuchElementException{
-    
-    // Creates new list
-    ArrayList<Edge> incidents = new ArrayList<Edge>();
-
-    //Iterates over edges' list
-    for(int i=0;i<this.edges.size(); i++){
-      // If the edge incise in the vertex, it's added to the list
-      if(this.edges.get(i).getEnd1().equals(id) || this.edges.get(i).getEnd2().equals(id) ){
-        incidents.add(this.edges.get(i));
-      }
-    }
-
-    return incidents;
   }
 
   /**
@@ -483,7 +390,7 @@ public class UndirectedGraph{
    * @param id2 // End 2 id
    * @return // true if the edge is in the graph, othercase false.
    */
-  public SimpleEdge getSimpleEdge(String id1, String id2){
+  public SimpleEdge getSimpleEdge(String id1, String id2) throws NoSuchElementException{
     // Iterates over the edge's list
     for(int i=0; i<this.edges.size();i++){
       // Checks if there's an edge with both vertex
@@ -660,63 +567,51 @@ public class UndirectedGraph{
     return min;
   }
 
-//   /**
-//    * Gets a string graph representation.
-//    * @return // Graph converted to string.
-//    */
-//   public String toString(){
+  /**
+   * Gets a string graph representation.
+   * @return // Graph converted to string.
+   */
+  public String toString(){
 
-//     //  Variables initialization
-//     String stringGraph = "";
+    //  Variables initialization
+    String stringGraph = "";
 
-//     // Vertices type.
-//     if(this.graph.size() != 0){
-//       stringGraph += "Tipo de dato de Vértices: ";
-//       stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";    
-//     }
+    // Graph type
+    // stringGraph += "Grafo No Dirijido \n";
+
+    // Number of vertices.
+    stringGraph += "Número de Vértices: ";
+    stringGraph += this.graph.size() + "\n";
+
+    // Number of Directed Edges.
+    stringGraph += "Número de Aristas: ";
+    stringGraph += this.edges.size() + "\n";
     
-//     // Edges type.
-//     if(this.edges.size() != 0){
-//       stringGraph += "Tipo de dato de Aristas: ";
-//       stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
-//     }
+    // Vertices.
+    stringGraph += "Vértices: \n";
+    stringGraph += "Id\t\tCap\t\tFloors\n";
+    for(int i = 0; i < this.graph.size(); i++){
+      Vertex v = this.graph.get(i);
+      stringGraph += v.getId() + " \t\t";
+      stringGraph += v.getCapacity() + "\t\t";
+      stringGraph += v.getFloors() + "\n";
+    }
 
-//     // Graph type
-//     stringGraph += "Grafo No Dirijido \n";
+    // Simple Edges.
+    stringGraph += "Aristas: \n";
+    stringGraph += "Id\t\tCap\t\tDist\t\tIdV1\t\tIdV2\n";
+    for(int j = 0; j < this.edges.size(); j++){
+      SimpleEdge e = this.edges.get(j);
+      stringGraph += e.getId() + "\t\t";
+      stringGraph += e.getCapacity() + "\t\t";
+      stringGraph += e.getDistance() + "\t\t";
+      stringGraph += e.getEnd1() + "\t\t";
+      stringGraph += e.getEnd2() + "\n";
+    }
 
-//     // Number of vertices.
-//     stringGraph += "Número de Vértices: ";
-//     stringGraph += this.graph.size() + "\n";
+    return stringGraph;
 
-//     // Number of Directed Edges.
-//     stringGraph += "Número de Aristas: ";
-//     stringGraph += this.edges.size() + "\n";
-    
-//     // Vertices.
-//     stringGraph += "Vértices: \n";
-//     stringGraph += "Id\t\tDato\t\tPeso\n";
-//     for(int i = 0; i < this.graph.size(); i++){
-//       Vertex v = this.graph.get(i);
-//       stringGraph += v.getId() + " \t\t";
-//       stringGraph += v.getData() + "\t\t";
-//       stringGraph += v.getWeight() + "\n";
-//     }
-
-//     // Simple Edges.
-//     stringGraph += "Aristas: \n";
-//     stringGraph += "Id\t\tDato\t\tPeso\t\tIdV1\t\tIdV2\n";
-//     for(int j = 0; j < this.edges.size(); j++){
-//       SimpleEdge e = this.edges.get(j);
-//       stringGraph += e.getId() + "\t\t";
-//       stringGraph += e.getData() + "\t\t";
-//       stringGraph += e.getWeight() + "\t\t";
-//       stringGraph += e.getEnd1() + "\t\t";
-//       stringGraph += e.getEnd2() + "\n";
-//     }
-
-//     return stringGraph;
-
-//   }
+  }
 
 //   /**
 //    * Auxiliary function for idnetufy vertex's data type.
@@ -755,4 +650,19 @@ public class UndirectedGraph{
 //     return "None";
 
 //   }
+
+  public void editVertexFloor(String id, int modification){
+
+    Vertex v = this.getVertex(id);
+    v.editVertexFloor(modification);
+
+  }
+
+  public void setVertexCapacity(String id, int newCapacity){
+
+    Vertex v = this.getVertex(id);
+    v.setCapacity(newCapacity);
+
+  }
+
 }

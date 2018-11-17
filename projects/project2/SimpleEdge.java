@@ -4,11 +4,11 @@
 public class SimpleEdge{
   
   // Edge data.
-  protected String id;
-  protected double distance;
-  protected int capacity;
-  protected String v1;
-  protected String v2;
+  private String id;
+  private double distance;
+  private int capacity;
+  private String v1;
+  private String v2;
   
   /**
    * // Creates a new simple edge
@@ -49,7 +49,11 @@ public class SimpleEdge{
    * Get distance of an Edge
    * @return // Edge's distance
    */
+<<<<<<< HEAD
   public int getDistance(){
+=======
+  protected double getDistance(){
+>>>>>>> b1a64dee38b4282c98f5bedd570255027367af7e
       return this.distance;
   }
 
