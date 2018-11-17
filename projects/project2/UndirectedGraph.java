@@ -178,6 +178,7 @@ public class UndirectedGraph{
    * @return
    */
   public boolean addSimpleEdge(String id, int capacity, double distance, String v1, String v2){
+
     SimpleEdge e = new SimpleEdge(id, capacity, distance, v1, v2);
     return this.addSimpleEdge(e);
   }
@@ -383,106 +384,98 @@ public class UndirectedGraph{
     
   }
 
-  private void bellmanFord(String originId){
+  // private void bellmanFord(String originId){
 
-    double[] distance = new double[this.graph.size()];
-    String[] predecessors = new String[this.graph.size()];
+  //   double[] distance = new double[this.graph.size()];
+  //   String[] predecessors = new String[this.graph.size()];
 
-    Arrays.fill(distance, Double.POSITIVE_INFINITY);
+  //   Arrays.fill(distance, Double.POSITIVE_INFINITY);
 
-    Arrays.fill(predecessors, -1);
+  //   Arrays.fill(predecessors, -1);
 
-    distance[this.getVertexIndex(originId)] = 0;
+  //   distance[this.getVertexIndex(originId)] = 0;
 
-    predecessors[this.getVertexIndex(originId)] = this.getVertexIndex(originId);
+  //   predecessors[this.getVertexIndex(originId)] = this.getVertexIndex(originId);
 
-    boolean change = true;
+  //   boolean change = true;
 
-    String m;
-    String n;
+  //   String m;
+  //   String n;
 
-    for(int i=0 ; i<this.graph.size(); i++){
-      change = false;
+  //   for(int i=0 ; i<this.graph.size(); i++){
+  //     change = false;
 
-      for(int j=0; j < this.edges.size(); j++){
-        n = this.getVertexIndex(this.edges.get(j).getEnd1());
-        m = this.getVertexIndex(this.edges.get(j).getEnd2());
+  //     for(int j=0; j < this.edges.size(); j++){
+  //       n = this.getVertexIndex(this.edges.get(j).getEnd1());
+  //       m = this.getVertexIndex(this.edges.get(j).getEnd2());
 
-        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25 ){
-          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25;
-          predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
-          change = true;
-        }
-      }
+  //       if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance()){
+  //         distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance();
+  //         predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
+  //         change = true;
+  //       }
+  //     }
+  //   }
+
+  //   for(int i=0; i<this.edges.size();i++){
+  //     n = this.getVertexIndex(this.edges.get(j).getEnd1());
+  //     m = this.getVertexIndex(this.edges.get(j).getEnd2());
+
+  //     if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25){
+  //       System.out.println("Error, hay un circuito de peso negativo");
+  //     }
+  //   }
+
+  //   for(int i=0; i<distance.length;i++){
+  //     distance[i] = distance[i] + Math.abs(this.graph.get(i).getFloors())*25;
+  //   }
+  // }
+
+  /**
+   * Gets a string graph representation.
+   * @return // Graph converted to string.
+   */
+  public String toString(){
+
+    //  Variables initialization
+    String stringGraph = "";
+
+    // Graph type
+    // stringGraph += "Grafo No Dirijido \n";
+
+    // Number of vertices.
+    stringGraph += "Número de Vértices: ";
+    stringGraph += this.graph.size() + "\n";
+
+    // Number of Directed Edges.
+    stringGraph += "Número de Aristas: ";
+    stringGraph += this.edges.size() + "\n";
+    
+    // Vertices.
+    stringGraph += "Vértices: \n";
+    stringGraph += "Id\t\tCap\t\tFloors\n";
+    for(int i = 0; i < this.graph.size(); i++){
+      Vertex v = this.graph.get(i);
+      stringGraph += v.getId() + " \t\t";
+      stringGraph += v.getCapacity() + "\t\t";
+      stringGraph += v.getFloors() + "\n";
     }
 
-    for(int i=0; i<this.edges.size();i++){
-      n = this.getVertexIndex(this.edges.get(j).getEnd1());
-      m = this.getVertexIndex(this.edges.get(j).getEnd2());
-
-      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance() + Math.abs(this.getVertex(m).getFloors())*25){
-        System.out.println("Error, hay un circuito de peso negativo");
-      }
+    // Simple Edges.
+    stringGraph += "Aristas: \n";
+    stringGraph += "Id\t\tCap\t\tDist\t\tIdV1\t\tIdV2\n";
+    for(int j = 0; j < this.edges.size(); j++){
+      SimpleEdge e = this.edges.get(j);
+      stringGraph += e.getId() + "\t\t";
+      stringGraph += e.getCapacity() + "\t\t";
+      stringGraph += e.getDistance() + "\t\t";
+      stringGraph += e.getEnd1() + "\t\t";
+      stringGraph += e.getEnd2() + "\n";
     }
+
+    return stringGraph;
+
   }
-
-//   /**
-//    * Gets a string graph representation.
-//    * @return // Graph converted to string.
-//    */
-//   public String toString(){
-
-//     //  Variables initialization
-//     String stringGraph = "";
-
-//     // Vertices type.
-//     if(this.graph.size() != 0){
-//       stringGraph += "Tipo de dato de Vértices: ";
-//       stringGraph += this.getVertexType(this.graph.get(0).getData()) + "\n";    
-//     }
-    
-//     // Edges type.
-//     if(this.edges.size() != 0){
-//       stringGraph += "Tipo de dato de Aristas: ";
-//       stringGraph += this.getEdgeType(this.edges.get(0).getData()) + "\n";
-//     }
-
-//     // Graph type
-//     stringGraph += "Grafo No Dirijido \n";
-
-//     // Number of vertices.
-//     stringGraph += "Número de Vértices: ";
-//     stringGraph += this.graph.size() + "\n";
-
-//     // Number of Directed Edges.
-//     stringGraph += "Número de Aristas: ";
-//     stringGraph += this.edges.size() + "\n";
-    
-//     // Vertices.
-//     stringGraph += "Vértices: \n";
-//     stringGraph += "Id\t\tDato\t\tPeso\n";
-//     for(int i = 0; i < this.graph.size(); i++){
-//       Vertex v = this.graph.get(i);
-//       stringGraph += v.getId() + " \t\t";
-//       stringGraph += v.getData() + "\t\t";
-//       stringGraph += v.getWeight() + "\n";
-//     }
-
-//     // Simple Edges.
-//     stringGraph += "Aristas: \n";
-//     stringGraph += "Id\t\tDato\t\tPeso\t\tIdV1\t\tIdV2\n";
-//     for(int j = 0; j < this.edges.size(); j++){
-//       SimpleEdge e = this.edges.get(j);
-//       stringGraph += e.getId() + "\t\t";
-//       stringGraph += e.getData() + "\t\t";
-//       stringGraph += e.getWeight() + "\t\t";
-//       stringGraph += e.getEnd1() + "\t\t";
-//       stringGraph += e.getEnd2() + "\n";
-//     }
-
-//     return stringGraph;
-
-//   }
 
 //   /**
 //    * Auxiliary function for idnetufy vertex's data type.
@@ -521,4 +514,19 @@ public class UndirectedGraph{
 //     return "None";
 
 //   }
+
+  public void editVertexFloor(String id, int modification){
+
+    Vertex v = this.getVertex(id);
+    v.editVertexFloor(modification);
+
+  }
+
+  public void setVertexCapacity(String id, int newCapacity){
+
+    Vertex v = this.getVertex(id);
+    v.setCapacity(newCapacity);
+
+  }
+
 }

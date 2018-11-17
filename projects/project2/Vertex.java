@@ -88,4 +88,12 @@ public class Vertex{
     this.adjacents = newAdj;
   }
 
+  public void editVertexFloor(int modification){
+    this.floors += modification;
+  }
+
+  public void setCapacity(int newCapacity){
+    this.capacity = 0;
+  }
+
 }

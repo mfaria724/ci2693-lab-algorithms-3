@@ -48,7 +48,7 @@ public class SimpleEdge{
    * Get distance of an Edge
    * @return // Edge's distance
    */
-  protected int getDistance(){
+  protected double getDistance(){
       return this.distance;
   }
   
