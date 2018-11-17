@@ -42,12 +42,6 @@ public class EncontrarAgua {
 
       String line;
       line = reader.readLine();
-<<<<<<< HEAD
-      String[] data = line.split(" ");
-      int capacity = Integer.parseInt(data[2]);
-      double distance = Double.parseDouble(data[3]);
-      graph.addSimpleEdge(i, capacity, distance, data[0], data[1]);
-=======
       int vertices = Integer.parseInt(line);
       line = reader.readLine();
       int edges = Integer.parseInt(line);
@@ -80,7 +74,6 @@ public class EncontrarAgua {
     } catch (Exception e) {
       System.out.println("Finalizo en readGraph. " + e.getMessage());
       System.exit(0);
->>>>>>> b1a64dee38b4282c98f5bedd570255027367af7e
     }
 
     System.out.println("El archivo del campus se ha leido correctamente.");

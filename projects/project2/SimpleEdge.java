@@ -49,11 +49,7 @@ public class SimpleEdge{
    * Get distance of an Edge
    * @return // Edge's distance
    */
-<<<<<<< HEAD
-  public int getDistance(){
-=======
-  protected double getDistance(){
->>>>>>> b1a64dee38b4282c98f5bedd570255027367af7e
+  public double getDistance(){
       return this.distance;
   }
 
