@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class EncontrarAgua {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception{
 
     // args[0] graph file
     // args[1] cases file
@@ -23,9 +23,9 @@ public class EncontrarAgua {
       } catch (NumberFormatException e) {
         System.out.println("Cantidad de personas inválida. Recuerde que la cantidad de personas debe ser un número entero.");
         System.exit(0);
-      } catch (Exception e) {
-        //TODO: handle exception
-      }
+      }// } catch (Exception e) {
+      //   //TODO: handle exception
+      // }
 
     }else{
       System.out.println("Uso: java EncontrarAgua <campus> <casos> <edif> <personas>");
@@ -81,15 +81,15 @@ public class EncontrarAgua {
 
   }
 
-  public static void readCases(String file, UndirectedGraph graph, String origin, int people){
+  public static void readCases(String file, UndirectedGraph graph, String origin, int people) throws Exception{
 
     try {
       BufferedReader reader = new BufferedReader(new FileReader(file));      
       UndirectedGraph cloneGraph;
       String line;
       String caseId = reader.readLine();
-
       while(caseId != null){
+        int cleanBathrooms = 0;
 
         System.out.println("Caso: " + caseId);
         cloneGraph = graph.clone();
@@ -107,13 +107,15 @@ public class EncontrarAgua {
           buildingNames[i] = vertices.get(i).getId();
         }
 
-        System.out.println("Edificios funcionando: " + buildings);
+        // System.out.println("Edificios funcionando: " + buildings);
         for(int i = 0; i < buildings; i++){
           line = reader.readLine();
           String[] data = line.split(" ");
           
-          System.out.println("Existe edificio: " + data[0]);
-          System.out.println("Index edificio: " + cloneGraph.getVertexIndex(data[0]));
+          // System.out.println("Existe edificio: " + data[0]);
+          // System.out.println("Index edificio: " + cloneGraph.getVertexIndex(data[0]));
+
+          cleanBathrooms += cloneGraph.getVertex(data[0]).getCapacity();
           buildingNames[cloneGraph.getVertexIndex(data[0])] = "HAS WATER";
 
           if(data.length == 2){
@@ -155,8 +157,8 @@ public class EncontrarAgua {
         line = reader.readLine();
         caseId = reader.readLine();
 
-        // cloneGraph.applyBellmanFord(origin, people);
-        System.out.println(cloneGraph.toString());
+        cloneGraph.applyBellmanFord(origin, people, cleanBathrooms);
+        // System.out.println(cloneGraph.toString());
 
       }
 
@@ -168,10 +170,10 @@ public class EncontrarAgua {
       System.out.println("Formato de archivo inválido. Revise el archivo de casos e intente de nuevo. " + e.getMessage());
       System.out.println("Exception: " + e.getClass());
       System.exit(0);
-    } catch (Exception e) {
-      System.out.println("Finalizo en readCases. " + e.getMessage());
-      System.exit(0);
-    }
+    }// } catch (Exception e) {
+    //   System.out.println("Finalizo en readCases. " + e.getMessage());
+    //   System.exit(0);
+    // }
       
     }
 }

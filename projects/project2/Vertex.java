@@ -18,6 +18,12 @@ public class Vertex{
     
   }
 
+  public Vertex(Vertex v){
+    this.id = v.id;
+    this.capacity = v.capacity;
+    this.floors = v.floors;
+  }
+
   /**
    * Creates a new vertex.
    * @param id // Vertex's id.

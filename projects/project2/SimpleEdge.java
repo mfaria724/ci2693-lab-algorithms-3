@@ -10,6 +10,18 @@ public class SimpleEdge{
   private String v1;
   private String v2;
   
+  public SimpleEdge(){
+
+  }
+
+  public SimpleEdge(SimpleEdge e){
+    this.id = e.id;
+    this.v1 = e.v1;
+    this.v2 = e.v2;
+    this.capacity = e.capacity;
+    this.distance = e.distance;
+  }
+
   /**
    * // Creates a new simple edge
    * @param id // Edge's id.

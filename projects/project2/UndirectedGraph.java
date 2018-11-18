@@ -305,12 +305,12 @@ public class UndirectedGraph{
 
     // Copy all vertices in the new graph
     for(int i=0; i<this.graph.size(); i++){
-      clone.graph.add(this.graph.get(i));
+      clone.graph.add(new Vertex(this.graph.get(i)));
     }
 
     // Copy all the edges in the new graph
     for(int i=0; i<this.edges.size(); i++){
-      clone.edges.add(this.edges.get(i));
+      clone.edges.add(new SimpleEdge(this.edges.get(i)));
     }
 
     return clone;
@@ -390,18 +390,22 @@ public class UndirectedGraph{
    * @param id2 // End 2 id
    * @return // true if the edge is in the graph, othercase false.
    */
-  public SimpleEdge getSimpleEdge(String id1, String id2) throws NoSuchElementException{
+  public SimpleEdge getSimpleEdge(String id1, String id2){
+
+    SimpleEdge min = this.edges.get(0);
+
     // Iterates over the edge's list
     for(int i=0; i<this.edges.size();i++){
       // Checks if there's an edge with both vertex
       if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
       || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
-        return this.edges.get(i);
+        if(min.getCapacity() > this.edges.get(i).getCapacity()){
+          min = this.edges.get(i);
+        }
       }
     }
+    return min;
 
-    // If there is no edge
-    throw new NoSuchElementException("Edge doesn't exist");
   }
 
   public int getSimpleEdgeIndex(String id1, String id2){
@@ -419,18 +423,37 @@ public class UndirectedGraph{
   }
 
 
-  public void applyBellmanFord(String originId, int people){
+  public void applyBellmanFord(String originId, int people, int cleanBathrooms){
     
-    while(people != 0 && this.haveWays){
+    System.out.println(originId + " " + people);
+
+    int initialPeople = people;
+
+    System.out.println(initialPeople);
+    System.out.println(cleanBathrooms);
+    // System.exit(0);
+
+    while(people > 0 && this.haveWays && people > initialPeople - cleanBathrooms){
+
+      System.out.println("initial people" +initialPeople);
+      System.out.println("clean bathrooms" +cleanBathrooms);
+      System.out.println("people" +people);
+      
+      System.out.println("Entro en el while");
+
       people = bellmanFord(originId, people);
+
+      System.out.println(people + "" +  this.haveWays);
     }
 
   }
 
   private int bellmanFord(String originId, int people){
 
+    System.out.println("Hace bellmanford");
+
     double[] distance = new double[this.graph.size()];
-    int[] predecessors = new String[this.graph.size()];
+    int[] predecessors = new int[this.graph.size()];
 
     Arrays.fill(distance, Double.POSITIVE_INFINITY);
 
@@ -445,26 +468,38 @@ public class UndirectedGraph{
     String m;
     String n;
 
-    for(int i=0 ; i<this.graph.size(); i++){
+    System.out.println(this.graph.size());
+    for(int i=0 ; i<this.graph.size() && change; i++){
       change = false;
 
       for(int j=0; j < this.edges.size(); j++){
-        n = this.getVertexIndex(this.edges.get(j).getEnd1());
-        m = this.getVertexIndex(this.edges.get(j).getEnd2());
+        n = this.edges.get(j).getEnd1();
+        m = this.edges.get(j).getEnd2();
 
-        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance()){
-          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance();
+        // System.out.println(this.edges.get(j).toString());
+        // (n,m)
+
+
+        // System.out.println("distancia a m: " + distance[this.getVertexIndex(m)] + " distancia a n: " + distance[this.getVertexIndex(n)] + " distancia (n,m): " +this.edges.get(j).getDistance());
+        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.edges.get(j).getDistance()){
+          // System.out.println("Entro en el if");
+          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.edges.get(j).getDistance();
           predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
+          change = true;
+        } else if( distance[this.getVertexIndex(n)] > distance[this.getVertexIndex(m)] + this.edges.get(j).getDistance()){
+          // System.out.println("Entro en el if");
+          distance[this.getVertexIndex(n)] = distance[this.getVertexIndex(m)] + this.edges.get(j).getDistance();
+          predecessors[this.getVertexIndex(n)] = this.getVertexIndex(m);
           change = true;
         }
       }
     }
 
     for(int i=0; i<this.edges.size();i++){
-      n = this.getVertexIndex(this.edges.get(j).getEnd1());
-      m = this.getVertexIndex(this.edges.get(j).getEnd2());
+      n = this.edges.get(i).getEnd1();
+      m = this.edges.get(i).getEnd2();
 
-      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.getSimpleEdge(n, m).getDistance()){
+      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.edges.get(i).getDistance()){
         System.out.println("Error, hay un circuito de peso negativo");
       }
     }
@@ -476,19 +511,36 @@ public class UndirectedGraph{
     int destination = betterOption(distance);
 
     if(destination == -1){
+      System.out.println("sale**********************************************************************************");
       this.haveWays = false;
     } else{
       ArrayList<Vertex> bestWay = reconstrucWay(destination, predecessors);
-
-      for(int i =0 ; bestWay.size();i++){
-        System.out.println(bestWay.get(i).getId());
+      bestWay.add(0, this.getVertex(originId));
+      
+      int assignedPeople = modifyGraph(bestWay);
+      // int variable
+      
+      if(people - assignedPeople < 0){
+        System.out.println(people);
+      } else {
+        System.out.println(assignedPeople);
       }
-  
-      people -= modifyGraph(bestWay);
 
+      people -= assignedPeople;
+      
+      for(int i =0 ; i<bestWay.size();i++){
+        System.out.print(bestWay.get(i).getId() + " - ");
+      }
+      System.out.println(distance[destination]);
+      // if(variable > 0){
+      //   people = variable;
+      // } else{
+      //   people = 0;
+      // }
       
     }
     
+    System.out.println("people: " + people);
     return people;
 
   }
@@ -501,9 +553,13 @@ public class UndirectedGraph{
       if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != 0){
         empty =false;
       }
+      // System.out.println("distance[min]" + distance[min] + " > " + "distance[i]" + distance[i]);
+      // System.out.println("capacidad de i:" + this.graph.get(i).getCapacity());
+      // System.out.println(i);
       if((distance[min] > distance[i] || distance[min] == 0) && distance[i] != 0 && this.graph.get(i).getCapacity() != 0){
         min = i;
       }
+      // System.out.println(min);
     }
     if(empty){
       min = -1;
@@ -514,16 +570,24 @@ public class UndirectedGraph{
 
   private int modifyGraph(ArrayList<Vertex> bestWay){
 
+    // System.out.println("Entra en modify");
+
     int minCapacity = getMinCapacity(bestWay);
     String m;
     String n;
 
-    for(int i=0; i<bestWay.size(); i++){
-      m = bestWay.get(i).getId();
-      n = bestWay.get(i + 1).getId();
-
-      this.edges.get(this.getSimpleEdgeIndex(m, n)).editCapacity(minCapacity);
+    try {
+      for(int i=0; i<bestWay.size() - 1; i++){
+        m = bestWay.get(i).getId();
+        n = bestWay.get(i + 1).getId();
+  
+        this.edges.get(this.getSimpleEdgeIndex(m, n)).editCapacity(minCapacity);
+      }    
+    } catch (Exception e) {
+      
     }
+    
+    // System.out.println("pasa primer for");
 
     this.graph.get(this.getVertexIndex(bestWay.get(bestWay.size() - 1).getId())).editCapacity(minCapacity);
 
@@ -540,10 +604,10 @@ public class UndirectedGraph{
   private ArrayList<Vertex> reconstrucWay(int destination, int[] predecessors){
     ArrayList<Vertex> way = new ArrayList<>();
 
-    j = destination;
+    int j = destination;
 
     do{
-      way.add(this.graph.get(j));
+      way.add(0,this.graph.get(j));
       j = predecessors[j];
     }while(j != predecessors[j]);
 
@@ -552,19 +616,28 @@ public class UndirectedGraph{
   }
 
   private int getMinCapacity(ArrayList<Vertex> way){
-    int min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();
-
-    for(int i=0; i< way.size() - 1;i++){
-      if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
-        min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
+    System.out.println("way: " + way.size());
+    try {
+      int min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();    
+      
+      for(int i=0; i< way.size() - 1;i++){
+        if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
+          min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
+          System.out.println("min lado (" + i +","+ (i + 1) + ") capacidad: " + min);
+          System.out.println(this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getId());
+        }
       }
+  
+      if(min > way.get(way.size() - 1).getCapacity()){
+        min = way.get(way.size() -1).getCapacity();
+      }
+
+      return min;
+
+    } catch (NoSuchElementException e) {
+      return way.get(0).getCapacity();
     }
 
-    if(min > way.get(way.size() - 1).getCapacity()){
-      min = way.get(way.size() -1).getCapacity();
-    }
-
-    return min;
   }
 
   /**
@@ -613,43 +686,7 @@ public class UndirectedGraph{
 
   }
 
-//   /**
-//    * Auxiliary function for idnetufy vertex's data type.
-//    * @param value
-//    * @return
-//    */
-//     private String getVertexType(V value){
-    
-//     if(value instanceof String){
-//       return "String";
-//     }else if(value instanceof Double){
-//       return "Double";
-//     }else if(value instanceof Boolean){
-//       return "Boolean";
-//     }
 
-//     return "None";
-
-//   }
-  
-//   /**
-//    * Auxiliary function for idnetufy edge's data type.
-//    * @param value
-//    * @return
-//    */
-//   private String getEdgeType(E value){
-    
-//     if(value instanceof String){
-//       return "String";
-//     }else if(value instanceof Double){
-//       return "Double";
-//     }else if(value instanceof Boolean){
-//       return "Boolean";
-//     }
-
-//     return "None";
-
-//   }
 
   public void editVertexFloor(String id, int modification){
 
