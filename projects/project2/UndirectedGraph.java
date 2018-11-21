@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Class to implement all TAD Undirected
+ * Class to implement all TAD Functions
  */
 public class UndirectedGraph{
   
@@ -32,15 +32,6 @@ public class UndirectedGraph{
   }
 
   /**
-   * Gets the number of edges in a graph.
-   * @return // The number of edges.
-   */
-  public int numEdges(){
-    
-    return this.edges.size();
-  }
-
-  /**
    * Adds an existing vertex to the graph. If there is no vertex with
    * that id, it creates the vertex.
    * @param v // Vertex that user wants to add to graph.
@@ -57,7 +48,7 @@ public class UndirectedGraph{
     this.graph.add(v);    
 
     return true;
-    }
+  }
 
   /**
    * Add a new vertex to the graph.
@@ -113,8 +104,6 @@ public class UndirectedGraph{
     throw new NoSuchElementException("Vertex doesn't exist");
   }
 
-
-
   /**
    * Verifies if a vertex is in the graph.
    * @param id // Vertex id.
@@ -131,6 +120,7 @@ public class UndirectedGraph{
 
     return false;
   }
+
   /**
    * Adds a simple edge to the graph
    * @param e // Pre-created edge.
@@ -185,67 +175,7 @@ public class UndirectedGraph{
 
     SimpleEdge e = new SimpleEdge(id, capacity, distance, v1, v2);
     return this.addSimpleEdge(e);
-  }
 
-  /**
-   * Verifies if a edge is in the graph.
-   * @param id1 // End 1 id
-   * @param id2 // End 2 id
-   * @return // true if the edge is in the graph, othercase false.
-   */
-  public boolean cotainsEdge(String id1, String id2){
-    // Iterates over the edge's list
-    for(int i=0; i<this.edges.size();i++){
-      // Checks if there's an edge with both vertex
-      if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
-      || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
-        return true;
-      }
-    }
-
-    // If there isn't edfe
-    return false;
-  }
-
-  /**
-   * Deletes a vertex in a graph.
-   * @param Id // Vertex's id.
-   * @return // true if the vertex was deleted, othercase false.
-   */
-  public boolean deleteVertex(String Id){
-
-    // Initialize variables
-    boolean result = false;
-
-    // Iterates over the list of adjacencies
-    for(int i=0;i<this.graph.size(); i++){
-      for(int j=0;j<this.graph.get(i).getAdjacencies().size(); j++){
-        // Deletes the vertex from the adjacencies list of another vertesx
-        if(this.graph.get(i).getAdjacencies().get(j).getId().equals(Id)){
-          ArrayList<Vertex> newAdj = this.graph.get(i).getAdjacencies();
-          newAdj.remove(j);
-          this.graph.get(i).setAdjacencies(newAdj);
-          result = true;
-        }
-      }
-    }
-
-    // Deletes the vertex in the vertex list
-    if(this.containsVertex(Id)){
-      this.graph.remove(this.getVertex(Id));
-    }
-
-    // Deletes edges that contains the vertex
-    int i =0;
-    while(i < this.edges.size()){
-      if(this.edges.get(i).getEnd1().equals(Id) || this.edges.get(i).getEnd2().equals(Id)){
-        this.edges.remove(i);
-        i = i - 1;
-      }
-      i += 1;
-    }
-    
-    return result;
   }
 
   /**
@@ -258,40 +188,6 @@ public class UndirectedGraph{
     ArrayList<Vertex> vertices = new ArrayList<Vertex>(this.graph);
 
     return vertices;
-  }
-
-  /**
-   * Gets the degree of one vertex in the graph.
-   * @param id // Vertex's id.
-   * @return // Vertex's degree.
-   */
-  public Integer degree(String id) throws NoSuchElementException{
-
-    // Checks if the vertex exist
-    if(this.containsVertex(id)){
-      // Return number of adjacents of the vertex
-      return this.getVertex(id).getAdjacencies().size();
-    }
-
-    // If vertex doesn't exist
-    throw new NoSuchElementException("Vertex doesn't exist");
-  }
-
-  /**
-   * Gets all adjacent vertices to a vertex. 
-   * @param id // Vertex's id.
-   * @return // the list of adjacent vertices.
-   * @throws NoSuchElementException // If there is no vertex with that id.
-   */
-
-  public ArrayList<Vertex> neighbourhood(String id) throws NoSuchElementException{
-    // Checks if vertex exist
-    if(this.containsVertex(id)){
-      // Return vertex's adjacents
-      return this.getVertex(id).getAdjacencies();
-    }
-
-    throw new NoSuchElementException("Vertex doesn't exist");
   }
 
   /**
@@ -425,32 +321,19 @@ public class UndirectedGraph{
 
   public void applyBellmanFord(String originId, int people, int cleanBathrooms){
     
-    System.out.println(originId + " " + people);
-
     int initialPeople = people;
 
-    System.out.println(initialPeople);
-    System.out.println(cleanBathrooms);
-    // System.exit(0);
-
     while(people > 0 && this.haveWays && people > initialPeople - cleanBathrooms){
-
-      System.out.println("initial people" +initialPeople);
-      System.out.println("clean bathrooms" +cleanBathrooms);
-      System.out.println("people" +people);
-      
-      System.out.println("Entro en el while");
-
       people = bellmanFord(originId, people);
+    }
 
-      System.out.println(people + "" +  this.haveWays);
+    if(people > 0){
+      System.out.println("  " + people + " personas sin asignar.");
     }
 
   }
 
   private int bellmanFord(String originId, int people){
-
-    System.out.println("Hace bellmanford");
 
     double[] distance = new double[this.graph.size()];
     int[] predecessors = new int[this.graph.size()];
@@ -468,7 +351,6 @@ public class UndirectedGraph{
     String m;
     String n;
 
-    System.out.println(this.graph.size());
     for(int i=0 ; i<this.graph.size() && change; i++){
       change = false;
 
@@ -476,18 +358,11 @@ public class UndirectedGraph{
         n = this.edges.get(j).getEnd1();
         m = this.edges.get(j).getEnd2();
 
-        // System.out.println(this.edges.get(j).toString());
-        // (n,m)
-
-
-        // System.out.println("distancia a m: " + distance[this.getVertexIndex(m)] + " distancia a n: " + distance[this.getVertexIndex(n)] + " distancia (n,m): " +this.edges.get(j).getDistance());
         if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.edges.get(j).getDistance()){
-          // System.out.println("Entro en el if");
           distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.edges.get(j).getDistance();
           predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
           change = true;
         } else if( distance[this.getVertexIndex(n)] > distance[this.getVertexIndex(m)] + this.edges.get(j).getDistance()){
-          // System.out.println("Entro en el if");
           distance[this.getVertexIndex(n)] = distance[this.getVertexIndex(m)] + this.edges.get(j).getDistance();
           predecessors[this.getVertexIndex(n)] = this.getVertexIndex(m);
           change = true;
@@ -501,6 +376,7 @@ public class UndirectedGraph{
 
       if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.edges.get(i).getDistance()){
         System.out.println("Error, hay un circuito de peso negativo");
+        System.exit(0);
       }
     }
 
@@ -511,37 +387,42 @@ public class UndirectedGraph{
     int destination = betterOption(distance);
 
     if(destination == -1){
-      System.out.println("sale**********************************************************************************");
       this.haveWays = false;
     } else{
       ArrayList<Vertex> bestWay = reconstrucWay(destination, predecessors);
       bestWay.add(0, this.getVertex(originId));
       
       int assignedPeople = modifyGraph(bestWay);
-      // int variable
-      
+      String printAssigned = "";
+
       if(people - assignedPeople < 0){
-        System.out.println(people);
+        printAssigned = Integer.toString(people);
       } else {
-        System.out.println(assignedPeople);
+        printAssigned = Integer.toString(assignedPeople);
       }
 
       people -= assignedPeople;
-      
-      for(int i =0 ; i<bestWay.size();i++){
-        System.out.print(bestWay.get(i).getId() + " - ");
-      }
-      System.out.println(distance[destination]);
-      // if(variable > 0){
-      //   people = variable;
-      // } else{
-      //   people = 0;
-      // }
+
+      printWay(printAssigned, bestWay, distance, destination);
       
     }
     
-    System.out.println("people: " + people);
     return people;
+
+  }
+
+  private void printWay(String printAssigned, ArrayList<Vertex> bestWay, double[] distance, int destination){
+
+    String output = "\tRuta: " + bestWay.get(0).getId();
+      
+    for(int i = 1 ; i<bestWay.size();i++){
+      output += " - " + bestWay.get(i).getId();
+    }
+    
+    output += " (" + distance[destination] + " m)";
+    
+    System.out.println("  " + printAssigned + " personas a " + bestWay.get(bestWay.size() - 1).getId());
+    System.out.println(output);
 
   }
 
@@ -553,13 +434,9 @@ public class UndirectedGraph{
       if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != 0){
         empty =false;
       }
-      // System.out.println("distance[min]" + distance[min] + " > " + "distance[i]" + distance[i]);
-      // System.out.println("capacidad de i:" + this.graph.get(i).getCapacity());
-      // System.out.println(i);
       if((distance[min] > distance[i] || distance[min] == 0) && distance[i] != 0 && this.graph.get(i).getCapacity() != 0){
         min = i;
       }
-      // System.out.println(min);
     }
     if(empty){
       min = -1;
@@ -569,8 +446,6 @@ public class UndirectedGraph{
   }
 
   private int modifyGraph(ArrayList<Vertex> bestWay){
-
-    // System.out.println("Entra en modify");
 
     int minCapacity = getMinCapacity(bestWay);
     String m;
@@ -587,8 +462,6 @@ public class UndirectedGraph{
       
     }
     
-    // System.out.println("pasa primer for");
-
     this.graph.get(this.getVertexIndex(bestWay.get(bestWay.size() - 1).getId())).editCapacity(minCapacity);
 
     for(int i=0; i<this.edges.size();i++){
@@ -616,15 +489,12 @@ public class UndirectedGraph{
   }
 
   private int getMinCapacity(ArrayList<Vertex> way){
-    System.out.println("way: " + way.size());
     try {
       int min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();    
       
       for(int i=0; i< way.size() - 1;i++){
         if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
           min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
-          System.out.println("min lado (" + i +","+ (i + 1) + ") capacidad: " + min);
-          System.out.println(this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getId());
         }
       }
   
@@ -639,54 +509,6 @@ public class UndirectedGraph{
     }
 
   }
-
-  /**
-   * Gets a string graph representation.
-   * @return // Graph converted to string.
-   */
-  public String toString(){
-
-    //  Variables initialization
-    String stringGraph = "";
-
-    // Graph type
-    // stringGraph += "Grafo No Dirijido \n";
-
-    // Number of vertices.
-    stringGraph += "Número de Vértices: ";
-    stringGraph += this.graph.size() + "\n";
-
-    // Number of Directed Edges.
-    stringGraph += "Número de Aristas: ";
-    stringGraph += this.edges.size() + "\n";
-    
-    // Vertices.
-    stringGraph += "Vértices: \n";
-    stringGraph += "Id\t\tCap\t\tFloors\n";
-    for(int i = 0; i < this.graph.size(); i++){
-      Vertex v = this.graph.get(i);
-      stringGraph += v.getId() + " \t\t";
-      stringGraph += v.getCapacity() + "\t\t";
-      stringGraph += v.getFloors() + "\n";
-    }
-
-    // Simple Edges.
-    stringGraph += "Aristas: \n";
-    stringGraph += "Id\t\tCap\t\tDist\t\tIdV1\t\tIdV2\n";
-    for(int j = 0; j < this.edges.size(); j++){
-      SimpleEdge e = this.edges.get(j);
-      stringGraph += e.getId() + "\t\t";
-      stringGraph += e.getCapacity() + "\t\t";
-      stringGraph += e.getDistance() + "\t\t";
-      stringGraph += e.getEnd1() + "\t\t";
-      stringGraph += e.getEnd2() + "\n";
-    }
-
-    return stringGraph;
-
-  }
-
-
 
   public void editVertexFloor(String id, int modification){
 
