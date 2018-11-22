@@ -10,10 +10,16 @@ public class SimpleEdge{
   private String v1;
   private String v2;
   
+  /**
+   * Empty constructor
+   */
   public SimpleEdge(){
 
   }
-
+  /**
+   * Initializes new edge with the data of a given edge
+   * @param e Edge given
+   */
   public SimpleEdge(SimpleEdge e){
     this.id = e.id;
     this.v1 = e.v1;

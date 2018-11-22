@@ -281,10 +281,10 @@ public class UndirectedGraph{
 
   
     /**
-   * Verifies if a edge is in the graph.
+   * Gets an the min  existing simple edge given the ids of the end vertex
    * @param id1 // End 1 id
    * @param id2 // End 2 id
-   * @return // true if the edge is in the graph, othercase false.
+   * @return
    */
   public SimpleEdge getSimpleEdge(String id1, String id2){
 
@@ -295,7 +295,7 @@ public class UndirectedGraph{
       // Checks if there's an edge with both vertex
       if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
       || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
-        if(min.getCapacity() > this.edges.get(i).getCapacity()){
+        if(min.getDistance() > this.edges.get(i).getDistance()){
           min = this.edges.get(i);
         }
       }
@@ -303,7 +303,12 @@ public class UndirectedGraph{
     return min;
 
   }
-
+  /**
+   * Method that given a ids of two vertex, returns the edge that contains them.
+   * @param id1 End 1 id
+   * @param id2 End 2 id
+   * @return
+   */
   public int getSimpleEdgeIndex(String id1, String id2){
     // Iterates over the edge's list
     for(int i=0; i<this.edges.size();i++){
@@ -318,23 +323,37 @@ public class UndirectedGraph{
     throw new NoSuchElementException("Edge doesn't exist");
   }
 
-
+  /**
+   * Method that apply bellmanford until there aren't people or bathrooms
+   * @param originId Origin id for bellman ford
+   * @param people Number of people that is going to be assigned
+   * @param cleanBathrooms Number of bathrooms that are available
+   */
   public void applyBellmanFord(String originId, int people, int cleanBathrooms){
     
     int initialPeople = people;
 
+    // Checks if there are people to assign, ways and still are bathrooms to assign people
     while(people > 0 && this.haveWays && people > initialPeople - cleanBathrooms){
       people = bellmanFord(originId, people);
     }
 
+    // If there are still people, they couldn't be assigned
     if(people > 0){
       System.out.println("  " + people + " personas sin asignar.");
     }
 
   }
 
+  /**
+   * Method that finds the minimun cost ways from a vertex to all its adjacencies
+   * @param originId  Origin vertex
+   * @param people Number of people that needs to be assigned
+   * @return
+   */
   private int bellmanFord(String originId, int people){
 
+    // Initializes needed arrays
     double[] distance = new double[this.graph.size()];
     int[] predecessors = new int[this.graph.size()];
 
@@ -346,55 +365,76 @@ public class UndirectedGraph{
 
     predecessors[this.getVertexIndex(originId)] = this.getVertexIndex(originId);
 
+    // Boleean variable used to detect if a change was made in a iteration
     boolean change = true;
 
-    String m;
-    String n;
+    // Initializing string used for the vertexes id
+    int m;
+    int n;
 
+    // Iterates |V| - 1 times to consider the largest elemental way
     for(int i=0 ; i<this.graph.size() && change; i++){
       change = false;
 
+      // Iterates over the edges of the graph
       for(int j=0; j < this.edges.size(); j++){
-        n = this.edges.get(j).getEnd1();
-        m = this.edges.get(j).getEnd2();
 
-        if( distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.edges.get(j).getDistance()){
-          distance[this.getVertexIndex(m)] = distance[this.getVertexIndex(n)] + this.edges.get(j).getDistance();
-          predecessors[this.getVertexIndex(m)] = this.getVertexIndex(n);
+        // Gets the ends of the edge
+        n = this.getVertexIndex(this.edges.get(j).getEnd1());
+        m = this.getVertexIndex(this.edges.get(j).getEnd2());
+
+        // Verifies if the actual cost to get to an vertex is more that the cost of the previous vertex adding the cost of the edge
+        // If so, update the cost to get to the vertex
+        if( distance[m] > distance[n] + this.edges.get(j).getDistance()){
+          distance[m] = distance[n] + this.edges.get(j).getDistance();
+          predecessors[m] = n;
           change = true;
-        } else if( distance[this.getVertexIndex(n)] > distance[this.getVertexIndex(m)] + this.edges.get(j).getDistance()){
-          distance[this.getVertexIndex(n)] = distance[this.getVertexIndex(m)] + this.edges.get(j).getDistance();
-          predecessors[this.getVertexIndex(n)] = this.getVertexIndex(m);
+        } else if( distance[n] > distance[m] + this.edges.get(j).getDistance()){
+          distance[n] = distance[m] + this.edges.get(j).getDistance();
+          predecessors[n] = m;
           change = true;
         }
       }
     }
 
+    // Iterates over the edges one more time to verifies is the same, if so it means that there is a negative cicle
     for(int i=0; i<this.edges.size();i++){
-      n = this.edges.get(i).getEnd1();
-      m = this.edges.get(i).getEnd2();
+      n = this.getVertexIndex(this.edges.get(j).getEnd1());
+      m = this.getVertexIndex(this.edges.get(j).getEnd2());
 
-      if(distance[this.getVertexIndex(m)] > distance[this.getVertexIndex(n)] + this.edges.get(i).getDistance()){
+      if(distance[m] > distance[n] + this.edges.get(i).getDistance()){
+        System.out.println("Error, hay un circuito de peso negativo");
+        System.exit(0);
+      } else if(distance[n] > distance[m] + this.edges.get(i).getDistance()){
         System.out.println("Error, hay un circuito de peso negativo");
         System.exit(0);
       }
     }
 
+    // Adds to every vertex the distance that has to walk to get wo the floor
     for(int i=0; i<distance.length;i++){
       distance[i] = distance[i] + Math.abs(this.graph.get(i).getFloors())*25;
     }
 
+    // Gets the vertex that has the way with the less distance
     int destination = betterOption(distance);
 
-    if(destination == -1){
+    // Checks if there isn't a way
+    if(destination == -1){ // If there isn't a way
       this.haveWays = false;
-    } else{
+    } else{ // If there is a way
+
+      // Reconstrucs the way to the destination vertex
       ArrayList<Vertex> bestWay = reconstrucWay(destination, predecessors);
       bestWay.add(0, this.getVertex(originId));
       
+      // Modifies the graph, and get the rest of people after assign them
       int assignedPeople = modifyGraph(bestWay);
+
+
       String printAssigned = "";
 
+      // Checks if there isn't more people, to know what to print
       if(people - assignedPeople < 0){
         printAssigned = Integer.toString(people);
       } else {
@@ -403,6 +443,7 @@ public class UndirectedGraph{
 
       people -= assignedPeople;
 
+      // Prints the way
       printWay(printAssigned, bestWay, distance, destination);
       
     }
@@ -411,21 +452,37 @@ public class UndirectedGraph{
 
   }
 
+  /**
+   * Method used to print the way
+   * @param printAssigned Number of people assgined the destination bathroom
+   * @param bestWay Way that is going to be printed
+   * @param distance Distance of the way
+   * @param destination Last vertex of the way
+   */
   private void printWay(String printAssigned, ArrayList<Vertex> bestWay, double[] distance, int destination){
 
+
     String output = "\tRuta: " + bestWay.get(0).getId();
-      
+    
+    // Iterates over the way to print every vertex
     for(int i = 1 ; i<bestWay.size();i++){
       output += " - " + bestWay.get(i).getId();
     }
     
+    // Add the distance in the output
     output += " (" + distance[destination] + " m)";
     
+    // Prints number of people assigned and the destination
     System.out.println("  " + printAssigned + " personas a " + bestWay.get(bestWay.size() - 1).getId());
     System.out.println(output);
 
   }
 
+  /**
+   * Method to get 
+   * @param distance
+   * @return
+   */
   private int betterOption(double[] distance){
     int min = 0;
     boolean empty = true;
