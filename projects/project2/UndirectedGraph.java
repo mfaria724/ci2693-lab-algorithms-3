@@ -579,17 +579,24 @@ public class UndirectedGraph{
     try {
       int min;
 
+      // Checks if the way has just one vertex
       if(way.get(0).getId().equals(way.get(1).getId())){
+        // If so, assign min as the capacity of the vertex
         min = way.get(0).getCapacity();
+
       } else{
-        min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();   
+        // If not, assign min as the first edge of the way
+        min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();  
+        // Iterates over the way, to check which edge has the min capacity 
         for(int i=0; i< way.size() - 1;i++){
           if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
             min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
           }
         }
-    
+        
+        // Checks if the destination vertex has less capacity than the min capacity edge
         if(min > way.get(way.size() - 1).getCapacity()){
+          // If so, assign the destination capacity as the minimum
           min = way.get(way.size() -1).getCapacity();
         } 
       }
