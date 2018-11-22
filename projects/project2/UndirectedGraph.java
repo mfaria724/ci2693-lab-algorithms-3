@@ -479,15 +479,17 @@ public class UndirectedGraph{
   }
 
   /**
-   * Method to get 
-   * @param distance
+   * Method to get from all the ways, the way with the minimum distance
+   * @param distance Array that contains the distance from the origin to every vertex
    * @return
    */
   private int betterOption(double[] distance){
+    // Initializes variables
     int min = 0;
     boolean empty = true;
-
+    // Iterates over the distance array to get the minimun distance
     for(int i=0; i<distance.length;i++){
+      // Checks if the way isn't empty
       if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != 0){
         empty =false;
       }
@@ -502,12 +504,19 @@ public class UndirectedGraph{
     return min;
   }
 
+  /**
+   * Method that modifies the graph after assign people, and get the number of people assigned
+   * @param bestWay Way to nearest bathroom
+   * @return
+   */
   private int modifyGraph(ArrayList<Vertex> bestWay){
 
+    // Gets the mincapacity in all the way.
     int minCapacity = getMinCapacity(bestWay);
     String m;
     String n;
 
+    // Iterates over the edges of the best way, substracting the mincapacity in every one
     try {
       for(int i=0; i<bestWay.size() - 1; i++){
         m = bestWay.get(i).getId();
@@ -519,23 +528,37 @@ public class UndirectedGraph{
       
     }
     
+    // Substracts the mincapacity in the destination vertex
     this.graph.get(this.getVertexIndex(bestWay.get(bestWay.size() - 1).getId())).editCapacity(minCapacity);
 
+    // Iterates over the edges
     for(int i=0; i<this.edges.size();i++){
+      // If their capacity is 0, it is deleted from the graph
       if(this.edges.get(i).getCapacity() == 0){
         this.deleteSimpleEdge(this.edges.get(i).getId());
       }
     }
 
+    // Return the number of people that is assigned
     return minCapacity;
 
   }
 
+  /**
+   * Method that reconstruct the way to the destination usign the predecessors array
+   * @param destination Index of the last vertex of the way in the predecessors array
+   * @param predecessors Array that contains the predecessors of every vertex
+   * @return
+   */
   private ArrayList<Vertex> reconstrucWay(int destination, int[] predecessors){
+
+    // Initializes return structure
     ArrayList<Vertex> way = new ArrayList<>();
 
-    int j = destination;
+    // Initializes aux varibles to construct the way
+    int j  = destination;
 
+    // Add the actual vertex to the way, and gets the predecessor of it until the predecessor is it again
     do{
       way.add(0,this.graph.get(j));
       j = predecessors[j];
@@ -545,16 +568,24 @@ public class UndirectedGraph{
     return way;
   }
 
+  /**
+   * Method used to get the mincapacity in a given way
+   * @param way Way given
+   * @return
+   */
   private int getMinCapacity(ArrayList<Vertex> way){
     try {
+      // Initializes min
       int min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();    
       
+      // Iterates over edges checking if the min is bigger than the actual, to get min capacity edge
       for(int i=0; i< way.size() - 1;i++){
         if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
           min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
         }
       }
-  
+      
+      // Checks if the destination vertex has less capacity than the min capacity edge
       if(min > way.get(way.size() - 1).getCapacity()){
         min = way.get(way.size() -1).getCapacity();
       }
@@ -567,6 +598,11 @@ public class UndirectedGraph{
 
   }
 
+  /**
+   * Method used to edit the floor of a given vertex
+   * @param id id of vertex that is going to be modified
+   * @param modification number of floors that are going to be added or substracted to the vertex
+   */
   public void editVertexFloor(String id, int modification){
 
     Vertex v = this.getVertex(id);
@@ -574,6 +610,11 @@ public class UndirectedGraph{
 
   }
 
+  /**
+   * Method that sets the capacity of an vertex
+   * @param id Vertex that is going to be modified
+   * @param newCapacity Capicity that is going to be setted
+   */
   public void setVertexCapacity(String id, int newCapacity){
 
     Vertex v = this.getVertex(id);
