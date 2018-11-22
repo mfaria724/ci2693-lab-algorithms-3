@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.List;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 /**
  * Class to implement all TAD Functions
@@ -295,11 +296,12 @@ public class UndirectedGraph{
       // Checks if there's an edge with both vertex
       if((this.edges.get(i).getEnd1().equals(id1) && this.edges.get(i).getEnd2().equals(id2))
       || (this.edges.get(i).getEnd1().equals(id2) && this.edges.get(i).getEnd2().equals(id1))){
-        if(min.getDistance() > this.edges.get(i).getDistance()){
+        if(min.getCapacity() > this.edges.get(i).getCapacity()){
           min = this.edges.get(i);
         }
       }
     }
+
     return min;
 
   }
@@ -399,8 +401,8 @@ public class UndirectedGraph{
 
     // Iterates over the edges one more time to verifies is the same, if so it means that there is a negative cicle
     for(int i=0; i<this.edges.size();i++){
-      n = this.getVertexIndex(this.edges.get(j).getEnd1());
-      m = this.getVertexIndex(this.edges.get(j).getEnd2());
+      n = this.getVertexIndex(this.edges.get(i).getEnd1());
+      m = this.getVertexIndex(this.edges.get(i).getEnd2());
 
       if(distance[m] > distance[n] + this.edges.get(i).getDistance()){
         System.out.println("Error, hay un circuito de peso negativo");
@@ -427,7 +429,7 @@ public class UndirectedGraph{
       // Reconstrucs the way to the destination vertex
       ArrayList<Vertex> bestWay = reconstrucWay(destination, predecessors);
       bestWay.add(0, this.getVertex(originId));
-      
+
       // Modifies the graph, and get the rest of people after assign them
       int assignedPeople = modifyGraph(bestWay);
 
@@ -445,9 +447,9 @@ public class UndirectedGraph{
 
       // Prints the way
       printWay(printAssigned, bestWay, distance, destination);
-      
     }
     
+    // System.exit(0);
     return people;
 
   }
@@ -470,7 +472,7 @@ public class UndirectedGraph{
     }
     
     // Add the distance in the output
-    output += " (" + distance[destination] + " m)";
+    output += " (" + new DecimalFormat("0.0#").format(distance[destination]) + " m)";
     
     // Prints number of people assigned and the destination
     System.out.println("  " + printAssigned + " personas a " + bestWay.get(bestWay.size() - 1).getId());
@@ -488,10 +490,10 @@ public class UndirectedGraph{
     boolean empty = true;
 
     for(int i=0; i<distance.length;i++){
-      if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != 0){
-        empty =false;
+      if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != this.graph.get(min).getFloors()*25.0){
+        empty = false;
       }
-      if((distance[min] > distance[i] || distance[min] == 0) && distance[i] != 0 && this.graph.get(i).getCapacity() != 0){
+      if((distance[min] > distance[i] || distance[min] == this.graph.get(i).getFloors()*25) && this.graph.get(i).getCapacity() != 0){
         min = i;
       }
     }
@@ -546,19 +548,24 @@ public class UndirectedGraph{
   }
 
   private int getMinCapacity(ArrayList<Vertex> way){
-    try {
-      int min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();    
-      
-      for(int i=0; i< way.size() - 1;i++){
-        if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
-          min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
-        }
-      }
-  
-      if(min > way.get(way.size() - 1).getCapacity()){
-        min = way.get(way.size() -1).getCapacity();
-      }
 
+    try {
+      int min;
+
+      if(way.get(0).getId().equals(way.get(1).getId())){
+        min = way.get(0).getCapacity();
+      } else{
+        min = this.getSimpleEdge(way.get(0).getId(), way.get(1).getId()).getCapacity();   
+        for(int i=0; i< way.size() - 1;i++){
+          if(min > this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity()){
+            min = this.getSimpleEdge(way.get(i).getId(), way.get(i+1).getId()).getCapacity();
+          }
+        }
+    
+        if(min > way.get(way.size() - 1).getCapacity()){
+          min = way.get(way.size() -1).getCapacity();
+        } 
+      }
       return min;
 
     } catch (NoSuchElementException e) {

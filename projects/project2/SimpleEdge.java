@@ -16,6 +16,11 @@ public class SimpleEdge{
   public SimpleEdge(){
 
   }
+
+  public SimpleEdge(int capacity){
+    this.capacity = capacity;
+  }
+
   /**
    * Initializes new edge with the data of a given edge
    * @param e Edge given

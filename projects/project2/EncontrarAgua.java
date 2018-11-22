@@ -34,7 +34,7 @@ public class EncontrarAgua {
         System.out.println("Cantidad de personas inválida. Recuerde que la cantidad de personas debe ser un número entero.");
         System.exit(0);
       } catch (Exception e) {
-        System.out.println("Ha ocurrido un error.");
+        System.out.println("El formato del archivo es incorrecto. ");
         System.exit(0);
       }
 
@@ -86,6 +86,12 @@ public class EncontrarAgua {
         graph.addSimpleEdge(Integer.toString(i), capacity, distance, data[0], data[1]);
       }
 
+      line = reader.readLine();
+      
+      if(line != null){
+        throw new Exception();
+      }
+
       // Closes reader.
       reader.close();
 
@@ -93,7 +99,7 @@ public class EncontrarAgua {
       System.out.println("El archivo especificado para el campus no existe. Intente de nuevo.");
       System.exit(0);
     } catch (Exception e) {
-      System.out.println("Finalizo en readGraph. " + e.getMessage());
+      System.out.println("El formato de archivo es inválido. ");
       System.exit(0);
     }
 
@@ -171,9 +177,11 @@ public class EncontrarAgua {
 
         // Change capacity for buildings that do not have avalible bathrooms.
         for(int i = 0; i < buildingNames.length; i++){
+
           if(!buildingNames[i].equals("HAS WATER")){
             cloneGraph.setVertexCapacity(buildingNames[i], 0);
           }
+
         }
 
         // Deletes edges that are not avalible.
@@ -196,11 +204,14 @@ public class EncontrarAgua {
       System.out.println("El archivo especificado para los casos no existe. Intente de nuevo.");
       System.exit(0);
     } catch (NumberFormatException e){
-      System.out.println("Formato de archivo inválido. Revise el archivo de casos e intente de nuevo. " + e.getMessage());
-      System.out.println("Exception: " + e.getClass());
+      System.out.println("Formato de archivo inválido. Revise el archivo de casos e intente de nuevo. ");
       System.exit(0);
     } catch (Exception e) {
-      System.out.println("Finalizo en readCases. " + e.getMessage());
+      if(e.getMessage().equals("Vertex doesn't exist")){
+        System.out.println("El vertice incial no pertenece al grafo o el archivo de casos es inválido. Verifique e intente de nuevo.");
+      }else{
+        System.out.println("El formato de archivo es inválido. ");
+      }
       System.exit(0);
     }
       
