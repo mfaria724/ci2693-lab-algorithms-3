@@ -367,6 +367,7 @@ public class UndirectedGraph{
 
     predecessors[this.getVertexIndex(originId)] = this.getVertexIndex(originId);
 
+
     // Boleean variable used to detect if a change was made in a iteration
     boolean change = true;
 
@@ -396,8 +397,13 @@ public class UndirectedGraph{
           predecessors[n] = m;
           change = true;
         }
+
+
+
       }
+
     }
+
 
     // Iterates over the edges one more time to verifies is the same, if so it means that there is a negative cicle
     for(int i=0; i<this.edges.size();i++){
@@ -449,7 +455,6 @@ public class UndirectedGraph{
       printWay(printAssigned, bestWay, distance, destination);
     }
     
-    // System.exit(0);
     return people;
 
   }
@@ -487,22 +492,30 @@ public class UndirectedGraph{
    */
   private int betterOption(double[] distance){
     // Initializes variables
-    int min = 0;
-    boolean empty = true;
-    // Iterates over the distance array to get the minimun distance
-    for(int i=0; i<distance.length;i++){
-      if(distance[min] != Double.POSITIVE_INFINITY && distance[min] != this.graph.get(min).getFloors()*25.0){
-        empty = false;
+    int min = -1;
+
+    // Gets a vertex that has capacity more than 0
+    for(int i=0; i< this.graph.size(); i++){
+      if(this.graph.get(i).getCapacity() != 0 && distance[i] != Double.POSITIVE_INFINITY){
+        min = i;
+        break;
       }
-      if((distance[min] > distance[i] || distance[min] == this.graph.get(i).getFloors()*25) && this.graph.get(i).getCapacity() != 0){
+    }
+
+    // If there is no vertex with capacity, returns -1
+    if(min == -1){
+      return -1;
+    }
+
+    // Iterates over the distance array to get the minimun distance
+    for(int i=0; i<distance.length;i++){ 
+      if(distance[min] > distance[i] && this.graph.get(i).getCapacity() != 0){
         min = i;
       }
     }
-    if(empty){
-      min = -1;
-    }
 
     return min;
+
   }
 
   /**
@@ -558,6 +571,7 @@ public class UndirectedGraph{
 
     // Initializes aux varibles to construct the way
     int j  = destination;
+
 
     // Add the actual vertex to the way, and gets the predecessor of it until the predecessor is it again
     do{

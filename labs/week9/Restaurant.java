@@ -200,7 +200,7 @@ public class Restaurant {
       System.out.printf(template, result, way, thirdColumn);
 
     }
-    System.out.println("Dijkstra tomó: " + ((this.finalTime - this.intialTime) / 1000) + " segundos.");
+    System.out.println("Dijkstra tomó: " + ((this.finalTime - this.intialTime) / 1000.00) + " segundos.");
 
   }
 
