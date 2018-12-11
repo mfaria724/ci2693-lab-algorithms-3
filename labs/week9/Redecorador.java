@@ -45,6 +45,8 @@ public class Redecorador {
         
       }
 
+      line = Lector.readLine();
+      
       // Read line.
       line = Lector.readLine();
       connections = Integer.parseInt(line);
@@ -62,7 +64,7 @@ public class Redecorador {
         double cost = costE(t1,t2, coordinates);
 
         // Adds connection.
-        restaurant.addConnection(t1, t2, cost);
+        restaurant.addConnection(t1, t2, cost, coordinates);
       }
 
     } catch (FileNotFoundException ex) { // If file doesn't exist.
@@ -127,10 +129,10 @@ public class Redecorador {
       } catch (NumberFormatException e) { // Invalid origin
         System.out.println("Nodo de origen inválido");
         System.out.println("Por favor, introduzca un nodo de origen válido.");
-      } catch (Exception e){ 
-        System.out.println("Ha ocurrido un error desconocido.");
-        System.out.println("El programa finalizará.");
-      }
+      }// } catch (Exception e){ 
+      //   System.out.println("Ha ocurrido un error desconocido.");
+      //   System.out.println("El programa finalizará.");
+      // }
     }
   }
 
