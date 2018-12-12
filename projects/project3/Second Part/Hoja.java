@@ -11,8 +11,13 @@ public class Hoja{
     private int count;
     private int[][] f;
     private int[] colors;
+    private boolean hasCycle = false;
+    private String head = "";
+    private String cycle = "";
 
-    // private String[] letras = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+
+
+    private String[] letras = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 
 
     Hoja(){
@@ -24,26 +29,26 @@ public class Hoja{
         matrizCeldas = new String[n][m];
     }
     
-    // public String getName(int fila, int columna){
+    public String getName(int fila, int columna){
 
-    //     String salida = Integer.toString(fila + 1);
+        String salida = Integer.toString(fila + 1);
         
-    //     salida = nameRec(columna, salida) + salida;
+        salida = nameRec(columna, salida) + salida;
 
-    //     return salida;
-    // }
+        return salida;
+    }
 
-    // public String nameRec(int numero, String salida){
+    public String nameRec(int numero, String salida){
         
-    //     if(numero < 26){
-    //         return this.letras[numero];
-    //     } else{
-    //         int div = numero / 26 - 1;
-    //         int mod = numero % 26;
-    //         return nameRec(div,salida) + letras[mod];
+        if(numero < 26){
+            return this.letras[numero];
+        } else{
+            int div = numero / 26 - 1;
+            int mod = numero % 26;
+            return nameRec(div,salida) + letras[mod];
 
-    //     }
-    // }
+        }
+    }
     
     public ArrayList<String> findPred(String expresion){
         ArrayList<String> salida = new ArrayList<>();
@@ -109,7 +114,7 @@ public class Hoja{
 
         salida[0] = index % n;
         salida[1] = index / n;
-        System.out.println(n +  " " + index);
+        // System.out.println(n +  " " + index);
         return salida;
     }
 
@@ -117,7 +122,7 @@ public class Hoja{
     /**
      * Method to initialize recursive DFS method.
      */
-    public void DFS(){
+    public int[][] DFS(){
 
         // Get number of nodes.
         this.count = this.matrizAdj.length;
@@ -137,16 +142,18 @@ public class Hoja{
             } catch (Exception e) {
                 if(e.getMessage().equals("matrizAdj has cycle")){
                     System.out.println("IMPOSSIBLE");
-                    return;
+                    System.exit(0);
                 }
             }
 
         }
 
         // Prints the result to user.
-        for(int i = 0; i < this.f.length; i++){
-            System.out.println(this.f[i][0] + ", " + this.f[i][1]);
-        }
+
+        return f;
+        // for(int i = 0; i < this.f.length; i++){
+        //     System.out.println(this.f[i][0] + ", " + this.f[i][1]);
+        // }
 
     } 
 
@@ -163,13 +170,34 @@ public class Hoja{
         // Applies DFS over the sucessors.
         for(int i = 0; i < suc.size(); i++){
             int w = suc.get(i);
-            if(this.colors[w] == 1){
-                throw new Exception("matrizAdj has cycle");
-            }
 
+            
+            if(this.colors[w] == 1){
+                // throw new Exception("matrizAdj has cycle");
+                this.hasCycle = true;
+                int[] coord = this.indexToCoord(w);
+                this.head = this.getName(coord[0],coord[1]);
+                this.cycle = this.head;
+            }
+            
             if(this.colors[w] == 0){
+                System.out.println(w);
                 this.DFS_recursive(w);
             }
+            
+            if(this.hasCycle){
+                System.out.println("entre");
+                int[] coord = this.indexToCoord(w);
+                String vertex = this.getName(coord[0],coord[1]);
+                System.out.println(vertex);
+                this.cycle = vertex + "->" + this.cycle;
+                if(vertex.equals(this.head)){
+                    System.out.println(this.cycle);
+                    System.exit(0);
+                }
+            }  
+
+
         }
         // Save finalization time.
         this.colors[v] += 1;
