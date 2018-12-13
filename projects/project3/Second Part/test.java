@@ -42,7 +42,7 @@ public class test{
                     for(int k=0; k<pred.size();k++){
                         // System.out.println(pred.get(k));
                         // System.out.println(hoja.nameToIndex(pred.get(k)));
-                        // System.out.println("n "+ n + " n*m " + n*m + " i(adj) " + hoja.nameToIndex(pred.get(k)) + " j(adj) "+ (j*n + i) + " i " + i + " j " + j);
+                        System.out.println("n "+ n + " n*m " + n*m + " i(adj) " + hoja.nameToIndex(pred.get(k)) + " j(adj) "+ (j*n + i) + " i " + i + " j " + j);
                         // System.out.println(hoja.matrizAdj[0].length);
                         hoja.matrizAdj[hoja.nameToIndex(pred.get(k))][j*n + i] = 1;
                     }                    

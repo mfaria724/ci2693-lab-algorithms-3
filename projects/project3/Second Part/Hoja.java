@@ -167,6 +167,12 @@ public class Hoja{
         // Gets all sucessors
         ArrayList<Integer> suc = this.sucessors(v);
 
+        int[] coordRoot = this.indexToCoord(v);
+        String vertexRoot = this.getName(coordRoot[0],coordRoot[1]);
+
+        // if(vertex1.equals("A1")){
+        //   System.out.println("Ojo");
+        // }
         // Applies DFS over the sucessors.
         for(int i = 0; i < suc.size(); i++){
             int w = suc.get(i);
@@ -178,22 +184,25 @@ public class Hoja{
                 int[] coord = this.indexToCoord(w);
                 this.head = this.getName(coord[0],coord[1]);
                 this.cycle = this.head;
+                return;
             }
             
             if(this.colors[w] == 0){
-                System.out.println(w);
                 this.DFS_recursive(w);
             }
             
             if(this.hasCycle){
-                System.out.println("entre");
                 int[] coord = this.indexToCoord(w);
                 String vertex = this.getName(coord[0],coord[1]);
-                System.out.println(vertex);
-                this.cycle = vertex + "->" + this.cycle;
+                this.cycle = vertex + " -> " + this.cycle;
                 if(vertex.equals(this.head)){
                     System.out.println(this.cycle);
                     System.exit(0);
+                }
+                if(vertexRoot.equals(this.head)){
+                  this.cycle = vertexRoot + " -> " + this.cycle;
+                  System.out.println(this.cycle);
+                  System.exit(0);
                 }
             }  
 
