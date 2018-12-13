@@ -95,19 +95,25 @@ public class USBDataFlow{
             // Invalid file format
             System.out.println("Formato de archivo incorrecto. Intente de nuevo.");
             System.exit(0);
-          }// catch (Exception e) {
+          } catch (Exception e) {
             // Unknown Error
-            //   System.out.println("Ha ocurrido un error desconocido. Mensaje: " + e.getMessage());
-            //   System.exit(0);
-            // }
+              System.out.println("Ha ocurrido un error desconocido. Mensaje: " + e.getMessage());
+              System.exit(0);
+            }
             
             return sheet;
       }
 
+      /**
+       * Main route
+       * @param args Arguments passed by user
+       */
       public static void main(String[] args) {
+        // Checks if file was provided
         if(args.length < 1){
           System.out.println("Uso: java test <archivo>");
         }else{
+          // 
           Sheet sheet = readFile(args[0]);
           Evaluador evaluador = new Evaluador();
 
