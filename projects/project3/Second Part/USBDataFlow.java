@@ -9,7 +9,7 @@ import java.io.FileReader;
  */ 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.security.cert.PKIXBuilderParameters;
 /**
  * ArrayList
  */
@@ -74,14 +74,13 @@ public class USBDataFlow{
                 }
             }
 
-            // for(int i=0; i<n*m;i++){
-            //     System.out.print("\n");
-            //     for(int j=0; j<n*m; j++){
-            //         System.out.print(sheet.adjMatrix[i][j] + ", ");
-            //     }
-            // }
-
-            // System.out.println(" ");            
+            for(int i=0; i<n*m;i++){
+                System.out.print("\n");
+                for(int j=0; j<n*m; j++){
+                    System.out.print(sheet.adjMatrix[i][j] + " ");
+                }
+            }
+            System.out.println("");            
             
           } catch (FileNotFoundException e) {
             // File doesn't exist
@@ -126,13 +125,19 @@ public class USBDataFlow{
             }
           }
 
-          for(int i=0;i<sheet.exprMatrix.length;i++){
-            System.out.print("\n");
-            for(int j=0;j<sheet.exprMatrix[0].length;j++){
-              System.out.print(sheet.exprMatrix[i][j] + ", ");
-            }
-          }
+          printResultMatrix(sheet);
+
 
         }    
+      }
+
+      public static void printResultMatrix(Sheet sheet){
+        for(int i=0;i<sheet.exprMatrix.length;i++){
+          System.out.print("\n");
+          for(int j=0;j<sheet.exprMatrix[0].length;j++){
+            System.out.print(sheet.exprMatrix[i][j] + " ");
+          }
+        }
+        System.out.print("\n");
       }
 }
