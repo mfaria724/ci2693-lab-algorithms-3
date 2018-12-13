@@ -9,14 +9,15 @@ import java.io.FileReader;
  */ 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.cert.PKIXBuilderParameters;
 /**
  * ArrayList
  */
 import java.util.ArrayList;
 
 /**
- * Class to implement the spreed sheet
+ * Class to use the spreed sheet
+ * @author Manuel Faria 15-10463
+ * @author Juan Oropeza 15-11041
  */
 public class USBDataFlow{
 
@@ -72,15 +73,7 @@ public class USBDataFlow{
                         sheet.adjMatrix[x][y] = 1;
                     }                    
                 }
-            }
-
-            for(int i=0; i<n*m;i++){
-                System.out.print("\n");
-                for(int j=0; j<n*m; j++){
-                    System.out.print(sheet.adjMatrix[i][j] + " ");
-                }
-            }
-            System.out.println("");            
+            }          
             
           } catch (FileNotFoundException e) {
             // File doesn't exist
@@ -114,29 +107,43 @@ public class USBDataFlow{
         }else{
           // 
           Sheet sheet = readFile(args[0]);
+          // Evualuator of expression
           Evaluador evaluador = new Evaluador();
 
-
-
+          // Gets the topogical sort
           int[][] topologicalSort = sheet.DFS();
 
+          // Iterate over the the array of topological sort
           for(int i = 0; i<topologicalSort.length; i++){
-            String valor = Integer.toString(evaluador.evaluateExpression(sheet.exprMatrix[topologicalSort[i][0]][topologicalSort[i][1]]));
-            System.out.println(valor);
-            sheet.exprMatrix[topologicalSort[i][0]][topologicalSort[i][1]] = valor;
+            
+            int x = topologicalSort[i][0];
+            int y = topologicalSort[i][1];
+
+            // Gets the valor of the expression of the cell
+            String valor = Integer.toString(evaluador.evaluateExpression(sheet.exprMatrix[x][y]));
+
+            // Update the expression matrix
+            sheet.exprMatrix[x][y] = valor;
+
+            // Iterate over the expression matrix to update the evaluated cells
             for(int j=0; j<sheet.exprMatrix.length;j++){
               for(int k=0; k<sheet.exprMatrix[0].length;k++){
-                sheet.exprMatrix[j][k] = sheet.exprMatrix[j ][k].replace(sheet.getName(topologicalSort[i][0],topologicalSort[i][1]), valor);
+                sheet.exprMatrix[j][k] = sheet.exprMatrix[j ][k].replace(sheet.getName(x,y), valor);
               }
             }
           }
 
+          // Prints the final sheet
           printResultMatrix(sheet);
 
 
         }    
       }
 
+      /**
+       * Method to print the final expr result
+       * @param sheet sheet to get the expressions matrix 
+       */
       public static void printResultMatrix(Sheet sheet){
         for(int i=0;i<sheet.exprMatrix.length;i++){
           System.out.print("\n");
