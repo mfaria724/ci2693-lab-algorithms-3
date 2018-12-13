@@ -87,6 +87,26 @@ public class Evaluador {
   }
 
   /**
+   * Evaluates an expression
+   * @param expression  expression to be evaluated
+   * @return expression's value
+   */
+  public static int evaluateExpression(String expression){
+
+    // Initalize graph structure with root vertex
+    graph = new Graph();
+    Vertex v = new Vertex(expression);  
+    graph.addVertex(v);
+    createTree(v);
+
+    // Prints root value
+    int rootElemValue = graph.adjacenciesList.get(0).getValue(); 
+
+
+    return rootElemValue;
+  }
+
+  /**
    * Divides expression to create a graph (Binary Tree)
    * @param v Root vertex
    * @throws Exception If format has invalid format

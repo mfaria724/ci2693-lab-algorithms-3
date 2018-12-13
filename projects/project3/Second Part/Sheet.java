@@ -3,119 +3,115 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Hoja{
+public class Sheet{
 
-    String[][] matrizExpresiones;
-    int[][] matrizAdj;
-    String[][] matrizCeldas;
+    String[][] exprMatrix;
+    int[][] adjMatrix;
     private int count;
     private int[][] f;
     private int[] colors;
     private boolean hasCycle = false;
     private String head = "";
     private String cycle = "";
+    private String[] letters = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 
 
-
-    private String[] letras = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-
-
-    Hoja(){
+    Sheet(){
         
     }
-    Hoja(int n, int m){
-        matrizExpresiones = new String[n][m];
-        matrizAdj = new int[n*m][n*m];
-        matrizCeldas = new String[n][m];
+
+    Sheet(int n, int m){
+        exprMatrix = new String[n][m];
+        adjMatrix = new int[n*m][n*m];
     }
     
-    public String getName(int fila, int columna){
+    public String getName(int row, int column){
 
-        String salida = Integer.toString(fila + 1);
+        String output = Integer.toString(row + 1);
         
-        salida = nameRec(columna, salida) + salida;
+        output = nameRec(column, output) + output;
 
-        return salida;
+        return output;
     }
 
-    public String nameRec(int numero, String salida){
+    public String nameRec(int number, String output){
         
-        if(numero < 26){
-            return this.letras[numero];
+        if(number < 26){
+            return this.letters[number];
         } else{
-            int div = numero / 26 - 1;
-            int mod = numero % 26;
-            return nameRec(div,salida) + letras[mod];
+            int div = number / 26 - 1;
+            int mod = number % 26;
+            return nameRec(div,output) + letters[mod];
 
         }
     }
     
-    public ArrayList<String> findPred(String expresion){
-        ArrayList<String> salida = new ArrayList<>();
+    public ArrayList<String> findPred(String expression){
+        ArrayList<String> output = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("[a-zA-Z]+\\d+");
-        Matcher matcher = pattern.matcher(expresion);
+        Matcher matcher = pattern.matcher(expression);
 
         while(matcher.find()){
-            salida.add(matcher.group(0));
+            output.add(matcher.group(0));
         }
 
-        return salida;
+        return output;
     }
 
     public int nameToIndex(String input){
-        String[] celda = input.split("[^a-zA-Z0-9]+|(?<=[a-zA-Z])(?=[0-9])|(?<=[0-9])(?=[a-zA-Z])");
-        // System.out.println(celda[0] + " " + celda[1]);
+        String[] cell = input.split("[^a-zA-Z0-9]+|(?<=[a-zA-Z])(?=[0-9])|(?<=[0-9])(?=[a-zA-Z])");
+        // System.out.println(cell[0] + " " + cell[1]);
 
 
-        int exp = celda[0].length() - 1;
-        int n = this.matrizCeldas.length;
+        int exp = cell[0].length() - 1;
+        int n = this.exprMatrix.length;
 
-        int salida = -1;
-        char[] caracteres = celda[0].toCharArray();
+        int output = -1;
+        char[] characters = cell[0].toCharArray();
         
-        for(int i=0; i<caracteres.length; i++){
-            // System.out.println(Character.getNumericValue(caracteres[i]));
-            salida += (Character.getNumericValue(caracteres[i]) - 9) * Math.pow(26, exp); 
+        for(int i=0; i<characters.length; i++){
+            // System.out.println(Character.getNumericValue(characters[i]));
+            output += (Character.getNumericValue(characters[i]) - 9) * Math.pow(26, exp); 
             exp--;
         }
 
-        // System.out.println("solo letras " + salida);
-        // System.out.println("con numeros " + (salida * n + Integer.parseInt(celda[1]) - 1))
-        return salida * n + Integer.parseInt(celda[1]) - 1;  // = x                     salida = (x + 1 - celda[1] ) / n
+        // System.out.println("solo letters " + output);
+        // System.out.println("con numeros " + (output * n + Integer.parseInt(cell[1]) - 1))
+        return output * n + Integer.parseInt(cell[1]) - 1;  // = x                     output = (x + 1 - cell[1] ) / n
     }    
 
     public int[] nameToCoord(String input){
-        int[] salida = {0,-1};
+        int[] output = {0,-1};
 
-        String[] celda = input.split("[^a-zA-Z0-9]+|(?<=[a-zA-Z])(?=[0-9])|(?<=[0-9])(?=[a-zA-Z])");
-        // System.out.println(celda[0] + " " + celda[1]);
+        String[] cell = input.split("[^a-zA-Z0-9]+|(?<=[a-zA-Z])(?=[0-9])|(?<=[0-9])(?=[a-zA-Z])");
+        // System.out.println(cell[0] + " " + cell[1]);
 
 
-        int exp = celda[0].length() - 1;
+        int exp = cell[0].length() - 1;
         
-        // System.out.println(celda[0]);
-        char[] caracteres = celda[0].toCharArray();
+        // System.out.println(cell[0]);
+        char[] characters = cell[0].toCharArray();
         
-        for(int i=0; i<caracteres.length; i++){
-            salida[1] += (Character.getNumericValue(caracteres[i]) - 9) * Math.pow(26, exp); 
+        for(int i=0; i<characters.length; i++){
+            output[1] += (Character.getNumericValue(characters[i]) - 9) * Math.pow(26, exp); 
             exp--;
         }
         
-        salida[0] = Integer.parseInt(celda[1]) - 1 ;
-        // System.out.println("solo letras " + salida);
-        // System.out.println("con numeros " + (salida * n + Integer.parseInt(celda[1]) - 1));
-        return salida;
+        output[0] = Integer.parseInt(cell[1]) - 1 ;
+        // System.out.println("solo letters " + output);
+        // System.out.println("con numeros " + (output * n + Integer.parseInt(cell[1]) - 1));
+        return output;
     }
 
     public int[] indexToCoord(int index){
-        int n = this.matrizCeldas.length;
-        int[] salida = new int[2];
+        int n = this.exprMatrix.length;
+        int[] output = new int[2];
 
-        salida[0] = index % n;
-        salida[1] = index / n;
+        output[0] = index % n;
+        output[1] = index / n;
         // System.out.println(n +  " " + index);
-        return salida;
+        return output;
     }
 
 
@@ -125,11 +121,11 @@ public class Hoja{
     public int[][] DFS(){
 
         // Get number of nodes.
-        this.count = this.matrizAdj.length;
+        this.count = this.adjMatrix.length;
 
         // Variables initialization.
-        this.f = new int[this.matrizAdj.length][2];
-        this.colors = new int[this.matrizAdj.length];
+        this.f = new int[this.adjMatrix.length][2];
+        this.colors = new int[this.adjMatrix.length];
         Arrays.fill(this.colors, 0);
 
         // Apply DFS for all nodes.
@@ -140,7 +136,7 @@ public class Hoja{
                     this.DFS_recursive(i);
                 }        
             } catch (Exception e) {
-                if(e.getMessage().equals("matrizAdj has cycle")){
+                if(e.getMessage().equals("adjMatrix has cycle")){
                     System.out.println("IMPOSSIBLE");
                     System.exit(0);
                 }
@@ -173,7 +169,7 @@ public class Hoja{
 
             
             if(this.colors[w] == 1){
-                // throw new Exception("matrizAdj has cycle");
+                // throw new Exception("adjMatrix has cycle");
                 this.hasCycle = true;
                 int[] coord = this.indexToCoord(w);
                 this.head = this.getName(coord[0],coord[1]);
@@ -216,8 +212,8 @@ public class Hoja{
         ArrayList<Integer> suc = new ArrayList<Integer>();
 
         // Iterates over vertexes.
-        for(int i = 0; i < this.matrizAdj.length; i++){
-            if(this.matrizAdj[v][i] == 1){
+        for(int i = 0; i < this.adjMatrix.length; i++){
+            if(this.adjMatrix[v][i] == 1){
                 suc.add(i);
             }
         }
