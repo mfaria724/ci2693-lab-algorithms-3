@@ -1,6 +1,8 @@
 public class DisjointSets{
+
     int[] parts;
     int n;
+    
     public DisjointSets(int n){
         this.n = n;
         this.parts = new int[n];
