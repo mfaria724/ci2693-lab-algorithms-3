@@ -18,7 +18,6 @@ public class Graph{
         this.parts = new int[n];
         for(int i=0; i<n;i++){
             this.parts[i] = i;
-            // System.out.println(this.parts[i]);
         }
 
 
@@ -75,13 +74,10 @@ public class Graph{
             int x = edge[0];
             int y = edge[1];
 
-            // System.out.println(x + " " + y);
             
             int repX = this.find(x);
             int repY = this.find(y);
 
-            // System.out.println(repX + " " + repY);
-            // System.out.println(numComp);
             if(repX != repY){
                 this.join(repX, repY);
                 T.add(edge);
