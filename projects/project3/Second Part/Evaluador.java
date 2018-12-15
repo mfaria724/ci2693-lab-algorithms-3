@@ -98,7 +98,7 @@ public class Evaluador {
     Vertex v = new Vertex(expression);  
     graph.addVertex(v);
     try{
-    createTree(v);
+      createTree(v);
     } catch(Exception e){
       System.out.println("La expresion tiene un error");
       System.exit(0);
@@ -121,7 +121,7 @@ public class Evaluador {
     String expression = v.getExpression();
 
     // Checks if expression is a number.
-    if(!expression.matches("[0-9]+")){
+    if(!expression.matches("[-]?[0-9]+")){
       // Get all expression characters.
       String[] expressionChars = expression.split("");
       
@@ -151,7 +151,7 @@ public class Evaluador {
    * @throws Exception If file has an invalid format.
    */
   private static void checkInnerBinaryOp(Vertex v, String[] expressionChars)throws Exception{
-    
+
     // Operators to check
     String[] innerBinaryOp = {"+","-","*"};
 
@@ -163,7 +163,7 @@ public class Evaluador {
 
       // Checks that operators are not in parenthesis.
       int level = 0;
-      for(int j = 0; j < expressionChars.length; j++){
+      for(int j = expressionChars.length - 1; j > -1; j--){
         
         // Increment or decrement level to not consider operators inside
         // parenthesis.
@@ -206,12 +206,12 @@ public class Evaluador {
 
           // Sets vertex value
           v.setValue(doOperation(leftChild.getValue(), rightChild.getValue(), v.getOperation()));
-
           return;
         }
 
       }
     }
+
   }
 
   /**
@@ -221,7 +221,7 @@ public class Evaluador {
    * @throws Exception If file has an invalid format.
    */
   private static void checkOutterBinaryOp(Vertex v, String[] expressionChars) throws Exception{
-    
+
     // Operators to check
     String[] outterBinaryOp = {"MAX","MIN"};
 
@@ -298,7 +298,7 @@ public class Evaluador {
    * @throws Exception If file has an invalid format.
    */
   private static void checkOutterUnaryOp(Vertex v, String[] expressionChars)throws Exception{
-    
+
     // Operators to check
     String[] outterUnaryOp = {"SUM"};
 
