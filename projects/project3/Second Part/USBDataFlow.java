@@ -60,7 +60,7 @@ public class USBDataFlow{
                     data[j] = data[j].replace("=", "");
 
                     // Update the exprMatrix with the expression
-                    sheet.exprMatrix[i][j] = data[j];
+                    sheet.exprMatrix[i][j] = data[j].toUpperCase();
 
                     // Find the cells that are in the actual expression
                     ArrayList<String> pred = sheet.findPred(data[j]);
@@ -87,11 +87,14 @@ public class USBDataFlow{
             // Invalid file format
             System.out.println("Formato de archivo incorrecto. Intente de nuevo.");
             System.exit(0);
+          } catch (IndexOutOfBoundsException e){
+            System.out.println("Se está referenciando una celda fuera del rango. El formato de archivo es incorrecto. Intente de nuevo.");
+            System.exit(0);
           } catch (Exception e) {
-            // Unknown Error
-              System.out.println("Ha ocurrido un error desconocido. Mensaje: " + e.getMessage());
-              System.exit(0);
-            }
+          // Unknown Error
+            System.out.println("Ha ocurrido un error desconocido. Mensaje: " + e.getMessage());
+            System.exit(0);
+          }
             
             return sheet;
       }
@@ -146,11 +149,10 @@ public class USBDataFlow{
        */
       public static void printResultMatrix(Sheet sheet){
         for(int i=0;i<sheet.exprMatrix.length;i++){
-          System.out.print("\n");
           for(int j=0;j<sheet.exprMatrix[0].length;j++){
-            System.out.print(sheet.exprMatrix[i][j] + " ");
+            System.out.print(sheet.exprMatrix[i][j] + "\t");
           }
+          System.out.print("\n");
         }
-        System.out.print("\n");
       }
 }

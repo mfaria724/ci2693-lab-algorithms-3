@@ -98,7 +98,7 @@ public class Sheet{
 
         // while to get the cells
         while(matcher.find()){
-            output.add(matcher.group(0));
+          output.add(matcher.group(0));
         }
 
         return output;
@@ -203,17 +203,10 @@ public class Sheet{
 
         // Apply DFS for all nodes.
         for(int i = 0; i < this.colors.length; i++){
-        
-            try {
-                if(this.colors[i] == 0){
-                    this.DFS_recursive(i);
-                }        
-            } catch (Exception e) {
-                if(e.getMessage().equals("adjMatrix has cycle")){
-                    System.out.println("IMPOSSIBLE");
-                    System.exit(0);
-                }
-            }
+          
+          if(this.colors[i] == 0){
+            this.DFS_recursive(i);
+          }        
 
         }
 
@@ -224,7 +217,7 @@ public class Sheet{
     /**
      * DFS recursive implementation.
      */
-    public void DFS_recursive(int v) throws Exception{
+    public void DFS_recursive(int v){
         // Marks vertex as visited.
         this.colors[v] += 1;
 
@@ -241,11 +234,13 @@ public class Sheet{
 
             
             if(this.colors[w] == 1){
-                this.hasCycle = true;
-                int[] coord = this.indexToCoord(w);
-                this.head = this.getName(coord[0],coord[1]);
-                this.cycle = this.head;
+              this.hasCycle = true;
+              int[] coord = this.indexToCoord(w);
+              this.head = this.getName(coord[0],coord[1]);
+              this.cycle = this.head;
+              if(v != w){
                 return;
+              }
             }
             
             if(this.colors[w] == 0){
@@ -253,18 +248,18 @@ public class Sheet{
             }
             
             if(this.hasCycle){
-                int[] coord = this.indexToCoord(w);
-                String vertex = this.getName(coord[0],coord[1]);
-                this.cycle = vertex + " -> " + this.cycle;
-                if(vertex.equals(this.head)){
-                    System.out.println(this.cycle);
-                    System.exit(0);
-                }
-                if(vertexRoot.equals(this.head)){
-                  this.cycle = vertexRoot + " -> " + this.cycle;
-                  System.out.println(this.cycle);
-                  System.exit(0);
-                }
+              int[] coord = this.indexToCoord(w);
+              String vertex = this.getName(coord[0],coord[1]);
+              this.cycle = vertex + " -> " + this.cycle;
+              if(vertex.equals(this.head)){
+                System.out.println(this.cycle);
+                System.exit(0);
+              }
+              if(vertexRoot.equals(this.head)){
+                this.cycle = vertexRoot + " -> " + this.cycle;
+                System.out.println(this.cycle);
+                System.exit(0);
+              }
             }  
 
 
